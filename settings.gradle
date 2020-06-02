@@ -1,0 +1,3 @@
+rootProject.name = "gia"
+include("common", "internal")
+

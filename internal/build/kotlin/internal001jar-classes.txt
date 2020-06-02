@@ -1,0 +1,1 @@
+/Users/kepha_local/korbit/Was/Test/gia2/internal/build/classes/kotlin/main/kr/co/korbit/gia/controller/ClientsController.class:/Users/kepha_local/korbit/Was/Test/gia2/internal/build/classes/kotlin/main/kr/co/korbit/gia/controller/HelloController.class:/Users/kepha_local/korbit/Was/Test/gia2/internal/build/classes/kotlin/main/kr/co/korbit/gia/controller/WhiteListsController.class
