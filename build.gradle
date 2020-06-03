@@ -12,6 +12,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
         classpath "com.github.jengelman.gradle.plugins:shadow:$shadow_version"
     }
 
@@ -25,6 +26,7 @@ apply plugin: "kotlin-jpa"
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "application"
 apply plugin: "org.jetbrains.kotlin.plugin.allopen"
+apply plugin: "org.jetbrains.kotlin.plugin.noarg"
 
 group "kr.co.korbit.gia"
 version "0.0.1"
@@ -118,3 +120,8 @@ allOpen {
     annotation "javax.persistence.Embeddable"
 }
 
+noArg {
+    annotation "javax.persistence.Entity"
+    annotation "javax.persistence.MappedSuperclass"
+    annotation "javax.persistence.Embeddable"
+}

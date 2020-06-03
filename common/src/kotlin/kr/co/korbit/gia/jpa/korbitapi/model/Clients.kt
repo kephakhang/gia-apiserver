@@ -1,15 +1,13 @@
 package kr.co.korbit.gia.jpa.korbitapi.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import kr.co.korbit.gia.jpa.entity.AbstractJpaPersistable
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import java.time.LocalDateTime
 import java.time.ZoneId
 import javax.persistence.*
 
-@Entity(name = "Clients")
-@Table(name = "korbit_api.clients")
+@Entity
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)

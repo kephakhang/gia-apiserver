@@ -44,7 +44,7 @@ class JpaTerraConfig {
     @ConfigurationProperties(prefix = "spring.datasource.terra")
     fun jpaTerraDataSource(): DataSource {
         val dataSource = DataSourceBuilder.create().type(HikariDataSource::class.java).build()
-        dataSource.connectionInitSql = "SET NAMES utf8mb4; set @@session.time_zone = '\$TIMEZONE'".replace("\$TIMEZONE", Calendar.getInstance().timeZone.id)
+        dataSource.connectionInitSql = "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
         return dataSource
     }
 

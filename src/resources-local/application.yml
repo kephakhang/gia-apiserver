@@ -49,6 +49,8 @@ spring:
       dialect: org.hibernate.dialect.MySQL57Dialect
       ddl-auto: validate
       use-new-id-generator-mappings: false
+      jdbc:
+        time_zone: UTC
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -63,13 +65,13 @@ spring:
 spring:
   profiles: db
   datasource:
-#    url: "jdbc:mysql://localhost:3306/korbit?autoReconnection-true&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul"
+#    url: "jdbc:mysql://localhost:3306/korbit?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
 #    driver-class-name: "com.mysql.cj.jdbc.Driver"
 #    username: kepha
 #    password: kepha
     korbit:
       type: "com.zaxxer.hikari.HikariDataSource"
-      jdbc-url: "jdbc:mysql://localhost:3306/korbit?autoReconnection-true&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul"
+      jdbc-url: "jdbc:mysql://localhost:3306/korbit?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
       driver-class-name: "com.mysql.cj.jdbc.Driver"
       username: kepha
       password: kepha
@@ -105,7 +107,7 @@ spring:
         idle-timeout: 10000
     korbitapi:
       type: "com.zaxxer.hikari.HikariDataSource"
-      jdbc-url: "jdbc:mysql://localhost:3306/korbit_api?autoReconnection-true&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul"
+      jdbc-url: "jdbc:mysql://localhost:3306/korbit_api?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
       driver-class-name: "com.mysql.cj.jdbc.Driver"
       username: kepha
       password: kepha
@@ -139,7 +141,7 @@ spring:
       validation-timeout: 5000
     terra:
       type: "com.zaxxer.hikari.HikariDataSource"
-      jdbc-url: "jdbc:mysql://localhost:3306/terra?autoReconnection-true&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul"
+      jdbc-url: "jdbc:mysql://localhost:3306/terra?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
       driver-class-name: "com.mysql.cj.jdbc.Driver"
       username: kepha
       password: kepha
