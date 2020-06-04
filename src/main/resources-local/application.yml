@@ -1,0 +1,277 @@
+spring:
+  profiles:
+    active: local
+
+---
+
+
+spring:
+  profiles: default
+  application:
+    name: gia-apiserver
+  http:
+    encoding:
+  mvc:
+    servlet:
+      load-on-startup: 1
+      multipart:
+        enabled: true
+        file-size-threshold: 0
+        max-file-size: 3MB
+        location: ./uploads
+        max-request-size: 10MB
+        resolve-lazily: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+server:
+  port: 8080
+  servlet:
+    encoding:
+      force: true
+      force-response: true
+
+---
+
+spring:
+  profiles: jpa
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    database: mysql
+    generate-ddl: false
+    open-in-view: false
+    #    mapping-resources:
+    #    properties:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL57Dialect
+      ddl-auto: validate
+      use-new-id-generator-mappings: false
+      jdbc:
+        time_zone: UTC
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+  data:
+    jpa:
+      repositories:
+        #        bootstrap-mode:
+        enabled: true
+
+---
+
+spring:
+  profiles: db
+  datasource:
+#    url: "jdbc:mysql://localhost:3306/korbit?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
+#    driver-class-name: "com.mysql.cj.jdbc.Driver"
+#    username: kepha
+#    password: kepha
+    test:
+      type: "com.zaxxer.hikari.HikariDataSource"
+      jdbc-url: "jdbc:mysql://localhost:3306/test?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      driver-class-name: "com.mysql.cj.jdbc.Driver"
+      username: kepha
+      password: kepha
+#      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
+      connection-test-query: "select 1 from dual"
+      #      schema:
+      minimum-idle: 10
+      idle-timeout: 600000
+      auto-commit: true
+      allow-pool-suspension: false
+      #      catalog:
+      #      data-source-j-n-d-i:
+      #      data-source-class-name:
+      connection-timeout: 70000
+#      data-source-properties: "{password=<kepha>}"
+      health-check-properties: "{}"
+      #      health-check-registry:
+      initialization-fail-timeout: 1
+      isolate-internal-queries: false
+      leak-detection-threshold: 0
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+      #      metric-registry: com.codahale.metrics.MetricRegistry
+      #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
+      read-only: false
+      register-mbeans: false
+      #      scheduled-executor:
+      transaction-isolation: TRANSACTION_REPEATABLE_READ
+      login-timeout: 70000
+      pool-name: HikariPool1
+      validation-timeout: 5000
+      hikari:
+        idle-timeout: 10000
+    korbit:
+      type: "com.zaxxer.hikari.HikariDataSource"
+      jdbc-url: "jdbc:mysql://localhost:3306/korbit?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      driver-class-name: "com.mysql.cj.jdbc.Driver"
+      username: kepha
+      password: kepha
+#      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
+      connection-test-query: "select 1 from dual"
+      #      schema:
+      minimum-idle: 10
+      idle-timeout: 600000
+      auto-commit: true
+      allow-pool-suspension: false
+      #      catalog:
+      #      data-source-j-n-d-i:
+      #      data-source-class-name:
+      connection-timeout: 70000
+#      data-source-properties: "{password=<kepha>}"
+      health-check-properties: "{}"
+      #      health-check-registry:
+      initialization-fail-timeout: 1
+      isolate-internal-queries: false
+      leak-detection-threshold: 0
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+      #      metric-registry: com.codahale.metrics.MetricRegistry
+      #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
+      read-only: false
+      register-mbeans: false
+      #      scheduled-executor:
+      transaction-isolation: TRANSACTION_REPEATABLE_READ
+      login-timeout: 70000
+      pool-name: HikariPool2
+      validation-timeout: 5000
+      hikari:
+        idle-timeout: 10000
+    korbitapi:
+      type: "com.zaxxer.hikari.HikariDataSource"
+      jdbc-url: "jdbc:mysql://localhost:3306/korbit_api?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      driver-class-name: "com.mysql.cj.jdbc.Driver"
+      username: kepha
+      password: kepha
+#      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
+      connection-test-query: "select 1 from dual"
+      #      schema:
+      minimum-idle: 10
+      idle-timeout: 600000
+      auto-commit: true
+      allow-pool-suspension: false
+      #      catalog:
+      #      data-source-j-n-d-i:
+      #      data-source-class-name:
+      connection-timeout: 70000
+#      data-source-properties: "{password=<kepha>}"
+      health-check-properties: "{}"
+      #      health-check-registry:
+      initialization-fail-timeout: 1
+      isolate-internal-queries: false
+      leak-detection-threshold: 0
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+      #      metric-registry: com.codahale.metrics.MetricRegistry
+      #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
+      read-only: false
+      register-mbeans: false
+      #      scheduled-executor:
+      transaction-isolation: TRANSACTION_REPEATABLE_READ
+      login-timeout: 70000
+      pool-name: HikariPool3
+      validation-timeout: 5000
+    terra:
+      type: "com.zaxxer.hikari.HikariDataSource"
+      jdbc-url: "jdbc:mysql://localhost:3306/terra?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      driver-class-name: "com.mysql.cj.jdbc.Driver"
+      username: kepha
+      password: kepha
+#      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
+      connection-test-query: "select 1 from dual"
+      #      schema:
+      minimum-idle: 10
+      idle-timeout: 600000
+      auto-commit: true
+      allow-pool-suspension: false
+      #      catalog:
+      #      data-source-j-n-d-i:
+      #      data-source-class-name:
+      connection-timeout: 70000
+#      data-source-properties: "{password=<kepha>}"
+      health-check-properties: "{}"
+      #      health-check-registry:
+      initialization-fail-timeout: 1
+      isolate-internal-queries: false
+      leak-detection-threshold: 0
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+      #      metric-registry: com.codahale.metrics.MetricRegistry
+      #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
+      read-only: false
+      register-mbeans: false
+      #      scheduled-executor:
+      transaction-isolation: TRANSACTION_REPEATABLE_READ
+      login-timeout: 70000
+      pool-name: HikariPool4
+      validation-timeout: 5000
+      hikari:
+        idle-timeout: 10000
+
+---
+
+spring:
+  priofiles: logging
+logging:
+  config: classpath:logback.xml
+  level:
+    root: info
+#    java:
+#      sql: debug
+#      sqlonly: debug
+#      sqltiming: debug
+#      audit: debug
+#      resultset: debug
+#    org.hibernate: warn
+#    org.hibernate.SQL: debug
+#    org.hibernate.type.descriptor.sql.Basicbinder: trace
+#    kr.co.korbit: debug
+#    java.sql: debug
+#    java.sql.Connection: info
+#    java.sql.Statement: info
+#    java.sql.PreparedStatement: debug
+#    java.sql.ResultSet: debug
+#    com.google.android.gcm.server: debug
+#    org.springframework.orm: warn
+#    org.springframework.core: warn
+#    org.springframework.beans: warn
+#    org.springframework.context: warn
+#    org.springframework.aop: warn
+#    org.springframework.web: info
+#    org.springframework.transaction: warn
+#    org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor: error
+#    org.springframework.data.redis.core.RedisConnectionUtils: warn
+#    org.springframework.web.servlet.mvc.method.annotation: trace
+#    org.springframework.web.servlet: info
+#    org.springframework.jdbc.core: warn
+#    org:
+#      springframework:
+#        jdbc:
+#          core:
+#            JdbcTemplate: DEBUG
+#            StatementCreatorUtils: TRACE
+#    org.apache.commons: info
+#    org.springframework.jdbc.datasource.DataSourceTransactionManager: error
+#    com.zaxxer.hikari: debug
+#    com.fasterxml.jackson.core: debug
+
+
+---
+
+spring:
+  profiles: local
+    - default
+    - jpa
+    - db
+    - logging

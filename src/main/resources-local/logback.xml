@@ -1,0 +1,28 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <logger name="org.hibernate.SQL" level="debug">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.springframework.jdbc.core.JdbcTemplate" level="debug">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="trace">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="kr.co.korbit" level="info">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+</configuration>

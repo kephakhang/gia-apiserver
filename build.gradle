@@ -28,18 +28,18 @@ apply plugin: "application"
 apply plugin: "org.jetbrains.kotlin.plugin.allopen"
 apply plugin: "org.jetbrains.kotlin.plugin.noarg"
 
-group "kr.co.korbit.gia"
+group "kr.co.korbit"
 version "0.0.1"
 mainClassName = "kr.co.korbit.gia.Application"
 
 
 sourceSets {
-    main.kotlin.srcDirs = ["src/kotlin"]
-    //main.kotlin.srcDirs = main.java.srcDirs = ["src/kotlin"]
-    main.resources.srcDirs = ["src/resources", "src/resources-static", "src/resources-$profile"]
-    test.kotlin.srcDirs = ["test/kotlin"]
-    //test.kotlin.srcDirs = test.java.srcDirs = ["test/kotlin"]
-    test.resources.srcDirs = ["test/resources"]
+    main.kotlin.srcDirs = ["src/main/kotlin"]
+    //main.kotlin.srcDirs = main.java.srcDirs = ["src/main/kotlin"]
+    main.resources.srcDirs = ["src/main/resources", "src/main/resources-static", "src/main/resources-$profile"]
+    test.kotlin.srcDirs = ["src/est/kotlin"]
+    //test.kotlin.srcDirs = test.java.srcDirs = ["src/test/kotlin"]
+    test.resources.srcDirs = ["src/test/resources"]
 }
 
 repositories {
@@ -101,7 +101,7 @@ dependencies {
 //kotlin.experimental.coroutines = 'enable'
 
 shadowJar {
-    baseName = 'gia'
+    baseName = 'gia-apiserver'
     classifier = null
     version = null
 }

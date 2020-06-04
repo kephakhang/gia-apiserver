@@ -1,8 +1,8 @@
 CREATE TABLE `users` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(64) COLLATE utf8mb_unicode_ci DEFAULT NULL,
-  `email` varchar(64) COLLATE utf8mb_unicode_ci DEFAULT NULL,
-  `user_hash` varchar(64) COLLATE utf8mb_unicode_ci DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_hash` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `encrypted_password` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
   `encrypted_password_set_at` datetime DEFAULT NULL,
   `reset_password_token` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -31,8 +31,8 @@ CREATE TABLE `users` (
   `deleted_at` datetime DEFAULT NULL,
   `dob` date DEFAULT NULL,
   `gender` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `nationality` varchar(16) COLLATE utf8mb_unicode_ci DEFAULT NULL,
-  `country_code` varchar(16) COLLATE utf8mb_unicode_ci DEFAULT NULL,
+  `nationality` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `country_code` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `namechecked_at` datetime DEFAULT NULL,
   `terms` tinyint(1) DEFAULT '0',
   `entity` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -45,8 +45,8 @@ CREATE TABLE `users` (
   `namechecked_by` bigint(20) DEFAULT NULL,
   `captcha_at` datetime DEFAULT NULL,
   `no_captcha_until` datetime DEFAULT NULL,
-  `join_reason` varchar(255) COLLATE utf8mb_unicode_ci DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8mb_unicode_ci DEFAULT NULL,
+  `join_reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `sign_up_platform_id` bigint(20) DEFAULT NULL,
   `is_identified_for_coins` tinyint(1) NOT NULL DEFAULT '0',
   `is_identified_for_fiats` tinyint(1) NOT NULL DEFAULT '0',
@@ -61,4 +61,4 @@ CREATE TABLE `users` (
   UNIQUE KEY `index_users_on_uuid` (`uuid`),
   KEY `index_users_on_permit` (`permit`),
   KEY `index_users_on_phone` (`phone`)
-) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

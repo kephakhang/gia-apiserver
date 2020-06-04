@@ -25,14 +25,14 @@ apply plugin: "kotlin-jpa"
 apply plugin: "org.jetbrains.kotlin.plugin.allopen"
 apply plugin: "org.jetbrains.kotlin.plugin.noarg"
 
-group 'kr.co.korbit.gia'
+group 'kr.co.korbit'
 version '0.0.1'
 
 sourceSets {
-    main.kotlin.srcDirs = ["src/kotlin"]
-    main.resources.srcDirs = ["src/resources"]
-    test.kotlin.srcDirs = ["test/kotlin"]
-    test.resources.srcDirs = ["test/resources"]
+    main.kotlin.srcDirs = ["src/main/kotlin"]
+    main.resources.srcDirs = ["src/main/resources"]
+    test.kotlin.srcDirs = ["src/test/kotlin"]
+    test.resources.srcDirs = ["src/test/resources"]
 }
 
 repositories {
