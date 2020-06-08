@@ -2,7 +2,10 @@ package kr.co.korbit.gia.config
 
 
 
+import kr.co.korbit.gia.interceptor.SecurityInterceptor
+import kr.co.korbit.gia.util.UnifiedArgumentResolver
 import org.modelmapper.ModelMapper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
@@ -14,8 +17,10 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.validation.MessageCodesResolver
 import org.springframework.validation.Validator
+import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler
 import org.springframework.web.servlet.config.annotation.*
+import org.springframework.web.servlet.handler.MappedInterceptor
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import java.nio.charset.Charset
@@ -37,26 +42,21 @@ class WebMvcConfig : WebMvcConfigurer {
             )
     }
 
+
+
+    @Bean
+    fun myMappedInterceptor(): MappedInterceptor? {
+        return MappedInterceptor(
+            arrayOf("/**"), arrayOf("/resource/**"),
+            SecurityInterceptor()
+        )
+    }
+
+
     @Bean
     fun modelMapper(): ModelMapper {
         return ModelMapper()
     }
-
-    //ToDo UnifiedArgumentResolver 세팅 필요
-//    @Autowired
-//    var unifiedArgumentResolver: UnifiedArgumentResolver? = null
-
-//    @Bean
-//    fun  properties(): PropertySourcesPlaceholderConfigurer? {
-//        val propertySourcesPlaceholderConfigurer: PropertySourcesPlaceholderConfigurer = PropertySourcesPlaceholderConfigurer()
-//        var yaml: YamlPropertiesFactoryBean = YamlPropertiesFactoryBean()
-//        yaml.setResources(ClassPathResource ("application.yml"))
-//        yaml.getObject()?.let {
-//            propertySourcesPlaceholderConfigurer.setProperties(it)
-//            return propertySourcesPlaceholderConfigurer
-//        }
-//        return null
-//    }
 
     @Bean
     fun responseBodyConverter(): HttpMessageConverter<String> {
@@ -98,7 +98,7 @@ class WebMvcConfig : WebMvcConfigurer {
         // CookieLocaleResolver localeResolver = new CookieLocaleResolver();
 
         // 최초 기본 로케일을 강제로 설정이 가능 하다.
-        localeResolver.setDefaultLocale(Locale("ko"))
+        localeResolver.setDefaultLocale(Locale.getDefault())
         return localeResolver
     }
 
@@ -118,10 +118,9 @@ class WebMvcConfig : WebMvcConfigurer {
     override fun addCorsMappings(corsRegistry: CorsRegistry) {}
     override fun addViewControllers(viewControllerRegistry: ViewControllerRegistry) {}
     override fun configureViewResolvers(viewResolverRegistry: ViewResolverRegistry) {}
-    //ToDo 나중에 세팅 필요
-//    override fun addArgumentResolvers(list: MutableList<HandlerMethodArgumentResolver>) {
-//        list.add(unifiedArgumentResolver)
-//    }
+    override fun addArgumentResolvers(list: MutableList<HandlerMethodArgumentResolver>) {
+        list.add(UnifiedArgumentResolver())
+    }
 
     override fun addReturnValueHandlers(list: List<HandlerMethodReturnValueHandler>) {}
     override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>?>) {

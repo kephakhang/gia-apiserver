@@ -1,8 +1,7 @@
 package kr.co.korbit.gia.config
 
 import com.typesafe.config.ConfigFactory
-import kr.co.korbit.common.config.ApplicationConfig
-import kr.co.korbit.common.config.HoconApplicationConfig
+import kr.co.korbit.common.conf.HoconApplicationConfig
 import java.util.*
 import kotlin.collections.HashMap
 

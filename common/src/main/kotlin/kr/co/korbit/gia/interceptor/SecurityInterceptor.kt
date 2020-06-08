@@ -1,5 +1,6 @@
 package kr.co.korbit.gia.interceptor
 
+import mu.KotlinLogging
 import org.slf4j.LoggerFactory
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpServletResponse
 class SecurityInterceptor : HandlerInterceptorAdapter() {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(SecurityInterceptor::class.java)
+        private val logger = KotlinLogging.logger(SecurityInterceptor::class.java.name)
         private const val PAGE_URL = "pageUrl"
     }
 

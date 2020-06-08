@@ -1,9 +1,15 @@
 package kr.co.korbit.gia.jpa.common
 
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.util.ProxyUtils
 import java.lang.reflect.Modifier
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 import javax.persistence.*
+
+
 
 
 @MappedSuperclass
@@ -13,6 +19,15 @@ abstract class AbstractJpaPersistable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     var id: Long = 0L
+
+    @CreatedDate
+    @Column(name="created_at")
+    var created_at: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
+
+    @LastModifiedDate
+    @Column(name="updated_at")
+    var updated_at: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
+
 
     override fun equals(other: Any?): Boolean {
         other ?: return false
@@ -47,4 +62,12 @@ abstract class AbstractJpaPersistable {
         return "${obj.javaClass.simpleName}=[${s.joinToString(", ")}]"
     }
 
+}
+
+enum class UserStatus{
+    registered, leaved, unconfirmed, dormant, failed, saved, deleted
+}
+
+enum class RefundStatus {
+    denied, canceled, filled, requested
 }

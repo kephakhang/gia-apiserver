@@ -16,6 +16,7 @@
     <context:property-placeholder properties-ref="yamlProperties"/>
 
     <bean id="securityInterceptor" class="kr.co.korbit.gia.interceptor.SecurityInterceptor" />
+    <bean id="unifiedArgumentResolver" class="kr.co.korbit.gia.util.UnifiedArgumentResolver" />
 
 
 </beans>
