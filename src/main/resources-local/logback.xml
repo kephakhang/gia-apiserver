@@ -22,7 +22,7 @@
     <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="kr.co.korbit" level="info">
+    <logger name="kr.co.korbit" level="debug">
         <appender-ref ref="STDOUT"/>
     </logger>
 </configuration>

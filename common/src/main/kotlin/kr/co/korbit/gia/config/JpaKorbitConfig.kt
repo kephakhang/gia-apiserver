@@ -26,7 +26,6 @@ import kotlin.collections.HashMap
 
 @Configuration
 @EnableTransactionManagement
-//@EntityScan(basePackages = ["kr.co.korbit.gia.jpa.korbit.model"])
 @EnableJpaRepositories(entityManagerFactoryRef = "jpaKorbitEntityManagerFactory",
         transactionManagerRef = "jpaKorbitTransactionManager",
         basePackages = ["kr.co.korbit.gia.jpa.korbit.repository"])

@@ -1,7 +1,7 @@
 package kr.co.korbit.gia.jpa.common
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import kr.co.korbit.gia.jpa.test.model.Users
+import kr.co.korbit.gia.jpa.test.model.User
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class PushMsg(
@@ -18,8 +18,8 @@ class PushMsg(
     var pushCase: Int? = null,
     var ios: Boolean? = null,
     var aos: Boolean? = null,
-    var sender: Users? = null,
-    var receivers: List<Users>? = null,
+    var sender: User? = null,
+    var receivers: List<User>? = null,
     var targets: List<UserApp>? = null
 ) : AbstractJpaPersistable() {
     companion object {

@@ -3,7 +3,7 @@ package kr.co.korbit.gia.kafka
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import kr.co.korbit.fisherman.pushserver.env.Env
+import kr.co.korbit.gia.env.Env
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.StringDeserializer

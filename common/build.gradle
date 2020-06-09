@@ -42,13 +42,14 @@ repositories {
     maven { url "https://repo.maven.apache.org/maven2/" }
     maven { url "https://plugins.gradle.org/m2/" }
     maven { url "https://kotlin.bintray.com/ktor" }
+    maven { url "https://repo1.maven.org/maven2/" }
 
 }
 
 
 dependencies {
 
-    implementation("io.ktor:ktor-server-core:$kotlin_version")
+    implementation("commons-io:commons-io:$commons_io_version")
     implementation("com.google.auth:google-auth-library-oauth2-http:$google_auth_version")
     implementation("com.google.firebase:firebase-admin:$firebase_admin_version")
     implementation("com.amazonaws:aws-java-sdk-s3:$aws_sdk_version")
@@ -67,6 +68,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc:$springboot_version")
     implementation("org.springframework.boot:spring-boot-starter-data-redis:$springboot_version")
     implementation("org.springframework.boot:spring-boot-starter-web:$springboot_version")
+    implementation("org.springframework.boot:spring-boot-autoconfigure:$springboot_version")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:$springboot_version")
     implementation("io.springfox:springfox-swagger2:$swagger_version")
     implementation("io.springfox:springfox-swagger-ui:$swagger_version")

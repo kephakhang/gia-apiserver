@@ -1,8 +1,11 @@
 package kr.co.korbit.gia.util
 
+import kr.co.korbit.common.extensions.stackTraceString
 import kr.co.korbit.common.extensions.traceString
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -12,7 +15,12 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 class LoggingFilter : Filter {
-    private val id = AtomicLong(1)
+
+    protected val logger = LoggerFactory.getLogger(LoggingFilter::class.java)
+    val CRLF = "\n"
+    val REQUEST_PREFIX = "Request: "
+    val RESPONSE_PREFIX = "Response: "
+
 
     @Throws(ServletException::class)
     override fun init(arg0: FilterConfig) {
@@ -26,11 +34,12 @@ class LoggingFilter : Filter {
         chain: FilterChain
     ) {
 
-        val requestId = MDC.get("requestId")
-        val requestUri = MDC.get("requestUri")
+        val requestId: String = KeyGenerator.generateOrderNo()
+        MDC.put("requestId", requestId)
+        val requestUri = (req as HttpServletRequest).requestURI
+        MDC.put("requestUri", req.requestURI)
+
         val startTime = System.nanoTime()
-//        val requestId = id.incrementAndGet()
-//        val startTime = System.nanoTime()
         var isException = false
         try {
 
@@ -42,20 +51,20 @@ class LoggingFilter : Filter {
             val msg = StringBuilder()
             msg.append(CRLF).append("################################")
                 .append(CRLF).append(REQUEST_PREFIX)
-                .append(requestUri).append(":").append(requestId)
+                .append(requestUri).append(":").append("--:" + requestId + ":--")
             logger.debug(msg.toString())
             chain.doFilter(req, res)
         } catch (ex: ServletException) {
             isException = true
-            ex.printStackTrace()
+            logger.error (ex.stackTraceString)
             throw ex
         } catch (ex: IOException) {
             isException = true
-            ex.printStackTrace()
+            logger.error(ex.stackTraceString)
             throw ex
         } catch (ex: Exception) {
             isException = true
-            ex.printStackTrace()
+            logger.error (ex.stackTraceString)
             throw ex
         } finally {
             if (logger.isDebugEnabled) {
@@ -64,13 +73,9 @@ class LoggingFilter : Filter {
         }
     }
 
-    private fun isHtml(request: HttpServletRequest?): Boolean {
+    private fun isHtml(requestUri: String): Boolean {
         return try {
-            val uri = request!!.requestURI.toLowerCase()
-            if (uri.indexOf(".ftl") > 0 || uri.indexOf(".html") > 0 || uri.indexOf(".js") > 0 || uri.indexOf(".htm") > 0 || uri.indexOf(
-                    "/jsp"
-                ) > 0 || uri.indexOf(".css") > 0
-            ) true else false
+            if ( "/(.+\\.(ico|js|css|html|jpg|jpeg|png|gif|svg))".toRegex().containsMatchIn(requestUri) ) true else false
         } catch (ex: Exception) {
             false
         }
@@ -117,7 +122,7 @@ class LoggingFilter : Filter {
         val response: HttpServletResponse = res as HttpServletResponse
         val logging = true
         var incRes = false
-        if (!isHtml(request)) incRes = true
+        if (!isHtml(requestUri)) incRes = true
         if (isMultipart(request)) {
             val tm = StringBuilder()
             val en: Enumeration<*> = request!!.headerNames
@@ -138,12 +143,12 @@ class LoggingFilter : Filter {
 				msg.append(CRLF).append("################################")
 						.append(CRLF).append(REQUEST_PREFIX)
 					.append(CRLF).append(REQUEST_PREFIX)
-					.append(reqUri).append(":").append(requestId);
+					.append(reqUri).append(":").append("--:" + requestId + ":--");
 
             } else {
                 msg.append(CRLF).append("###Exception####################")
                     .append(CRLF).append(REQUEST_PREFIX)
-                    .append(reqUri).append(":").append(requestId)
+                    .append(reqUri).append(":").append("--:" + requestId + ":--")
             }
             if (request.queryString != null
                 && !request.queryString.isEmpty()
@@ -155,7 +160,7 @@ class LoggingFilter : Filter {
             }
             val authKey = getAuthKey(request)
             if (authKey!!.isNotEmpty()) {
-                msg.append(CRLF).append("SessionKey: ").append(authKey)
+                msg.append(CRLF).append("authKey: ").append(authKey)
             }
 
 
@@ -165,7 +170,7 @@ class LoggingFilter : Filter {
                 .append(request.contentType)
             if (!isMultipart(request)) {
                 msg.append(CRLF).append("Request Body: ").append(reqUri).append(":")
-                    .append(requestId).append(CRLF)
+                    .append("--:" + requestId + ":--").append(CRLF)
                 if (isFormSubmit(request)) {
                     var firstParam = true
                     val e: Enumeration<*> = request.parameterNames
@@ -197,9 +202,9 @@ class LoggingFilter : Filter {
             if (!isException && incRes) {
                 msg.append(CRLF).append("-------------------------------")
                     .append(CRLF).append(RESPONSE_PREFIX)
-                msg.append(CRLF).append(response.traceString().toByte())
+                msg.append(CRLF).append(ResponseWrapper(response).toByteArray())
             }
-            msg.append(CRLF).append("################################").append(requestId)
+            msg.append(CRLF).append("################################").append("--:" + requestId + ":--")
             if (isException) {
                 logger.error(
                     msg.toString().replace("\\t".toRegex(), "\t").replace("\\n".toRegex(), "\n")
@@ -212,12 +217,5 @@ class LoggingFilter : Filter {
                 )
             }
         }
-    }
-
-    companion object {
-        protected val logger = LoggerFactory.getLogger(LoggingFilter::class.java)
-        private const val CRLF = "\n"
-        private const val REQUEST_PREFIX = "Request: "
-        private const val RESPONSE_PREFIX = "Response: "
     }
 }

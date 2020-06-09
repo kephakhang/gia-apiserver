@@ -11,11 +11,11 @@ import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity(name = "User")
-@Table(name = "test.user")
+@Table(name = "test.users")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class Users (
+class User (
 
     @Column(name = "uuid")
     var uuid: String,
@@ -168,6 +168,6 @@ class Users (
 ) : AbstractJpaPersistable(){
 }
 
-typealias Session = Users
-typealias Agent = Users
-typealias Admin = Users
+typealias Session = User
+typealias Agent = User
+typealias Admin = User

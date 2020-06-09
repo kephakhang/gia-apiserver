@@ -19,22 +19,22 @@ class KorbitError(
         val messageConfig = HoconApplicationConfig(ConfigFactory.load("i18n/" + lang))
         val errorConfig = HoconApplicationConfig(ConfigFactory.load("i18n/error"))
 
-        fun error(code: String, vararg args:Any?): KorbitError {
+        fun error(code: ErrorCode, vararg args: Any?): KorbitError {
             try {
-                val errConf: ApplicationConfig = KorbitError.errorConfig.config("error." + code)
-                val errMessageConf: ApplicationConfig = KorbitError.errorConfig.config("error." + code + ".message")
+                val errConf: ApplicationConfig = KorbitError.errorConfig.config("error." + code.name)
+                val errMessageConf: ApplicationConfig = KorbitError.errorConfig.config("error." + code.name + ".message")
 
                 val error: KorbitError = KorbitError(
-                    code,
+                    code.name,
                     errConf.property("description").getString(),
                     HashMap<String, String>(),
                     errConf.property("origin").getString()
                 )
                 ErrorMessageLang.values().forEach {
                     if( args.size > 0 ) {
-                        error.message.put(it.lang, errMessageConf.property(it.lang).getString().format(args))
+                        error.message.put(it.name, errMessageConf.property(it.name).getString().format(args))
                     } else {
-                        error.message.put(it.lang, errMessageConf.property(it.lang).getString())
+                        error.message.put(it.name, errMessageConf.property(it.name).getString())
                     }
 
                 }
@@ -48,14 +48,14 @@ class KorbitError(
     }
 }
 
-enum class ErrorCode(val value: String) {
-    E0000("E0000"),
-    E1001("E1001"),
-    E1002("E1002"),
-    E1003("E1003")
+enum class ErrorCode {
+    E00000,
+    E00003,
+    E10001,
+    E10002,
 }
 
-enum class ErrorMessageLang(val lang: String) {
-    ko("ko"),
-    en("en")
+enum class ErrorMessageLang {
+    ko,
+    en
 }

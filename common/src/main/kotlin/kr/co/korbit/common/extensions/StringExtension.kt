@@ -17,3 +17,8 @@ fun kotlin.String.hashString(algorithm: String): String {
         .digest(this.toByteArray())
         .fold("", { str, it -> str + "%02x".format(it) })
 }
+
+fun kotlin.String.asResource(work: (String) -> Unit) {
+    val content = this.javaClass::class.java.getResource(this).readText()
+    work(content)
+}

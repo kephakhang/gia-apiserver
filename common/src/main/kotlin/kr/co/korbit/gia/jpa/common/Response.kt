@@ -6,9 +6,10 @@ import java.time.LocalDateTime
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class Response(
     val success: Boolean,
-    val requestId: String,
-    val uri: String,
-    val body:Any
+    val body:Any,
+    val requestId: String?,
+    val requestUri: String?,
+    val method: String?
 ) {
 
 }

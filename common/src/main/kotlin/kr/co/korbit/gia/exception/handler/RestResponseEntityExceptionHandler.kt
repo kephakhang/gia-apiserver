@@ -2,10 +2,11 @@ package kr.co.korbit.gia.exception.handler
 
 import kr.co.korbit.common.error.ErrorCode
 import kr.co.korbit.common.error.KorbitError
-import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.exception.*
+import kr.co.korbit.gia.jpa.common.Response
 import mu.KotlinLogging
 import org.hibernate.exception.ConstraintViolationException
+import org.slf4j.MDC
 import org.springframework.beans.TypeMismatchException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -241,6 +242,7 @@ class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
     //========================================================================================================
     //  Handle exceptions finally
     //========================================================================================================
+    @Throws(Throwable::class)
     private fun handleExceptionInternal(
         ex: Exception,
         status: HttpStatus,
@@ -251,18 +253,18 @@ class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
         val req: HttpServletRequest =
             (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request
         val uri = req.requestURI
-        val method = req.method
-        var err: KorbitError = KorbitError.error(ErrorCode.E0000.value)
+        val method = req.method.toUpperCase()
+        var err: KorbitError = KorbitError.error(ErrorCode.E00000)
 
         when(ex) {
             is IllegalStateException  -> {
 
                 when(uri) {
                     "/v1/user" -> {
-                        when(method.toUpperCase()) {
+                        when(method) {
                             "GET" -> {
 
-                                err = KorbitError.error(ErrorCode.E1001.value, (ex as InternalException).argList.toArray())
+                                err = KorbitError.error(ErrorCode.E10001, (ex as InternalException).argList.toArray())
                             }
                             "POST" -> {
 
@@ -290,15 +292,18 @@ class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
             is InternalException -> {
 
             }
+            is SessionNotFoundException -> {
+                err = KorbitError.error(ErrorCode.E00003)
+            }
             else -> {
-                ex.message?.let {
-                    err.description = it
-                    err.message.put("en", it)
-                    err.message.put(Env.lang, ex.localizedMessage)
-                }
+//                ex.message?.let {
+//                    err.description = it
+//                }
+
+                throw ex
             }
         }
-        return handleExceptionInternal(ex, err as Any, HttpHeaders(), status, request)
+        return handleExceptionInternal(ex, Response(false, err as Any, MDC.get("requestId"), uri, method), HttpHeaders(), status, request)
     }
 
     override fun handleExceptionInternal(

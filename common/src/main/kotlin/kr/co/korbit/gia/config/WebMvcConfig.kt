@@ -3,13 +3,15 @@ package kr.co.korbit.gia.config
 
 
 import kr.co.korbit.gia.interceptor.SecurityInterceptor
-import kr.co.korbit.gia.util.UnifiedArgumentResolver
+import kr.co.korbit.gia.util.LoggingFilter
 import org.modelmapper.ModelMapper
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
-import org.springframework.context.annotation.*
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.ImportResource
 import org.springframework.format.FormatterRegistry
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.StringHttpMessageConverter
@@ -31,21 +33,17 @@ import java.util.*
 @Configuration
 @EnableWebMvc
 @EnableAutoConfiguration
-@ComponentScan("kr.co.korbit.gia.jpa")
+@ComponentScan("kr.co.korbit.gia")
 @ImportResource("classpath:/app-context.xml")
 class WebMvcConfig : WebMvcConfigurer {
 
-    companion object {
-        private val RESOURCE_LOCATIONS =
-            arrayOf( /*   "classpath:/META-INF/resources/",  "classpath:/resources/", */
-                "classpath:/static/"
-            )
-    }
-
-
+    private val RESOURCE_LOCATIONS =
+        arrayOf(
+            "classpath:/static/"
+        )
 
     @Bean
-    fun myMappedInterceptor(): MappedInterceptor? {
+    fun securityInterceptor(): MappedInterceptor {
         return MappedInterceptor(
             arrayOf("/**"), arrayOf("/resource/**"),
             SecurityInterceptor()
@@ -64,13 +62,11 @@ class WebMvcConfig : WebMvcConfigurer {
     }
 
 
-//    @Bean
-//    fun characterEncodingFilter(): javax.servlet.Filter {
-//        val filter: CharacterEncodingFilter = CharacterEncodingFilter()
-//        filter.encoding = "UTF-8"
-//        filter.setForceEncoding(true)
-//        return filter
-//    }
+    @Bean
+    fun loggingFilter(): javax.servlet.Filter {
+        val filter: LoggingFilter = LoggingFilter()
+        return filter
+    }
 
     @Bean
     fun webServerFactoryCustomizer(): WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
@@ -111,16 +107,14 @@ class WebMvcConfig : WebMvcConfigurer {
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
 
         registry.addResourceHandler("/**")
-            .addResourceLocations(WebMvcConfig.RESOURCE_LOCATIONS[0])
+            .addResourceLocations(RESOURCE_LOCATIONS[0])
 
     }
 
     override fun addCorsMappings(corsRegistry: CorsRegistry) {}
     override fun addViewControllers(viewControllerRegistry: ViewControllerRegistry) {}
     override fun configureViewResolvers(viewResolverRegistry: ViewResolverRegistry) {}
-    override fun addArgumentResolvers(list: MutableList<HandlerMethodArgumentResolver>) {
-        list.add(UnifiedArgumentResolver())
-    }
+    override fun addArgumentResolvers(list: MutableList<HandlerMethodArgumentResolver>) {}
 
     override fun addReturnValueHandlers(list: List<HandlerMethodReturnValueHandler>) {}
     override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>?>) {
@@ -136,6 +130,4 @@ class WebMvcConfig : WebMvcConfigurer {
     override fun getMessageCodesResolver(): MessageCodesResolver? {
         return null
     }
-
-
 }

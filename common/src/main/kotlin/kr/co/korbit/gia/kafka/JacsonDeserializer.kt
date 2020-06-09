@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
-import kr.co.korbit.exception.stackTraceString
+import kr.co.korbit.common.extensions.stackTraceString
 import kr.co.korbit.gia.jpa.common.PushMsg
 import mu.KotlinLogging
 import org.apache.kafka.common.serialization.Deserializer

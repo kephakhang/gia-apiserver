@@ -1,9 +1,10 @@
 package kr.co.korbit.gia.kafka
 
-import kr.co.korbit.exception.stackTraceString
+import kr.co.korbit.common.extensions.stackTraceString
 import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.jpa.common.PushMsg
 import kr.co.korbit.gia.util.ClosableJob
+import kr.co.korbit.gia.util.Message
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -31,11 +32,11 @@ class Consumer<K, V>(private val consumer: KafkaConsumer<K, V>, val topic: Strin
                 try {
                     val records = consumer.poll(Duration.of(1000, ChronoUnit.MILLIS))
                     for (record in records) {
-                        logger.debug(Env.message("app.kafka.consumer.record") ,record.topic(), record.partition(), record.offset(), record.key(), record.value())
+                        logger.debug(Message.message("app.kafka.consumer.record") ,record.topic(), record.partition(), record.offset(), record.key(), record.value())
                         logger.debug("record.value() : " + record.value().toString())
 
                         if( (Env.branch == "master" && record.key().toString() != Env.korbit) || record.value() is Throwable ) { // DeSerialization 오류시 Exception Return from consumer
-                            logger.warn(Env.message("app.kafka.consumer.unknownRecord"),record.value() as Throwable)
+                            logger.warn(Message.message("app.kafka.consumer.unknownRecord"),record.value() as Throwable)
                             Thread.sleep(1000)
                             continue
                         }
@@ -50,38 +51,38 @@ class Consumer<K, V>(private val consumer: KafkaConsumer<K, V>, val topic: Strin
                     if (!records.isEmpty) {
                         consumer.commitAsync { offsets, exception ->
                             if (exception != null) {
-                                logger.error(exception){ Env.message("app.kafka.consumer.commit.fail") + offsets }
+                                logger.error(exception){ Message.message("app.kafka.consumer.commit.fail") + offsets }
                             } else {
-                                logger.debug(Env.message("app.kafka.consumer.commit.success"), offsets)
+                                logger.debug(Message.message("app.kafka.consumer.commit.success"), offsets)
                             }
                         }
                     }
                 } catch(e: Throwable) {
-                    logger.error(Env.message("app.kafka.consumer.unknownRecord") + e.stackTraceString)
+                    logger.error(Message.message("app.kafka.consumer.unknownRecord") + e.stackTraceString)
                     Thread.sleep(1000)
                 }
             }
-            logger.info { Env.message("app.kafka.consumer.finish") }
+            logger.info { Message.message("app.kafka.consumer.finish") }
         } catch (e: Throwable) {
             when (e) {
-                is WakeupException -> logger.info { Env.message("app.kafka.consumer.wakeup") }
-                else -> logger.error(e) { Env.message("app.kafka.consumer.pollingFail") }
+                is WakeupException -> logger.info { Message.message("app.kafka.consumer.wakeup") }
+                else -> logger.error(e) { Message.message("app.kafka.consumer.pollingFail") }
             }
         } finally {
-            logger.info { Env.message("app.kafka.consumer.commit.sync") }
+            logger.info { Message.message("app.kafka.consumer.commit.sync") }
             consumer.commitSync()
             consumer.close()
             finished.countDown()
-            logger.info { Env.message("app.kafka.consumer.closed") }
+            logger.info { Message.message("app.kafka.consumer.closed") }
         }
     }
 
     override fun close() {
-        logger.info { Env.message("app.kafka.consumer.jobClose") }
+        logger.info { Message.message("app.kafka.consumer.jobClose") }
         closed.set(true)
         consumer.wakeup()
         finished.await(3000, TimeUnit.MILLISECONDS)
-        logger.info { Env.message("app.kafka.consumer.jobClosed") }
+        logger.info { Message.message("app.kafka.consumer.jobClosed") }
     }
 }
 

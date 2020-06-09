@@ -1,12 +1,14 @@
 package kr.co.korbit.gia.util
 
 
+import kr.co.korbit.common.extensions.stackTraceString
 import kr.co.korbit.gia.aop.ControllerProxy
 import mu.KotlinLogging
 import org.springframework.util.StringUtils
 import java.nio.charset.Charset
 import java.util.*
 import javax.crypto.Cipher
+import javax.crypto.Mac
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
@@ -27,8 +29,21 @@ class SecureUtil{
          * @Author            : angelkum
          * @Date                : 오후 2:21:18
          */
-        fun encryptPassword(loginId: String, password: String): String {
-            return DigestUtil.encryptSHA256Hmac(loginId + "xwspqj)(#", password + "eptigvy@&^(")
+        fun encryptPassword(loginId: String, password: String): String? {
+            val secret = loginId + "(zhqlt)"
+            val key = password + "(fhdpqj)"
+
+            var sha256: String? = null
+            try {
+                val sha256_HMAC = Mac.getInstance("HmacSHA256")
+                val secret_key = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
+                sha256_HMAC.init(secret_key)
+                val sha256_result = sha256_HMAC.doFinal(key.toByteArray())
+                sha256 = NumberUtil.bytesToHexString(sha256_result)
+            } catch (e: java.lang.Exception) {
+                logger.error{ e.stackTraceString }
+            }
+            return sha256
         }
 
         /**
@@ -42,7 +57,7 @@ class SecureUtil{
             return try {
                 val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
                 cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec)
-                val encrypted = cipher.doFinal("$mobileNumber.vnkwpq#^&".toByteArray(charset("UTF-8")))
+                val encrypted = cipher.doFinal("$mobileNumber.zhqltvhdpqj".toByteArray(charset("UTF-8")))
                 String(Base64.getEncoder().encode(encrypted))
             } catch (e: Exception) {
                 logger.error("input=$mobileNumber", e)

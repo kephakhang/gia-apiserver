@@ -6,11 +6,9 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.messaging.*
 import com.google.firebase.messaging.Message
-import kr.co.korbit.exception.stackTraceString
+import kr.co.korbit.common.extensions.stackTraceString
 import kr.co.korbit.gia.jpa.common.UserApp
 import mu.KotlinLogging
-import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import java.io.File
 import java.io.FileInputStream
@@ -19,16 +17,15 @@ import java.net.URL
 import java.util.*
 
 class Firebase {
-//    @Autowired
-//    var msgSvc: MsgService? = null
-    val accessToken: AccessToken? = null
-    var googleCredentials: GoogleCredentials? = null
-    var sendUrl: String? = null
-    var dbUrl: String? = null
-    var jsonKey: String? = null
-    var options: FirebaseOptions? = null
-    var firbaseApp: FirebaseApp? = null
-    var firebaseMessaging: FirebaseMessaging? = null
+    private val accessToken: AccessToken? = null
+    private var googleCredentials: GoogleCredentials? = null
+    private var sendUrl: String? = null
+    private var dbUrl: String? = null
+    private var jsonKey: String? = null
+    private var options: FirebaseOptions? = null
+    private var firbaseApp: FirebaseApp? = null
+    private var firebaseMessaging: FirebaseMessaging? = null
+
     fun getFirbaseApp(): FirebaseApp? {
         return firbaseApp
     }
@@ -123,7 +120,7 @@ class Firebase {
                     .build()
             logger.info("sendPush Message : $message")
             logger.info("sendPush firebaseMessaging : " + firebaseMessaging.toString())
-            response = firebaseMessaging.send(message)
+            response = firebaseMessaging!!.send(message)
             logger.debug("sendPush response : $response")
         } catch (e: Exception) {
             logger.error("sendPush exception : " + e.stackTraceString)
@@ -136,7 +133,7 @@ class Firebase {
     fun sendMulticastPush(
         data: Map<String?, String?>,
         targetList: List<UserApp>,
-        resultHandler: MsgConsumer.PushResultHandler?,
+        resultHandler: PushResultHandler?,
         handlerArg: Any?
     ) {
         var message: MulticastMessage? = null
@@ -190,8 +187,7 @@ class Firebase {
 
     companion object {
         val logger = KotlinLogging.logger(Firebase::class.java.name)
-        var firebaseUser: Firebase? = null
-        var firebaseBiz: Firebase? = null
+        var firebase: Firebase? = null
         val SCOPES = arrayOf(
             "https://www.googleapis.com/auth/firebase.database",
             "https://www.googleapis.com/auth/userinfo.email",
@@ -199,51 +195,28 @@ class Firebase {
             "https://www.googleapis.com/auth/cloud-platform",
             "https://www.googleapis.com/auth/firebase.readonly"
         )
-        const val FCM_USER_SDK_KEY_JSON =
-            "/google/nearme-ae2c9-firebase-adminsdk-ohajk-4efd1cf727.json"
-        const val FCM_BIZ_SDK_KEY_JSON = "/google/nearme-ae2c9-firebase-adminsdk-ohajk-4efd1cf727.json"
-        const val FCM_USER_SEND_URL =
-            "https://fcm.googleapis.com/v1/projects/nearme-ae2c9/messages:send"
-        const val FCM_BIZ_SEND_URL =
-            "https://fcm.googleapis.com/v1/projects/nearme-ae2c9/messages:send"
-        const val FCM_USER_DB_URL = "https://nearme-ae2c9.firebaseio.com"
-        const val FCM_BIZ_DB_URL = "https://nearme-ae2c9.firebaseio.com"
-        fun getUserInstance(context: ApplicationContext): Firebase? {
-            val firebase = userInstance
-            //firebase!!.msgSvc = context.getBean("msgService") as MsgService
-            return firebase
+        const val FCM_KORBIT_SDK_KEY_JSON =
+            "/google/korbit-ae2c9-firebase-adminsdk-ohajk-4efd1cf727.json"
+        const val FCM_KORBIT_SEND_URL =
+            "https://fcm.googleapis.com/v1/projects/korbit-ae2c9/messages:send"
+        const val FCM_KORBIT_DB_URL = "https://korbit-ae2c9.firebaseio.com"
+
+        fun geInstance(context: ApplicationContext): Firebase? {
+            return Firebase.firebase
         }
 
-        fun getBizInstance(context: ApplicationContext): Firebase? {
-            val firebase = bizInstance
-            //firebase!!.msgSvc = context.getBean("msgService") as MsgService
-            return firebase
-        }
-
-        val userInstance: Firebase?
-            get() {
-                if (firebaseUser == null) {
-                    firebaseUser = Firebase()
-                    firebaseUser!!.sendUrl = FCM_USER_SEND_URL
-                    firebaseUser!!.dbUrl = FCM_USER_DB_URL
-                    firebaseUser!!.jsonKey = FCM_USER_SDK_KEY_JSON
-                    firebaseUser!!.createApp()
-                }
-                return firebaseUser
-            }
-
-        val bizInstance: Firebase?
+        val instance: Firebase?
             get() {
                 logger.info("getBizInstance")
-                if (firebaseBiz == null) {
+                if( Firebase.firebase == null) {
                     logger.info("firebaseBiz null")
-                    firebaseBiz = Firebase()
-                    firebaseBiz!!.sendUrl = FCM_BIZ_SEND_URL
-                    firebaseBiz!!.dbUrl = FCM_BIZ_DB_URL
-                    firebaseBiz!!.jsonKey = FCM_BIZ_SDK_KEY_JSON
-                    firebaseBiz!!.createApp()
+                    Firebase.firebase = Firebase()
+                    Firebase.firebase!!.sendUrl = FCM_KORBIT_SEND_URL
+                    Firebase.firebase!!.dbUrl = FCM_KORBIT_DB_URL
+                    Firebase.firebase!!.jsonKey = FCM_KORBIT_SDK_KEY_JSON
+                    Firebase.firebase!!.createApp()
                 }
-                return firebaseBiz
+                return Firebase.firebase
             }
 
         @Throws(FirebaseMessagingException::class)
@@ -251,11 +224,12 @@ class Firebase {
             // [START send_to_token]
             // This registration token comes from the client FCM SDKs.
 
+            // ToDo push 알림 메세지 전송 실 연둥 필요
             // See documentation on defining a message payload.
             val message: Message = Message.builder()
-                .putData("title", "럭키볼 푸쉬")
+                .putData("title", "Korbit Inc.")
                 .putData("contents", "Hi")
-                .putData("move_type2", "order")
+                .putData("move_type2", "main")
                 .setToken(registrationToken)
                 .build()
 

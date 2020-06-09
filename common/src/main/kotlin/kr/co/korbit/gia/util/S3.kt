@@ -1,10 +1,17 @@
 package kr.co.korbit.gia.util
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider
+import com.amazonaws.auth.BasicAWSCredentials
+import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.AmazonS3ClientBuilder
+import com.amazonaws.services.s3.model.CannedAccessControlList
+import com.amazonaws.services.s3.model.DeleteObjectRequest
+import com.amazonaws.services.s3.model.PutObjectRequest
+import kr.co.korbit.common.extensions.asResource
+import mu.KLogger
+import mu.KotlinLogging
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
 import java.util.*
 
 class S3 {
@@ -14,23 +21,23 @@ class S3 {
     private var key: String? = null
     private var secretKey: String? = null
     fun shutdown() {
-        amazonS3Client.shutdown()
+        amazonS3Client!!.shutdown()
     }
 
     fun init() {
         try {
-            val `is`: InputStream = StoreUtil.getClassLoaderFile("kr/co/pplus/store/config/rootkey.csv")
-            val prop = Properties()
-            prop.load(`is`)
-            key = prop.getProperty("AWSAccessKeyId")
-            secretKey = prop.getProperty("AWSSecretKey")
-            bucket = prop.getProperty("AWSBucket")
-            region = prop.getProperty("AWSRegion")
-            `is`.close()
-            val credentials = BasicAWSCredentials(key, secretKey)
-            val credentialsProvider = AWSStaticCredentialsProvider(credentials)
-            amazonS3Client =
-                AmazonS3ClientBuilder.standard().withCredentials(credentialsProvider).withRegion(region).build()
+            "kr/co/pplus/store/config/rootkey.csv".asResource {
+                val prop = Properties()
+                prop.load(ByteArrayInputStream(it.toByteArray()))
+                key = prop.getProperty("AWSAccessKeyId")
+                secretKey = prop.getProperty("AWSSecretKey")
+                bucket = prop.getProperty("AWSBucket")
+                region = prop.getProperty("AWSRegion")
+                val credentials = BasicAWSCredentials(key, secretKey)
+                val credentialsProvider = AWSStaticCredentialsProvider(credentials)
+                amazonS3Client =
+                    AmazonS3ClientBuilder.standard().withCredentials(credentialsProvider).withRegion(region).build()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -55,18 +62,18 @@ class S3 {
     }
 
     fun putS3(uploadFile: File?, fileKey: String?): String {
-        amazonS3Client.putObject(
+        amazonS3Client!!.putObject(
             PutObjectRequest(
                 bucket,
                 fileKey,
                 uploadFile
             ).withCannedAcl(CannedAccessControlList.PublicRead)
         )
-        return amazonS3Client.getUrl(bucket, fileKey).toString()
+        return amazonS3Client!!.getUrl(bucket, fileKey).toString()
     }
 
     fun removeS3(fileKey: String?) {
-        amazonS3Client.deleteObject(DeleteObjectRequest(bucket, fileKey))
+        amazonS3Client!!.deleteObject(DeleteObjectRequest(bucket, fileKey))
     }
 
     fun removeNewFile(targetFile: File) {
@@ -89,7 +96,7 @@ class S3 {
 
     companion object {
         private var s3Instace: S3? = null
-        private val logger: Logger = LoggerFactory.getLogger(BuyController::class.java)
+        private val logger: KLogger= KotlinLogging.logger(S3::class.java.name)
         val instance: S3?
             get() = if (s3Instace == null) {
                 s3Instace = S3()
@@ -99,12 +106,13 @@ class S3 {
                 s3Instace
             }
 
+        // Just for Test
         @JvmStatic
         fun main(argv: Array<String>) {
             try {
                 val path = "/Users/peter/Documents/web/eventBanner/2019/05/30/1559188716172_904969.jpg"
                 val file = File(path)
-                System.out.println(kr.co.pplus.store.util.S3.getInstance().putS3(file, "web/tmp/test2.jpg"))
+                System.out.println(S3.instance!!.putS3(file, "web/tmp/test2.jpg"))
             } catch (e: Exception) {
                 e.printStackTrace()
             }

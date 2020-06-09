@@ -6,11 +6,14 @@ import kr.co.korbit.common.conf.ApplicationConfigValue
 import kr.co.korbit.common.conf.HoconApplicationConfig
 import kr.co.korbit.gia.jpa.common.UserStatus
 import kr.co.korbit.gia.jpa.test.model.Session
-import java.util.Locale
 import mu.KotlinLogging
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 private val logger = KotlinLogging.logger {}
@@ -27,7 +30,6 @@ class Env {
         var branch = "local"
 
         val appConfig = HoconApplicationConfig(ConfigFactory.load("application.conf"))
-        val messageConfig = HoconApplicationConfig(ConfigFactory.load("i18n/" + lang))
         val greeting: String = "HELLO This is Kobit's API server!"
         val normalClosureMessage: String = "Normal closure"
 
@@ -83,34 +85,8 @@ class Env {
             )
         }
 
-        fun isValidWebsocketMessage(input: String): Boolean {
+        fun isValidCoinInfoJson(input: String): Boolean {
             return input.replace("[0-9a-zA-Z_\\s\"{},\\.\\:\\[\\]]+".toRegex(),"").isEmpty()
-        }
-
-        fun messageProp(key: String): ApplicationConfigValue? {
-            try {
-                val idx: Int = key.lastIndexOf(".")
-                val group: String = key.substring(0, idx)
-                val key: String = key.substring(idx + 1)
-                return Env.messageConfig.config(group).property(key)
-            }catch(e: Throwable) {
-                logger.error( "Env.message : " +  e.stackTrace)
-                return null
-            }
-        }
-
-        fun message(key: String): String {
-            try {
-                val idx: Int = key.lastIndexOf(".")
-                val group: String = key.substring(0, idx)
-                val key: String = key.substring(idx + 1)
-                logger.debug("Evn.message - group : " + group)
-                logger.debug("Evn.message - key : " + key)
-                return Env.messageConfig.config(group).property(key).getString()
-            }catch(e: Throwable) {
-                logger.error( "Env.message : " +  e.stackTrace)
-                return ""
-            }
         }
     }
 }
