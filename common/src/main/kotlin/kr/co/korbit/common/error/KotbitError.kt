@@ -8,6 +8,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 val logger = KotlinLogging.logger {}
+
 class KorbitError(
     val code: String,
     var description: String,

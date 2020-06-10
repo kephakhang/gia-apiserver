@@ -38,6 +38,9 @@ class User (
     @Column(name = "reset_password_sent_at")
     var reset_password_sent_at: LocalDateTime? = null,
 
+    @Column(name = "remember_created_at")
+    var remember_created_at: LocalDateTime? = null,
+
     @Column(name = "sign_in_count")
     var sign_in_count: Int,
 

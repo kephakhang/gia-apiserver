@@ -1,6 +1,4 @@
 package kr.co.korbit.gia.exception
 
-import org.springframework.http.HttpStatus
-
-class NotFoundException(vararg args: Any?) : InternalException(*args){
+class NotFoundException(cause: Throwable, vararg args: Any?) : InternalException(cause, *args){
 }

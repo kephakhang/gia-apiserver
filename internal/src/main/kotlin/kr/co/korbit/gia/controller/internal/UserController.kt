@@ -1,5 +1,10 @@
 package kr.co.korbit.gia.controller.internal
 
+import kr.co.korbit.gia.annotation.SkipSessionCheck
+import kr.co.korbit.gia.env.Env
+import kr.co.korbit.gia.jpa.common.Ok
+import kr.co.korbit.gia.jpa.common.Response
+import kr.co.korbit.gia.jpa.test.model.Session
 import kr.co.korbit.gia.jpa.test.model.User
 import kr.co.korbit.gia.jpa.test.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,9 +20,12 @@ class UserController {
     @Autowired
     val userService: UserService? = null
 
+    @SkipSessionCheck
     @GetMapping
-    fun getUser(@RequestParam("id") id: Long): User? {
+    fun getUser(/* session: Session , */ @RequestParam("id") id: Long): Any? {
 
-        return userService?.getUser(id)
+        //Env.objectMapper.writeValueAsString(session)
+
+        return Ok(userService?.getUser(id))
     }
 }

@@ -22,6 +22,8 @@ log.txt
 npm-debug.log*
 
 .gradle
+build/
+dist/
 /build
 /.idea
 /.ionic

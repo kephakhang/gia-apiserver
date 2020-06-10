@@ -1,20 +1,24 @@
 @file:Suppress("NAME_SHADOWING")
 package kr.co.korbit.gia.env
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.typesafe.config.ConfigFactory
-import kr.co.korbit.common.conf.ApplicationConfigValue
 import kr.co.korbit.common.conf.HoconApplicationConfig
 import kr.co.korbit.gia.jpa.common.UserStatus
 import kr.co.korbit.gia.jpa.test.model.Session
 import mu.KotlinLogging
-import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+
 
 private val logger = KotlinLogging.logger {}
 
@@ -33,6 +37,27 @@ class Env {
         val greeting: String = "HELLO This is Kobit's API server!"
         val normalClosureMessage: String = "Normal closure"
 
+        var objectMapper: ObjectMapper = ObjectMapper()
+
+        init {
+            val javaTimeModule = JavaTimeModule()
+            // Hack time module to allow 'Z' at the end of string (i.e. javascript json's)
+            javaTimeModule.addDeserializer(
+                LocalDateTime::class.java,
+                LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME)
+            )
+            objectMapper.registerModule(javaTimeModule)
+            //objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
+            objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true)
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            objectMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+            objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+        }
+
         fun getTestSession(): Session {
             return Session(
                 "3c9aa398-0004-4324-a826-8c7fdaae633c",
@@ -41,7 +66,9 @@ class Env {
                 "$2a$13$4NNAyWx81NJX2w3Z1j0YoOT9/HizPH1UR354/i11CunXDmAKeKB/a",
                 null,
                 null,
-                null, 0,
+                null,
+                null,
+                0,
                 null,
                 null,
                 null,

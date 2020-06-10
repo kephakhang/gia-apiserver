@@ -62,11 +62,11 @@ class WebMvcConfig : WebMvcConfigurer {
     }
 
 
-    @Bean
-    fun loggingFilter(): javax.servlet.Filter {
-        val filter: LoggingFilter = LoggingFilter()
-        return filter
-    }
+//    @Bean
+//    fun loggingFilter(): javax.servlet.Filter {
+//        val filter: LoggingFilter = LoggingFilter()
+//        return filter
+//    }
 
     @Bean
     fun webServerFactoryCustomizer(): WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
@@ -119,7 +119,7 @@ class WebMvcConfig : WebMvcConfigurer {
     override fun addReturnValueHandlers(list: List<HandlerMethodReturnValueHandler>) {}
     override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>?>) {
         val builder = Jackson2ObjectMapperBuilder()
-        builder.indentOutput(true).dateFormat(SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+        builder.indentOutput(true).dateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
         converters.add(MappingJackson2HttpMessageConverter(builder.build()))
     }
 

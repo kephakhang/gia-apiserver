@@ -12,7 +12,8 @@ class UserService {
 
     fun getUser(id: Long): User? {
         usersRepository?.let {
-            return it.findById(id).get()
+            val user:User? = it.findById(id).get()
+            return user
         }
         return null
     }

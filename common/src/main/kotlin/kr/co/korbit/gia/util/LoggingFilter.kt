@@ -1,15 +1,11 @@
 package kr.co.korbit.gia.util
 
 import kr.co.korbit.common.extensions.stackTraceString
-import kr.co.korbit.common.extensions.traceString
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
-import org.springframework.web.context.request.RequestContextHolder
-import org.springframework.web.context.request.ServletRequestAttributes
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicLong
 import javax.servlet.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -44,15 +40,8 @@ class LoggingFilter : Filter {
         try {
 
             if ( "/(health|.+\\.(ico|js|css|html|jpg|jpeg|png|gif|svg))".toRegex().containsMatchIn(requestUri) ) {
-                req!!.setAttribute("ignoreLogging", true)
+                req.setAttribute("ignoreLogging", true)
             }
-
-            //logger.debug( "###request### : " + req.getRequestURI() + req.getAttribute("systemBaseUrl")) ;
-            val msg = StringBuilder()
-            msg.append(CRLF).append("################################")
-                .append(CRLF).append(REQUEST_PREFIX)
-                .append(requestUri).append(":").append("--:" + requestId + ":--")
-            logger.debug(msg.toString())
             chain.doFilter(req, res)
         } catch (ex: ServletException) {
             isException = true
@@ -81,20 +70,20 @@ class LoggingFilter : Filter {
         }
     }
 
-    private fun isMultipart(request: HttpServletRequest?): Boolean {
-        return (request!!.contentType != null
+    private fun isMultipart(request: HttpServletRequest): Boolean {
+        return (request.contentType != null
                 && request.contentType.startsWith("multipart/form-data"))
     }
 
-    private fun isFormSubmit(request: HttpServletRequest?): Boolean {
-        return (request!!.contentType != null
+    private fun isFormSubmit(request: HttpServletRequest): Boolean {
+        return (request.contentType != null
                 && request.contentType.startsWith(
             "application/x-www-form-urlencoded"
         ))
     }
 
-    private fun getAuthKey(request: HttpServletRequest?): String? {
-        var authKey = request!!.getHeader("Authorization")
+    private fun getAuthKey(request: HttpServletRequest): String? {
+        var authKey = request.getHeader("Authorization")
         if (authKey == null || authKey.isEmpty()) {
             val cookies = request.cookies
             if (cookies != null) {
@@ -125,7 +114,7 @@ class LoggingFilter : Filter {
         if (!isHtml(requestUri)) incRes = true
         if (isMultipart(request)) {
             val tm = StringBuilder()
-            val en: Enumeration<*> = request!!.headerNames
+            val en: Enumeration<*> = request.headerNames
             tm.append(CRLF).append("Request Header").append(CRLF)
             while (en.hasMoreElements()) {
                 val hn = en.nextElement() as String
@@ -136,19 +125,19 @@ class LoggingFilter : Filter {
         }
         if (logging) {
             val msg = StringBuilder()
-            val reqUri = request!!.requestURI
+            val reqUri = request.requestURI
             if (reqUri.contains("Payment") || reqUri.contains("INIpay") || reqUri.contains("payment")) incRes = true
             if (!isException) {
 
-				msg.append(CRLF).append("################################")
+				msg.append(CRLF).append("################################").append("--:" + requestId + ":--[")
 						.append(CRLF).append(REQUEST_PREFIX)
 					.append(CRLF).append(REQUEST_PREFIX)
-					.append(reqUri).append(":").append("--:" + requestId + ":--");
+					.append(reqUri).append(":")
 
             } else {
-                msg.append(CRLF).append("###Exception####################")
+                msg.append(CRLF).append("###Exception####################").append("--:" + requestId + ":--[")
                     .append(CRLF).append(REQUEST_PREFIX)
-                    .append(reqUri).append(":").append("--:" + requestId + ":--")
+                    .append(reqUri).append(":")
             }
             if (request.queryString != null
                 && !request.queryString.isEmpty()
@@ -159,18 +148,23 @@ class LoggingFilter : Filter {
                 msg.append(CRLF).append("SESSION ID: ").append(session.id)
             }
             val authKey = getAuthKey(request)
-            if (authKey!!.isNotEmpty()) {
-                msg.append(CRLF).append("authKey: ").append(authKey)
+            authKey ?.let {
+                if (it.isNotEmpty()) {
+                    msg.append(CRLF).append("authKey: ").append(authKey).append(CRLF)
+                }
             }
 
+            var ip: String? = req.getHeader("X-FORWARDED-FOR")
+            if (ip == null) ip = req.getRemoteAddr()
 
-            /*msg.append(CRLF).append("Remote-IP: ")
-					.append(ThcUtil.getClientIP(request));*/msg.append(CRLF)
-                .append("Content-Type: ")
-                .append(request.contentType)
+            ip?.let {
+                msg.append(CRLF).append("Remote-IP: ")
+                    .append(ip).append(CRLF)
+            }
+
+            msg.append("Content-Type: ").append(request.contentType)
             if (!isMultipart(request)) {
-                msg.append(CRLF).append("Request Body: ").append(reqUri).append(":")
-                    .append("--:" + requestId + ":--").append(CRLF)
+                msg.append(CRLF).append("Request Body: ").append(reqUri).append(":").append(CRLF)
                 if (isFormSubmit(request)) {
                     var firstParam = true
                     val e: Enumeration<*> = request.parameterNames
@@ -190,7 +184,7 @@ class LoggingFilter : Filter {
                         }
                     }
                 } else {
-                    msg.append(request.traceString().toByte())
+                    msg.append(String(RequestWrapper(request).toByteArray()))
                 }
             }
             msg.append(CRLF).append("Elapsed Time: ")
@@ -202,9 +196,9 @@ class LoggingFilter : Filter {
             if (!isException && incRes) {
                 msg.append(CRLF).append("-------------------------------")
                     .append(CRLF).append(RESPONSE_PREFIX)
-                msg.append(CRLF).append(ResponseWrapper(response).toByteArray())
+                msg.append(CRLF).append(String(ResponseWrapper(response).toByteArray()))
             }
-            msg.append(CRLF).append("################################").append("--:" + requestId + ":--")
+            msg.append(CRLF).append("################################").append("--:" + requestId + ":--]")
             if (isException) {
                 logger.error(
                     msg.toString().replace("\\t".toRegex(), "\t").replace("\\n".toRegex(), "\n")

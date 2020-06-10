@@ -2,7 +2,7 @@ package kr.co.korbit.gia.exception
 
 import org.springframework.http.HttpStatus
 
-open class InternalException(vararg args: Any?) : Exception(){
+open class InternalException(cause: Throwable?, vararg args: Any?) : Exception(cause){
     val httpStatus: HttpStatus = HttpStatus.OK
     private val serialVersionUID = 1756502187423843041L
 
