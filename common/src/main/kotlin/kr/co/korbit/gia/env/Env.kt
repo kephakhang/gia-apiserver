@@ -12,6 +12,7 @@ import kr.co.korbit.common.conf.HoconApplicationConfig
 import kr.co.korbit.gia.jpa.common.UserStatus
 import kr.co.korbit.gia.jpa.test.model.Session
 import mu.KotlinLogging
+import org.apache.kafka.common.protocol.types.ArrayOf
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -20,7 +21,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 
-private val logger = KotlinLogging.logger {}
+private val logger = KotlinLogging.logger(Env::class.java.name)
 
 class Env {
     companion object {
@@ -44,7 +45,7 @@ class Env {
             // Hack time module to allow 'Z' at the end of string (i.e. javascript json's)
             javaTimeModule.addDeserializer(
                 LocalDateTime::class.java,
-                LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME)
+                LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))
             )
             objectMapper.registerModule(javaTimeModule)
             //objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
@@ -55,7 +56,7 @@ class Env {
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
             objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-            objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+            objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
         }
 
         fun getTestSession(): Session {
@@ -86,7 +87,7 @@ class Env {
                 null,
                 null,
                 null,
-                LocalDateTime.parse("2020-04-23 08:28:26", DateTimeFormatter.ISO_DATE_TIME),
+                LocalDateTime.parse("2020-04-23T08:28:26.000", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")),
                 LocalDate.parse("1969-01-01", DateTimeFormatter.ISO_DATE),
                 "m",
                 "0",
@@ -97,23 +98,30 @@ class Env {
                 null,
                 null,
                 null,
-                LocalDateTime.parse("2020-04-23 08:31:55", DateTimeFormatter.ISO_DATE_TIME),
+                LocalDateTime.parse("2020-04-23T08:31:55.000", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")),
                 "verification_success",
                 "KORBIT20200423083011744",
                 23177,
-                LocalDateTime.parse("2020-04-23 08:31:55", DateTimeFormatter.ISO_DATE_TIME),
+                LocalDateTime.parse("2020-04-23T08:31:55.000", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")),
                 null,
                 "",
                 UserStatus.registered,
                 1L,
-                false,
                 true,
-                true
+                true,
+                false
             )
         }
 
         fun isValidCoinInfoJson(input: String): Boolean {
             return input.replace("[0-9a-zA-Z_\\s\"{},\\.\\:\\[\\]]+".toRegex(),"").isEmpty()
         }
+
+
+        @JvmStatic fun main(argv: List<String>) {
+            System.out.println(LocalDateTime.parse("2020-04-23T08:28:26.000", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")).toString())
+        }
+
     }
 }
+

@@ -10,4 +10,5 @@ import java.util.*
 @Transactional(transactionManager = "jpaTestTransactionManager")
 interface UserRepository : JpaRepository<User, Long> {
     override fun findById(id: Long): Optional<User>
+    fun findByFailed_attemptsAfter(attempt: Int): List<User>
 }

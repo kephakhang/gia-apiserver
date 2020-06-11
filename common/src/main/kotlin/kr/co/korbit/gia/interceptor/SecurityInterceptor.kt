@@ -9,10 +9,8 @@ import javax.servlet.http.HttpServletResponse
 
 class SecurityInterceptor : HandlerInterceptorAdapter() {
 
-    companion object {
-        private val logger = KotlinLogging.logger(SecurityInterceptor::class.java.name)
-        private const val PAGE_URL = "pageUrl"
-    }
+    private val logger = KotlinLogging.logger(SecurityInterceptor::class.java.name)
+    val PAGE_URL = "pageUrl"
 
     @Throws(Exception::class)
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
@@ -20,8 +18,8 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
         val uri = request.requestURI
         //val session = request.session
         return try {
-            println("method : " + request.method)
-            println("uri : $uri")
+            logger.debug("method : " + request.method)
+            logger.debug("uri : $uri")
             if (request.method.toUpperCase() == "OPTIONS") {
                 if (uri.startsWith("/gia/") || uri.startsWith("/api/")) {
                     response.reset()

@@ -1,19 +1,14 @@
 package kr.co.korbit.gia.aop
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import kr.co.korbit.common.error.ErrorCode
 import kr.co.korbit.common.error.KorbitError
 import kr.co.korbit.common.extensions.stackTraceString
-import kr.co.korbit.gia.annotation.AdminSessionUser
-import kr.co.korbit.gia.annotation.AgentSessionUser
 import kr.co.korbit.gia.annotation.SkipSessionCheck
 import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.exception.SessionNotFoundException
 import kr.co.korbit.gia.jpa.common.Response
 import kr.co.korbit.gia.jpa.test.model.Session
-import kr.co.korbit.gia.jpa.test.service.AuthService
 import kr.co.korbit.gia.util.KeyGenerator
 import kr.co.korbit.gia.util.RequestWrapper
 import mu.KotlinLogging
@@ -25,6 +20,7 @@ import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import java.lang.reflect.Method
@@ -32,7 +28,6 @@ import java.lang.reflect.ParameterizedType
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 
 private val logger = KotlinLogging.logger(ControllerProxy::class.java.name)
@@ -40,13 +35,13 @@ private val logger = KotlinLogging.logger(ControllerProxy::class.java.name)
 @Aspect
 @Configuration
 class ControllerProxy {
-//    val gson: Gson = GsonBuilder().setPrettyPrinting().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()
+//    val gson: Gson = GsonBuilder().setPrettyPrinting().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").create()
     val CRLF = "\n"
     val REQUEST_PREFIX = "Request: "
     val RESPONSE_PREFIX = "Response: "
 
     @Autowired
-    var context: ApplicationContext? = null
+    lateinit var context: ApplicationContext
 
     @Throws(Throwable::class)
     fun checkOAuth2(call: ProceedingJoinPoint, req: HttpServletRequest, method: Method) {
@@ -81,41 +76,6 @@ class ControllerProxy {
 
     }
 
-    @Throws(SessionNotFoundException::class)
-    fun checkSession(call: ProceedingJoinPoint, req: HttpServletRequest, method: Method): Session? {
-        val req: HttpServletRequest =
-            (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request
-        var authKey = req.getHeader("Authorization")
-        if (authKey == null || authKey.isEmpty()) {
-            req.cookies?.let {
-                for (cookie in it) {
-                    if (cookie.name.equals("Korbit-Authorization", ignoreCase = true)) {
-                        authKey = cookie.value
-                        break
-                    }
-                }
-            }
-            if (authKey == null || authKey.isEmpty())
-                authKey = req.getParameter("Authorization")
-        }
-
-        val authService: AuthService = context!!.getBean(AuthService::class.java)
-        MDC.put("authKey", authKey ?: "NULL")
-        try {
-            if (method.isAnnotationPresent(SkipSessionCheck::class.java)) {
-                return null
-            } else if (method.isAnnotationPresent(AgentSessionUser::class.java)) {
-                return authService.checkAgentAuth(authKey)
-            } else if (method.isAnnotationPresent(AdminSessionUser::class.java)) {
-                return authService.checkAdminAuth(authKey)
-            } else { // public session
-                return authService.checkAuth(authKey)
-            }
-        } catch(ex: Exception) {
-            throw SessionNotFoundException(ex)
-        }
-    }
-
     private fun isHtml(requestUri: String): Boolean {
         return try {
             if ( "/(.+\\.(ico|js|css|html|jpg|jpeg|png|gif|svg))".toRegex().containsMatchIn(requestUri) ) true else false
@@ -142,7 +102,6 @@ class ControllerProxy {
         requestUri: String,
         isException: Boolean,
         req: HttpServletRequest,
-        res: HttpServletResponse,
         response: Any?
     ) {
         val logging = true
@@ -226,7 +185,6 @@ class ControllerProxy {
     }
 
     @Around("execution(* kr.co.korbit.gia.controller.internal.*.*(..)) || execution(* kr.co.korbit.gia.controller.public.*.*(..)) || execution(* kr.co.korbit.gia.controller.admin.*.*(..))")
-    @Throws(Throwable::class)
     fun around(call: ProceedingJoinPoint): Any? {
         var response: Any? = null
         val sig = call.signature as MethodSignature
@@ -234,8 +192,6 @@ class ControllerProxy {
         val args = call.args
         val req: HttpServletRequest =
             (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request
-        val res: HttpServletResponse =
-            (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).response
         val requestId: String = KeyGenerator.generateOrderNo()
         val requestUri: String = req.requestURI
         val startTime = System.nanoTime()
@@ -245,10 +201,9 @@ class ControllerProxy {
         try {
             logger.debug("around AOP in : $args")
 
-            val session: Session? = checkSession(call, req, method)
-
             // session 값을 필요한 경우 Controller 의 RestApi 함수 파라미터로 자동 injection
-            session?.let {
+            var session: Session? = null
+            if( !method.isAnnotationPresent(SkipSessionCheck::class.java) ) {
                 val genericParameterTypes = method.genericParameterTypes
                 val returnType = method.returnType
                 val i = 0
@@ -258,12 +213,17 @@ class ControllerProxy {
                     } else {
                         val cls = genericParameterType as Class<*>
                         if (Session::class.java.isAssignableFrom(cls)) {
-                            args[i] = session
+                            session = args[i] as Session
                             break
                         }
                     }
                 }
+
+                if( session == null ) {
+                    throw SessionNotFoundException(Exception("SessionNotFound"))
+                }
             }
+
 
             val res: Any? = call.proceed(args)
             when( res ) {
@@ -311,7 +271,6 @@ class ControllerProxy {
                                 requestUri,
                                 isException,
                                 req,
-                                res,
                                 response)
                 }
             }

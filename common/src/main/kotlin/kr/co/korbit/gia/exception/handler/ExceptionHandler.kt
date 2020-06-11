@@ -16,10 +16,10 @@ import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import javax.servlet.http.HttpServletRequest
 
-val logger = KotlinLogging.logger(RestResponseEntityExceptionHandler::class.java.name)
+val logger = KotlinLogging.logger(ExceptionHandler::class.java.name)
 
 @ControllerAdvice
-class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
+class ExceptionHandler : ResponseEntityExceptionHandler() {
     //========================================================================================================
     //  Handle intentional exceptions
     //========================================================================================================

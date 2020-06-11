@@ -2,9 +2,16 @@ package kr.co.korbit.gia.config
 
 
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import kr.co.korbit.gia.interceptor.SecurityInterceptor
-import kr.co.korbit.gia.util.LoggingFilter
 import org.modelmapper.ModelMapper
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
@@ -27,6 +34,8 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -41,6 +50,26 @@ class WebMvcConfig : WebMvcConfigurer {
         arrayOf(
             "classpath:/static/"
         )
+
+    @Bean
+    fun objectMapper(): ObjectMapper? {
+        return ObjectMapper()
+            .setAnnotationIntrospector(JacksonAnnotationIntrospector())
+            .registerModule(JavaTimeModule().addDeserializer(
+                LocalDateTime::class.java,
+                LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))
+            ))
+            .setDateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"))
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .enable(SerializationFeature.INDENT_OUTPUT)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+    }
 
     @Bean
     fun securityInterceptor(): MappedInterceptor {
@@ -114,13 +143,34 @@ class WebMvcConfig : WebMvcConfigurer {
     override fun addCorsMappings(corsRegistry: CorsRegistry) {}
     override fun addViewControllers(viewControllerRegistry: ViewControllerRegistry) {}
     override fun configureViewResolvers(viewResolverRegistry: ViewResolverRegistry) {}
-    override fun addArgumentResolvers(list: MutableList<HandlerMethodArgumentResolver>) {}
+
+    @Autowired
+    private lateinit var unifiedArgumentResolver: UnifiedArgumentResolver
+
+    override fun addArgumentResolvers(list: MutableList<HandlerMethodArgumentResolver>) {
+        list.add(unifiedArgumentResolver)
+    }
 
     override fun addReturnValueHandlers(list: List<HandlerMethodReturnValueHandler>) {}
     override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>?>) {
-        val builder = Jackson2ObjectMapperBuilder()
-        builder.indentOutput(true).dateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
-        converters.add(MappingJackson2HttpMessageConverter(builder.build()))
+
+        val jacksonMessageConverter = MappingJackson2HttpMessageConverter()
+        jacksonMessageConverter.objectMapper.setAnnotationIntrospector(JacksonAnnotationIntrospector())
+            .registerModule(JavaTimeModule().addDeserializer(
+                LocalDateTime::class.java,
+                LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))
+            ))
+            .setDateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"))
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .enable(SerializationFeature.INDENT_OUTPUT)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            converters.add(jacksonMessageConverter)
     }
 
     override fun getValidator(): Validator? {
