@@ -22,11 +22,11 @@ abstract class AbstractJpaPersistable {
 
     @CreatedDate
     @Column(name="created_at")
-    var created_at: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
+    var createdAt: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
 
     @LastModifiedDate
     @Column(name="updated_at")
-    var updated_at: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
+    var updatedAt: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
 
 
     override fun equals(other: Any?): Boolean {

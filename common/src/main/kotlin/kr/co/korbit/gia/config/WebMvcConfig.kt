@@ -69,6 +69,7 @@ class WebMvcConfig : WebMvcConfigurer {
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+
     }
 
     @Bean
@@ -137,6 +138,12 @@ class WebMvcConfig : WebMvcConfigurer {
 
         registry.addResourceHandler("/**")
             .addResourceLocations(RESOURCE_LOCATIONS[0])
+
+        registry.addResourceHandler("swagger-ui.html")
+            .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+            .addResourceLocations("classpath:/META-INF/resources/webjars/");
 
     }
 

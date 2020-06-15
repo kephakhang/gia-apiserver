@@ -3,11 +3,12 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
     }
     
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springboot_version"
+        classpath "org.springframework.plugin:spring-plugin-core:$spring_plugin_version"
         classpath "io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:$spring_management_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
@@ -46,8 +47,8 @@ repositories {
     mavenCentral()
     mavenLocal()
     jcenter()
-    maven { url "https://kotlin.bintray.com/ktor" }
-    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url = uri("https://kotlin.bintray.com/ktor") }
+    maven { url = uri("https://plugins.gradle.org/m2/") }
 }
 
 dependencies {

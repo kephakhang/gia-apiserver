@@ -1,4 +1,4 @@
-package kr.co.korbit.gia.jpa.test.model
+package kr.co.korbit.gia.jpa.korbit.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import kr.co.korbit.gia.jpa.common.AbstractJpaPersistable
@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
+
 @Entity(name = "Users")
 @Table(name = "korbit.users")
 @Cacheable
@@ -169,7 +170,3 @@ class User (
     var isCorporation: Boolean = false
 ) : AbstractJpaPersistable(){
 }
-
-typealias Session = User
-typealias Agent = User
-typealias Admin = User

@@ -12,6 +12,7 @@ spring:
   jackson:
     date-format: "yyyy-MM-dd'T'HH:mm:ss.SSS"
     time-zone: "Etc/UTC"
+    property-naming-strategy: SNAKE_CASE
   http:
     encoding:
   mvc:
@@ -49,6 +50,9 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+        naming:
+          implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+          physical-strategy: kr.co.korbit.gia.config.CamelCaseToSnakeCaseNamingStrategy
     database-platform: org.hibernate.dialect.MySQL57Dialect
     database: mysql
     generate-ddl: false

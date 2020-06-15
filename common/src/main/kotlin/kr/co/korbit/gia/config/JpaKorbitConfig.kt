@@ -33,9 +33,10 @@ class JpaKorbitConfig {
     val dialect = "org.hibernate.dialect.MySQL57Dialect"
     var ddlAuto = "validate"
     var showSql = "true"
+    var formatSql = "true"
     var useNewIdGeneratorMappings = "false"
-    var implicitStrategy = "org.hibernate.cfg.ImprovedNamingStrategy"
-    var physicalStrategy = "org.hibernate.cfg.ImprovedNamingStrategy"
+    var implicitStrategy = "kr.co.korbit.gia.config.CamelCaseToSnakeCaseNamingStrategy"
+    var physicalStrategy = "kr.co.korbit.gia.config.CamelCaseToSnakeCaseNamingStrategy"
 
     @Autowired(required = false)
     private val persistenceUnitManager: PersistenceUnitManager? = null
@@ -63,6 +64,7 @@ class JpaKorbitConfig {
         val properties = HashMap<String, String?>()
         properties["hibernate.ddl-auto"] = ddlAuto
         properties["show-sql"] = showSql
+        properties["format-sql"] = formatSql
         properties["hibernate.naming.implicit-strategy}"] = implicitStrategy
         properties["hibernate.naming.physical-strategy}"] = physicalStrategy
         properties["hibernate.use-new-id-generator-mappings"] = useNewIdGeneratorMappings

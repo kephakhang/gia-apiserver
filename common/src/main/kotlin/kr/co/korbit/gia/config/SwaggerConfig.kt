@@ -3,6 +3,7 @@ package kr.co.korbit.gia.config
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import springfox.documentation.builders.ApiInfoBuilder
+import springfox.documentation.builders.PathSelectors.regex
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.service.ApiInfo
 import springfox.documentation.service.Contact
@@ -22,7 +23,8 @@ class SwaggerConfig {
     fun productApi(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
             .select()
-            .apis(RequestHandlerSelectors.basePackage("kr.co.korbit.gia"))
+            .apis(RequestHandlerSelectors.basePackage("kr.co.korbit.gia.controller"))
+            .paths(regex("/gia.*"))
             .build()
             .apiInfo(this.metaInfo())
     }

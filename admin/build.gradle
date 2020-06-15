@@ -1,11 +1,12 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
     }
 
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springboot_version"
+        classpath "org.springframework.plugin:spring-plugin-core:$spring_plugin_version"
         classpath "io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:$spring_management_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
@@ -50,8 +51,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:$springboot_version")
     implementation("org.springframework.boot:spring-boot-starter-web:$springboot_version")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:$springboot_version")
-    implementation("io.springfox:springfox-swagger2:$swagger_version")
-    implementation("io.springfox:springfox-swagger-ui:$swagger_version")
+//    implementation("io.springfox:springfox-swagger2:$swagger_version")
+//    implementation("io.springfox:springfox-swagger-ui:$swagger_version")
     testImplementation("junit:junit:4.12")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

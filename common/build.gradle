@@ -2,11 +2,13 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
+        maven { url = uri("https://oss.jfrog.org/artifactory/oss-snapshot-local/") }
     }
 
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springboot_version"
+        classpath "org.springframework.plugin:spring-plugin-core:$spring_plugin_version"
         classpath "io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:$spring_management_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
@@ -35,15 +37,10 @@ sourceSets {
 }
 
 repositories {
-    mavenCentral()
-    mavenLocal()
-    jcenter()
-    maven { url "https://kotlin.bintray.com/ktor" }
-    maven { url "https://repo.maven.apache.org/maven2/" }
-    maven { url "https://plugins.gradle.org/m2/" }
-    maven { url "https://kotlin.bintray.com/ktor" }
-    maven { url "https://repo1.maven.org/maven2/" }
 
+    jcenter()
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local/" }
 }
 
 
@@ -72,6 +69,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:$springboot_version")
     implementation("io.springfox:springfox-swagger2:$swagger_version")
     implementation("io.springfox:springfox-swagger-ui:$swagger_version")
+    implementation("io.springfox:springfox-data-rest:$swagger_version")
     testImplementation("junit:junit:$junit_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
