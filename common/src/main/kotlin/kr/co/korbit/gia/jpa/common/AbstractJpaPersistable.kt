@@ -3,6 +3,7 @@ package kr.co.korbit.gia.jpa.common
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.util.ProxyUtils
+import java.io.Serializable
 import java.lang.reflect.Modifier
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -13,7 +14,7 @@ import javax.persistence.*
 
 
 @MappedSuperclass
-abstract class AbstractJpaPersistable {
+abstract class AbstractJpaPersistable: Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

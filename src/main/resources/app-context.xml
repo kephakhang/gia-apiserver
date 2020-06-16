@@ -16,5 +16,6 @@
     <context:property-placeholder properties-ref="yamlProperties"/>
 
     <bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+    <!--bean id="documentationPluginsManagerReplaced" class="kr.co.korbit.gia.config.swagger.DocumentationPluginsManagerReplaced" /-->
 
 </beans>

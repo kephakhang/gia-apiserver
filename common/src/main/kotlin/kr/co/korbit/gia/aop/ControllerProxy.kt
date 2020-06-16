@@ -104,7 +104,6 @@ class ControllerProxy {
         req: HttpServletRequest,
         response: Any?
     ) {
-        val logging = true
         val msg = StringBuilder()
         if (!isException) {
 
@@ -205,10 +204,10 @@ class ControllerProxy {
             var session: Session? = null
             if( !method.isAnnotationPresent(SkipSessionCheck::class.java) ) {
                 val genericParameterTypes = method.genericParameterTypes
-                val returnType = method.returnType
-                val i = 0
+                var i = 0
                 for (genericParameterType in genericParameterTypes) {
                     if (genericParameterType is ParameterizedType) {
+                        i++
                         continue
                     } else {
                         val cls = genericParameterType as Class<*>
@@ -216,6 +215,7 @@ class ControllerProxy {
                             session = args[i] as Session
                             break
                         }
+                        i++
                     }
                 }
 

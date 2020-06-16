@@ -19,14 +19,13 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
 
 @RestController
-@RequestMapping("/quizz")
 class LneQuizzController {
 
     @Autowired
     lateinit var lneQuizzService: LneQuizzService
 
-    @GetMapping
-    fun getLneQuizz(session: Session , @RequestParam("id") id: Long): Any? {
+    @GetMapping("/quizz")
+    fun getLneQuizz(@RequestParam("id") id: Long, session: Session): Any? {
 
         return Ok(lneQuizzService.getLneQuizz(id))
     }

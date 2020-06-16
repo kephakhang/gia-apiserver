@@ -1,13 +1,24 @@
 package kr.co.korbit.gia.jpa.korbit.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import io.swagger.annotations.ApiModel
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
+import org.springframework.validation.annotation.Validated
 import java.time.LocalDateTime
+import javax.annotation.Generated
 import javax.persistence.*
 import kr.co.korbit.gia.jpa.common.AbstractJpaPersistable as AbstractJpaPersistable1
 
-
+/**
+ * subscription information
+ */
+@ApiModel(description = "Korbit Quest Event Entity Model")
+@Validated
+@Generated(
+    value = ["kr.co.korbit"],
+    date = "2020-06-16T17:24:48.045401+09:00[Asia/Seoul]"
+)
 @Entity(name = "LneQuests")
 @Table(name = "korbit.lne_quests")
 @Cacheable

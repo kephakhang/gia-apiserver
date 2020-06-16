@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/white_lists")
 class WhiteListsController {
 
     @Autowired
     val whiteListsRepository: WhiteListsRepository? = null
 
-    @GetMapping
+    @GetMapping("/white_lists")
     fun getWhiteListsByIp(@RequestParam("ip") ip: String): WhiteLists? {
 
         whiteListsRepository?.let {

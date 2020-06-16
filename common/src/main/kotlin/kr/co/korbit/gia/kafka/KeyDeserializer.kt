@@ -19,28 +19,27 @@ class KeyDeserializer(
 
     override fun deserialize(topic: String, data: ByteArray): String {
         return try {
-            data?.let {
-                val key = String(it, Charset.defaultCharset())
-                if( !key.equals(Env.korbit) ) {
-                    if (Env.branch.equals("master")) {
-                        logger.error("unkown kafka event's key : " + key)
-                        return "unknown"
-                    } else {
-                        return Env.korbit
-                    }
+
+            val key = String(data, Charset.defaultCharset())
+            if( !key.equals(Env.korbit) ) {
+                if (Env.branch.equals("master")) {
+                    logger.error("unkown kafka event's key : " + key)
+                    "unknown"
                 } else {
-                    return Env.korbit
+                    Env.korbit
                 }
+            } else {
+                Env.korbit
             }
 
         } catch (e: Throwable) {
 
             if( Env.branch.equals("master") ) {
                 logger.error("Error when deserializing of kafka event's key byte[] to string : " + e.stackTrace)
-                return "unknown"
+                "unknown"
             } else {
                 logger.warn("Error when deserializing of kafka event's key byte[] to string : " + e.stackTrace)
-                return Env.korbit
+                Env.korbit
             }
         }
     }

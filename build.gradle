@@ -44,11 +44,12 @@ sourceSets {
 }
 
 repositories {
-    mavenCentral()
-    mavenLocal()
+//    mavenCentral()
+//    mavenLocal()
     jcenter()
     maven { url = uri("https://kotlin.bintray.com/ktor") }
     maven { url = uri("https://plugins.gradle.org/m2/") }
+    maven { url = uri("https://oss.jfrog.org/oss-snapshot-local/") }
 }
 
 dependencies {
@@ -83,6 +84,11 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-core:$hoplite_version")
     implementation("com.sksamuel.hoplite:hoplite-yaml:$hoplite_version")
     implementation("org.apache.kafka:kafka-clients:$kafka_version")
+    implementation("io.springfox:springfox-swagger2:$swagger_version")
+    implementation("io.springfox:springfox-swagger-ui:$swagger_version")
+    implementation("io.springfox:springfox-data-rest:$swagger_version")
+    implementation("io.springfox:springfox-swagger-common:$swagger_version")
+    implementation("io.springfox:springfox-bean-validators:$swagger_version")
 //    implementation("io.ktor:ktor-jackson:$ktor_version"
 //    implementation("io.github.microutils:kotlin-logging:$kotlin_logging_version"
 //    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$fasterxml_version"

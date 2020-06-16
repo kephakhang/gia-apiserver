@@ -18,16 +18,19 @@ class NumberUtil {
             }
         }
 
-        @JvmOverloads
+        private val hexArray = "0123456789ABCDEF".toCharArray()
         fun bytesToHexString(bytes: ByteArray, upper: Boolean = false): String {
-            val hexArray = if (upper) upperHexArray else lowerHexArray
             val hexChars = CharArray(bytes.size * 2)
-            for (i in bytes.indices) {
-                val v: Int = bytes[i].and(0xFF as Byte) as Int
-                hexChars[i * 2] = hexArray[v ushr 4]
-                hexChars[i * 2 + 1] = hexArray[v and 0x0F]
+            for (j in bytes.indices) {
+                val v = (bytes[j] and 0xFF.toByte()).toInt()
+
+                hexChars[j * 2] = hexArray[v ushr 4]
+                hexChars[j * 2 + 1] = hexArray[v and 0x0F]
             }
-            return String(hexChars)
+            if( upper )
+                return String(hexChars)
+            else
+                return String(hexChars).toLowerCase()
         }
 
         fun isDigit(string: String): Boolean {

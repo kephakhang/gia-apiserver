@@ -39,8 +39,8 @@ sourceSets {
 repositories {
 
     jcenter()
-    maven { url "https://plugins.gradle.org/m2/" }
-    maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local/" }
+    maven { url = uri("https://plugins.gradle.org/m2/") }
+    maven { url = uri("https://oss.jfrog.org/oss-snapshot-local/") }
 }
 
 
@@ -70,6 +70,8 @@ dependencies {
     implementation("io.springfox:springfox-swagger2:$swagger_version")
     implementation("io.springfox:springfox-swagger-ui:$swagger_version")
     implementation("io.springfox:springfox-data-rest:$swagger_version")
+    implementation("io.springfox:springfox-swagger-common:$swagger_version")
+    implementation("io.springfox:springfox-bean-validators:$swagger_version")
     testImplementation("junit:junit:$junit_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

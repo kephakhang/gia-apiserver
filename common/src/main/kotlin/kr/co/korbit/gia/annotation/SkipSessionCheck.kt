@@ -1,7 +1,6 @@
 package kr.co.korbit.gia.annotation
 
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
+import kotlin.annotation.Retention
 
 @Target(
     AnnotationTarget.VALUE_PARAMETER,
@@ -9,5 +8,5 @@ import java.lang.annotation.RetentionPolicy
     AnnotationTarget.PROPERTY_GETTER,
     AnnotationTarget.PROPERTY_SETTER
 )
-@Retention(RetentionPolicy.RUNTIME)
+@Retention
 annotation class SkipSessionCheck 

@@ -10,9 +10,7 @@ open class Response(
     val requestUri: String?,
     val method: String?
 ) {
-
 }
 
 class Ok(override val body: Any?): Response(true, body, null, null, null) {
-
 }

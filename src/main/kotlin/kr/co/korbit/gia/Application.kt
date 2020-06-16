@@ -11,18 +11,19 @@ import kr.co.korbit.gia.util.Firebase
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.ApplicationPidFileWriter
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Import
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
-
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
+import springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration
 
 @SpringBootApplication
-@Import(value = [JpaKorbitConfig::class, JpaKorbitApiConfig::class, JpaTerraConfig::class, SwaggerConfig::class, WebMvcConfig::class])
+@Import(value = [JpaKorbitConfig::class, JpaKorbitApiConfig::class, JpaTerraConfig::class, SwaggerConfig::class, WebMvcConfig::class, SpringDataRestConfiguration::class])
 class Application {
+
     companion object {
 
         val consumerJobs: ArrayList<BackgroundJob> = ArrayList<BackgroundJob>()

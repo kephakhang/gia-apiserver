@@ -119,7 +119,7 @@ class LoggingFilter : Filter {
             while (en.hasMoreElements()) {
                 val hn = en.nextElement() as String
                 val hv = request.getHeader(hn)
-                if (hn != null && hv != null) tm.append(hn).append(": ").append(hv).append(CRLF)
+                if (hv != null) tm.append(hn).append(": ").append(hv).append(CRLF)
             }
             logger.debug(tm.toString())
         }

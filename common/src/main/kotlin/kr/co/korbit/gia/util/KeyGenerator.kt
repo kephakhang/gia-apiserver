@@ -52,14 +52,13 @@ class KeyGenerator {
      * @return  sha256 암호로 변환된 스트링
      */
         fun sha256(str: String): String? {
-            var SHA: String? = ""
-            SHA = try {
+
+            return try {
                 str.sha256()
             } catch (e: NoSuchAlgorithmException) {
                 e.printStackTrace()
                 null
             }
-            return SHA
         }
 
         /*

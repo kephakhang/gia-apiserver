@@ -78,7 +78,7 @@ class UnifiedArgumentResolver : HandlerMethodArgumentResolver, ApplicationContex
     ): Any? {
 
         return try {
-            if (methodParameter.method.isAnnotationPresent(SkipSessionCheck::class.java)) {
+            if (methodParameter.method!!.isAnnotationPresent(SkipSessionCheck::class.java)) {
                 null
             } else {
                 val session: Session? =

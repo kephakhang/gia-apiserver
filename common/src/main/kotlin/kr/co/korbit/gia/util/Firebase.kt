@@ -55,21 +55,20 @@ class Firebase {
     fun getClassLoaderFile(filename: String?): InputStream? {
         // note that this method is used when initializing logging, so it must
         // not attempt to log anything.
-        var file: File? = null
         val loader = Firebase::class.java.classLoader
         val inputStream = loader.getResourceAsStream(filename)
         return if (inputStream != null) {
             inputStream
         } else {
             var url = loader.getResource(filename)
-            if (url == null) {
+            val file = if (url == null) {
                 url = ClassLoader.getSystemResource(filename)
                 if (url == null) {
                     throw Exception("Unable to find $filename")
                 }
-                file = toFile(url)
+                toFile(url)
             } else {
-                file = toFile(url)
+                toFile(url)
             }
             if (file == null || !file.exists()) {
                 null
@@ -106,21 +105,19 @@ class Firebase {
 
     @Throws(Exception::class)
     fun sendPush(data: Map<String?, String?>, pushKey: String?) {
-        var message: Message? = null
-        var response: String? = null
         try {
             if (pushKey == null) {
                 return
             }
             logger.debug("sendPush message : $data")
-            message =
+            val message =
                 Message.builder()
                     .putAllData(data)
                     .setToken(pushKey)
                     .build()
             logger.info("sendPush Message : $message")
             logger.info("sendPush firebaseMessaging : " + firebaseMessaging.toString())
-            response = firebaseMessaging!!.send(message)
+            val response = firebaseMessaging!!.send(message)
             logger.debug("sendPush response : $response")
         } catch (e: Exception) {
             logger.error("sendPush exception : " + e.stackTraceString)
@@ -136,8 +133,7 @@ class Firebase {
         resultHandler: PushResultHandler?,
         handlerArg: Any?
     ) {
-        var message: MulticastMessage? = null
-        var response: BatchResponse? = null
+
         try {
             logger.debug("sendPush message : $data")
             val pushKeyArr: MutableList<String> = ArrayList()
@@ -145,7 +141,7 @@ class Firebase {
                 logger.info("targetKey : " + target.push_key)
                 pushKeyArr.add(target.push_key)
             }
-            message = MulticastMessage.builder()
+            val message = MulticastMessage.builder()
                 .putAllData(data)
                 .addAllTokens(pushKeyArr)
                 .build()
@@ -155,7 +151,7 @@ class Firebase {
             }
             logger.info("sendPush Message : " + message.toString())
             logger.info("sendPush firebaseMessaging : " + firebaseMessaging.toString())
-            response = firebaseMessaging!!.sendMulticast(message)
+            val response = firebaseMessaging!!.sendMulticast(message)
             if (response != null) {
                 logger.debug("sendPush response : $response")
                 var i = 0

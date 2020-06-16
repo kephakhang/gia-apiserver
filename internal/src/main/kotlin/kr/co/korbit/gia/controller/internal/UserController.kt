@@ -15,14 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/user")
 class UserController {
 
     @Autowired
     val userService: UserService? = null
 
-    @GetMapping
-    fun getUser(session: Session , @RequestParam("id") id: Long): Any? {
+    @GetMapping("/user")
+    fun getUser(@RequestParam("id") id: Long): Any? {
 
         //Env.objectMapper.writeValueAsString(session)
 

@@ -20,14 +20,14 @@ class Message {
         val messageConfig = HoconApplicationConfig(ConfigFactory.load("i18n/" + lang))
 
         fun messageProp(key: String): ApplicationConfigValue? {
-            try {
+            return try {
                 val idx: Int = key.lastIndexOf(".")
                 val group: String = key.substring(0, idx)
-                val key: String = key.substring(idx + 1)
-                return messageConfig.config(group).property(key)
+                val keyname: String = key.substring(idx + 1)
+                messageConfig.config(group).property(keyname)
             }catch(e: Throwable) {
                 logger.error( "Env.message : " +  e.stackTraceString)
-                return null
+                null
             }
         }
 

@@ -20,8 +20,8 @@ class DigestUtil {
         }
 
         fun encryptMD5(str: String): String? {
-            var MD5: String? = ""
-            MD5 = try {
+
+            return try {
                 val md = MessageDigest.getInstance("MD5")
                 md.update(str.toByteArray())
                 val byteData = md.digest()
@@ -30,12 +30,11 @@ class DigestUtil {
                 e.printStackTrace()
                 null
             }
-            return MD5
         }
 
         fun encryptSHA1(str: String): String? {
-            var SHA1: String? = ""
-            SHA1 = try {
+
+            return try {
                 val sh = MessageDigest.getInstance("SHA1")
                 sh.update(str.toByteArray(charset("UTF-8")))
                 val digest = sh.digest()
@@ -47,12 +46,10 @@ class DigestUtil {
                 e.printStackTrace()
                 null
             }
-            return SHA1
         }
 
         fun encryptSHA256(str: String): String? {
-            var SHA256: String? = ""
-            SHA256 = try {
+            return try {
                 val sh = MessageDigest.getInstance("SHA-256")
                 sh.update(str.toByteArray(charset("UTF-8")))
                 val byteData = sh.digest()
@@ -64,7 +61,6 @@ class DigestUtil {
                 e.printStackTrace()
                 null
             }
-            return SHA256
         }
 
         fun encryptSHA256Hmac(deviceNumber: String): String? {
@@ -72,23 +68,22 @@ class DigestUtil {
         }
 
         fun encryptSHA256Hmac(secretKey: String, deviceNumber: String): String? {
-            var SHA256: String? = ""
-            SHA256 = try {
-                val sha256HMAC = Mac.getInstance("HmacSHA256")
-                val secretKey = SecretKeySpec(secretKey.toByteArray(), "HmacSHA256")
+
+            return try {
+                val sha256HMAC: Mac = Mac.getInstance("HmacSHA256")
+                val secretKey: SecretKeySpec = SecretKeySpec(secretKey.toByteArray(), "HmacSHA256")
                 sha256HMAC.init(secretKey)
-                val sha256Result = sha256HMAC.doFinal(deviceNumber.toByteArray())
+                val sha256Result: ByteArray = sha256HMAC.doFinal(deviceNumber.toByteArray())
                 NumberUtil.bytesToHexString(sha256Result)
             } catch (e: Exception) {
                 e.printStackTrace()
                 null
             }
-            return SHA256
         }
 
         fun encryptHMACMD5(secretKey: String, value: String): String? {
-            var digest: String? = ""
-            digest = try {
+
+            return try {
                 val mac = Mac.getInstance("HmacMD5")
                 val secretKey = SecretKeySpec(secretKey.toByteArray(charset("UTF-8")), "HmacMD5")
                 mac.init(secretKey)
@@ -98,7 +93,6 @@ class DigestUtil {
                 e.printStackTrace()
                 null
             }
-            return digest
         }
     }
 }
