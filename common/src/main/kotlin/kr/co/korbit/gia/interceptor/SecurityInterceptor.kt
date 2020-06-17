@@ -21,7 +21,11 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
             logger.debug("method : " + request.method)
             logger.debug("uri : $uri")
             if (request.method.toUpperCase() == "OPTIONS") {
-                if (uri.startsWith("/gia/") || uri.startsWith("/api/")) {
+                if (uri.endsWith(".html") || uri.endsWith(".css") || uri.endsWith(".js") ||
+                    uri.endsWith(".jpg") || uri.endsWith(".gif") || uri.endsWith(".png") ||
+                    uri.endsWith(".ico") || uri.endsWith(".svg") ||
+                    uri.contains("/\\/swagger/".toRegex()) ||
+                    uri.startsWith("/internal/") || uri.startsWith("/public/") || uri.startsWith("/admin/")) {
                     response.reset()
                     response.setHeader("Access-Control-Allow-Origin", "*")
                     response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT")
@@ -41,13 +45,17 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
                     response.contentType = "application/json; charset=utf-8"
                     response.characterEncoding = "utf-8"
                     response.status = HttpServletResponse.SC_UNAUTHORIZED
-                    response.writer.write("{\"success\":false}")
+                    response.writer.write("{\"success\":false, \"description\":\"unknown uri\"}")
                     response.writer.flush()
                     false
                 }
             } else {
                 logger.debug("URI - {}", uri)
-                if (uri.startsWith("/gia/") || uri.startsWith("/api/")) {
+                if (uri.endsWith(".html") || uri.endsWith(".css") || uri.endsWith(".js") ||
+                    uri.endsWith(".jpg") || uri.endsWith(".gif") || uri.endsWith(".png") ||
+                    uri.endsWith(".ico") || uri.endsWith(".svg") ||
+                    uri.contains("/\\/swagger/".toRegex()) ||
+                    uri.startsWith("/internal/") || uri.startsWith("/public/") || uri.startsWith("/admin/")) {
                     response.setHeader("Access-Control-Allow-Origin", "*")
                     response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT")
                     response.setHeader("Access-Control-Max-Age", "3600")
@@ -61,7 +69,7 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
                     response.contentType = "application/json; charset=utf-8"
                     response.characterEncoding = "utf-8"
                     response.status = HttpServletResponse.SC_UNAUTHORIZED
-                    response.writer.write("{\"success\":false}")
+                    response.writer.write("{\"success\":false, \"description\":\"unknown uri\"}")
                     response.writer.flush()
                     false
                 }

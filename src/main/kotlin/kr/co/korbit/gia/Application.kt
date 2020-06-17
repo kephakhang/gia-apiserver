@@ -29,13 +29,12 @@ class Application {
         val consumerJobs: ArrayList<BackgroundJob> = ArrayList<BackgroundJob>()
         val kafkaEventServices: ArrayList<KafkaEventService> = ArrayList<KafkaEventService>()
         lateinit var app: SpringApplication
-        lateinit var appContext: ApplicationContext
 
 
         @JvmStatic fun main(args: Array<String>) {
             TimeZone.setDefault(TimeZone.getTimeZone("Etc/UTC"))
             Env.branch = Env.appConfig.config("app.deployment").property("branch").toString()
-            appContext = runApplication<Application>(*args)
+            Env.appContext = runApplication<Application>(*args)
         }
 
         fun initFirebase(context: ApplicationContext) {
@@ -52,7 +51,7 @@ class Application {
             // Appicable="false" 이면 Consumer 를 띄우지 않는다.
             if (applicable.equals("true")) {
 
-                initFirebase(appContext)
+                initFirebase(Env.appContext)
 
                 val topics: List<String> = Env.appConfig.config("app.kafka.consumer").property("topics").getList()
                 val kafkaEventProducer: KafkaProducer<String, Any> = buildProducer<String, Any>()

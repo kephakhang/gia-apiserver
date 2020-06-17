@@ -22,7 +22,6 @@ import kr.co.korbit.gia.jpa.common.AbstractJpaPersistable as AbstractJpaPersista
 @Entity(name = "LneQuests")
 @Table(name = "korbit.lne_quests")
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class LneQuest (
 
@@ -58,9 +57,8 @@ class LneQuest (
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "quest_id", insertable = false, updatable = false)
-    var lneQuizzes: MutableList<LneQuizz> = mutableListOf()
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lneQuest")
+    var lneQuizzList: MutableList<LneQuizz> = mutableListOf()
 ): AbstractJpaPersistable1() {
     
 }

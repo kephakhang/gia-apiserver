@@ -23,8 +23,8 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     //========================================================================================================
     //  Handle intentional exceptions
     //========================================================================================================
-    @ExceptionHandler(InternalException::class)
-    fun handleInternalException(ex: InternalException, request: WebRequest): ResponseEntity<Any> {
+    @ExceptionHandler(KorbitException::class)
+    fun handleKorbitException(ex: KorbitException, request: WebRequest): ResponseEntity<Any> {
         return handleExceptionInternal(ex, null, HttpHeaders(), HttpStatus.OK, request)
     }
 
@@ -48,43 +48,8 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         var err:KorbitError? = null
 
         when(ex) {
-            is IllegalStateException  -> {
-
-                when(uri) {
-                    "/v1/user" -> {
-                        when(method) {
-                            "GET" -> {
-
-                                err = KorbitError.error(ErrorCode.E10001, (ex as InternalException).argList.toArray())
-                            }
-                            "POST" -> {
-
-                            }
-                            "PUT" -> {
-
-                            }
-                            "DELETE" -> {
-
-                            }
-                        }
-                    }
-                }
-
-            }
-            is NotFoundException -> {
-
-            }
-            is TooManyRequestException -> {
-
-            }
-            is WrongFormatException -> {
-
-            }
-            is InternalException -> {
-
-            }
-            is SessionNotFoundException -> {
-                errCode = ErrorCode.E00003
+            is KorbitException -> {
+                err = KorbitError.error((ex as KorbitException))
             }
             else -> {
 

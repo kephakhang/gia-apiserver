@@ -15,5 +15,9 @@ import java.util.*
 @Transactional(transactionManager = "jpaTestTransactionManager")
 interface LneQuestRepository : JpaRepository<LneQuest, Long> {
     override fun findById(id: Long): Optional<LneQuest>
+    override fun findAll(pageable: Pageable): Page<LneQuest>
+
     fun findAllByCreatedAtBetween(@Param("from")from: LocalDateTime, @Param("to")to: LocalDateTime, pageable: Pageable): Page<LneQuest>
+
+
 }

@@ -9,20 +9,18 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
+import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.interceptor.SecurityInterceptor
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.ImportResource
+import org.springframework.context.ApplicationContext
+import org.springframework.context.annotation.*
 import org.springframework.format.FormatterRegistry
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.StringHttpMessageConverter
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.validation.MessageCodesResolver
 import org.springframework.validation.Validator
@@ -44,7 +42,9 @@ import java.util.*
 @EnableAutoConfiguration
 @ComponentScan("kr.co.korbit.gia")
 @ImportResource("classpath:/app-context.xml")
-class WebMvcConfig : WebMvcConfigurer {
+class WebMvcConfig(
+    val unifiedArgumentResolver: UnifiedArgumentResolver = UnifiedArgumentResolver()
+    ) : WebMvcConfigurer {
 
     private val RESOURCE_LOCATIONS =
         arrayOf(
@@ -100,7 +100,7 @@ class WebMvcConfig : WebMvcConfigurer {
 
     @Bean
     fun webServerFactoryCustomizer(): WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
-        return WebServerFactoryCustomizer { factory -> factory.setContextPath("/gia") }
+        return WebServerFactoryCustomizer { factory -> factory.setContextPath("") }
     }
 
     /*
@@ -151,8 +151,7 @@ class WebMvcConfig : WebMvcConfigurer {
     override fun addViewControllers(viewControllerRegistry: ViewControllerRegistry) {}
     override fun configureViewResolvers(viewResolverRegistry: ViewResolverRegistry) {}
 
-    @Autowired
-    private lateinit var unifiedArgumentResolver: UnifiedArgumentResolver
+//    val unifiedArgumentResolver: UnifiedArgumentResolver = context.getBean(UnifiedArgumentResolver::class.java)
 
     override fun addArgumentResolvers(list: MutableList<HandlerMethodArgumentResolver>) {
         list.add(unifiedArgumentResolver)

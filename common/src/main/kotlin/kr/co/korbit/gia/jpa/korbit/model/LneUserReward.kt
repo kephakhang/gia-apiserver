@@ -11,7 +11,6 @@ import javax.persistence.*
 @Entity(name = "LneUserRewards")
 @Table(name = "korbit.lne_user_rewards")
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class LneUserReward(
     var user_id: Long,
@@ -25,9 +24,17 @@ class LneUserReward(
 
     @Type(type = "yes_no")
     var paid: Boolean,
+
+    @Column(name = "paid_at")
     var paidAt: LocalDateTime,
+
+    @Column(name = "rewarded_amount_in_krw")
     var rewardedAmountInKrw: Double = 0.0,
+
+    @Column(name = "paid_amount_in_krw")
     var paidAmountInKrw: Double = 0.0,
+
+    @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null
 ): AbstractJpaPersistable() {
     

@@ -47,36 +47,31 @@ server:
 spring:
   profiles: jpa
   jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        use_sql_comments: true
-        naming:
-          implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-          physical-strategy: kr.co.korbit.gia.config.CamelCaseToSnakeCaseNamingStrategy
     database-platform: org.hibernate.dialect.MySQL57Dialect
     database: mysql
-    generate-ddl: false
-    open-in-view: false
-    #    mapping-resources:
-    #    properties:
     hibernate:
-      dialect: org.hibernate.dialect.MySQL57Dialect
       ddl-auto: validate
-      use-new-id-generator-mappings: false
-      jdbc:
-        time_zone: UTC
       naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    properties:
+      hibernate:
+#        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        ddl-auto: validate
+        use-new-id-generator-mappings: false
+        jdbc:
+          time_zone: UTC
+          batch_size:
   data:
     rest:
       detection-strategy: annotated
     jpa:
       repositories:
-        #        bootstrap-mode:
         enabled: true
+        #        bootstrap-mode:
 
 ---
 
@@ -238,6 +233,8 @@ logging:
   config: classpath:logback.xml
   level:
     root: info
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
 #    java:
 #      sql: debug
 #      sqlonly: debug

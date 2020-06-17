@@ -9,4 +9,4 @@ import kotlin.annotation.Retention
     AnnotationTarget.PROPERTY_SETTER
 )
 @Retention
-annotation class SkipSessionCheck 
+annotation class SkipSessionCheck

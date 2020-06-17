@@ -1,9 +1,12 @@
 package kr.co.korbit.gia.controller.internal
 
 import io.swagger.annotations.*
+import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.jpa.common.Ok
 import kr.co.korbit.gia.jpa.common.Response
+import kr.co.korbit.gia.jpa.korbit.model.LneQuest
 import kr.co.korbit.gia.jpa.korbit.service.LneQuestService
+import kr.co.korbit.gia.jpa.korbitapi.repository.ClientsRepository
 import kr.co.korbit.gia.jpa.test.model.Session
 import org.jetbrains.annotations.NotNull
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,12 +16,49 @@ import java.time.LocalDateTime
 
 @RestController
 @Api(value = "quest", description = "코빗 quest api")
-class LneQuestController {
+class LneQuestController(
+    val lneQuestService: LneQuestService = Env.appContext.getBean(LneQuestService::class.java)
+): BaseController() {
 
-    @Autowired
-    lateinit var lneQuestService: LneQuestService
+    @ApiOperation(
+        value = "",
+        nickname = "addLneQuest",
+        notes = "신규 quest 정보를 테이블에 추가하기",
+        response = Response::class
+    )
+    @ApiResponses(
+        value = [ApiResponse(
+            code = 201,
+            message = "추가된 quest 정보 응답",
+            response = Response::class
+        )]
+    )
+    @PostMapping(baseUri + "/quest")
+    fun addLneQuest(@RequestBody lneQuest: LneQuest, session: Session): Response? {
 
-    //    @RequestMapping(value = ["/streams"], produces = ["application/json"], method = [RequestMethod.POST])
+        return Ok(lneQuestService.addLneQuest(lneQuest))
+    }
+
+
+    @ApiOperation(
+        value = "",
+        nickname = "getLneQuest",
+        notes = "quest 정보를 수정(update)한다",
+        response = Response::class
+    )
+    @ApiResponses(
+        value = [ApiResponse(
+            code = 201,
+            message = "수정된 quest 정보 응답",
+            response = Response::class
+        )]
+    )
+    @PutMapping(baseUri + "/quest")
+    fun updateLneQuest(@RequestBody lneQuest: LneQuest, session: Session): Response? {
+
+        return Ok(lneQuestService.updateLneQuest(lneQuest))
+    }
+
     @ApiOperation(
         value = "",
         nickname = "getLneQuest",
@@ -32,7 +72,7 @@ class LneQuestController {
             response = Response::class
         )]
     )
-    @GetMapping("/quest")
+    @GetMapping(baseUri + "/quest")
     fun getLneQuest(@ApiParam(
                         value = "quest 의 id(primary key)",
                         required = true
@@ -55,16 +95,9 @@ class LneQuestController {
             response = Response::class
         )]
     )
-    @GetMapping("/quest/list")
-    fun getLneQuestList(@NotNull @ApiParam(
-                            value = "요청기간의 시작 시각",
-                            required = true
-                        ) @RequestParam("from", required = true) from: LocalDateTime,
-                        @NotNull @ApiParam(
-                            value = "요청기간의 종료 시각",
-                            required = true
-                        ) @RequestParam("to", required = true) to: LocalDateTime, pageable: Pageable, session: Session): Response? {
+    @GetMapping(baseUri + "/quest/list")
+    fun getLneQuestList(pageable: Pageable, session: Session): Response? {
 
-        return Ok(lneQuestService.getLneQuestList(from, to, pageable))
+        return Ok(lneQuestService.getLneQuestList(pageable))
     }
 }

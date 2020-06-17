@@ -3,6 +3,7 @@ package kr.co.korbit.common.error
 import com.typesafe.config.ConfigFactory
 import kr.co.korbit.common.conf.ApplicationConfig
 import kr.co.korbit.common.conf.HoconApplicationConfig
+import kr.co.korbit.gia.exception.KorbitException
 import mu.KotlinLogging
 import java.util.*
 import kotlin.collections.HashMap
@@ -39,12 +40,21 @@ class KorbitError(
                     }
 
                 }
-
                 return error
             }catch(e: Throwable) {
                 logger.error( "Env.message : " +  e.stackTrace)
                 throw e
             }
+        }
+
+        fun error(kex: KorbitException): KorbitError? {
+            val error: KorbitError? = error(kex.code, kex.argList.toArray())
+            error?.let {
+                kex.cause?.let {
+                    error.description = it.localizedMessage
+                }
+            }
+            return error
         }
     }
 }

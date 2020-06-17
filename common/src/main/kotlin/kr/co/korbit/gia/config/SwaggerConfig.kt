@@ -48,7 +48,7 @@ class SwaggerConfig {
 
     @Bean
     fun korbitApi(): Docket? {
-        return Docket(DocumentationType.SPRING_WEB)
+        return Docket(DocumentationType.SWAGGER_2)
             .ignoredParameterTypes(Session::class.java)
             .apiInfo(apiInfo())
             .select()

@@ -62,12 +62,13 @@ class JpaKorbitConfig {
         adapter.setDatabasePlatform(dialect)
         adapter.setGenerateDdl(false)
         val properties = HashMap<String, String?>()
-        properties["hibernate.ddl-auto"] = ddlAuto
-        properties["show-sql"] = showSql
-        properties["format-sql"] = formatSql
-        properties["hibernate.naming.implicit-strategy}"] = implicitStrategy
-        properties["hibernate.naming.physical-strategy}"] = physicalStrategy
-        properties["hibernate.use-new-id-generator-mappings"] = useNewIdGeneratorMappings
+//        properties["hibernate.ddl-auto"] = ddlAuto
+//        properties["show-sql"] = showSql
+//        properties["format-sql"] = formatSql
+//        properties["format_sql"] = formatSql
+//        properties["hibernate.naming.implicit-strategy}"] = implicitStrategy
+//        properties["hibernate.naming.physical-strategy}"] = physicalStrategy
+//        properties["hibernate.use-new-id-generator-mappings"] = useNewIdGeneratorMappings
         //builder.setCallback(getVendorCallback());
         return EntityManagerFactoryBuilder(
                 adapter, properties, persistenceUnitManager)
@@ -82,7 +83,7 @@ class JpaKorbitConfig {
         val factory =  builder
                 .dataSource(jpaKorbitDataSource)
 //                .packages("kr.co.korbit.gia.jpa.kotbit.model")
-                .persistenceUnit("gia")
+                .persistenceUnit("korbit")
                 .build()
 
         factory.setPackagesToScan("kr.co.korbit.gia.jpa.korbit.model")

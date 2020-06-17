@@ -72,6 +72,7 @@ dependencies {
     implementation("io.springfox:springfox-data-rest:$swagger_version")
     implementation("io.springfox:springfox-swagger-common:$swagger_version")
     implementation("io.springfox:springfox-bean-validators:$swagger_version")
+    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:$p5spy_version")
     testImplementation("junit:junit:$junit_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

@@ -13,6 +13,7 @@ import kr.co.korbit.gia.jpa.common.UserStatus
 import kr.co.korbit.gia.jpa.test.model.Session
 import mu.KotlinLogging
 import org.apache.kafka.common.protocol.types.ArrayOf
+import org.springframework.context.ApplicationContext
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -25,6 +26,7 @@ private val logger = KotlinLogging.logger(Env::class.java.name)
 
 class Env {
     companion object {
+
         val password = "vmffotvhaxla"
         val korbit = "korbit"
         val connectionsLimit = 10
@@ -33,6 +35,7 @@ class Env {
         var topicLogging: Boolean = false
         val topicLogRollingPeriod: Long = 7L
         var branch = "local"
+        lateinit var appContext: ApplicationContext
 
         val appConfig = HoconApplicationConfig(ConfigFactory.load("application.conf"))
         val greeting: String = "HELLO This is Kobit's API server!"

@@ -25,10 +25,11 @@ import javax.servlet.http.HttpServletRequest
 private val logger = KotlinLogging.logger(UnifiedArgumentResolver::class.java.name)
 
 @Service
-class UnifiedArgumentResolver : HandlerMethodArgumentResolver, ApplicationContextAware {
+class UnifiedArgumentResolver(
+    val authService: AuthService = AuthService()
+) : HandlerMethodArgumentResolver, ApplicationContextAware {
 
-    @Autowired
-    var context: ApplicationContext? = null
+    lateinit var context: ApplicationContext
 
     @Throws(SessionNotFoundException::class)
     fun checkSession(req: HttpServletRequest, method: Method): Session? {
@@ -46,19 +47,21 @@ class UnifiedArgumentResolver : HandlerMethodArgumentResolver, ApplicationContex
                 authKey = req.getParameter("Authorization")
         }
 
-        val authService: AuthService = context!!.getBean(AuthService::class.java)
         MDC.put("authKey", authKey ?: "NULL")
+        val uri = req.requestURI
         try {
-            if (method.isAnnotationPresent(SkipSessionCheck::class.java)) {
+            if ( method.isAnnotationPresent(SkipSessionCheck::class.java)) {
                 return null
             } else if (method.isAnnotationPresent(AgentSessionUser::class.java)) {
                 return authService.checkAgentAuth(authKey)
             } else if (method.isAnnotationPresent(AdminSessionUser::class.java)) {
                 return authService.checkAdminAuth(authKey)
-            } else { // public session
+            } else if( uri.startsWith("/internal/") || uri.startsWith("/public/") || uri.startsWith("/admin/") ) {
                 //ToDo remove test authKey
                 authKey = "TEST"
                 return authService.checkAuth(authKey)
+            } else {
+                return null
             }
         } catch(ex: Exception) {
             return null

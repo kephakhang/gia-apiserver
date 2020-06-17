@@ -1,20 +1,20 @@
 package kr.co.korbit.gia.jpa.korbit.service
 
+import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.jpa.korbit.model.LneQuizz
 import kr.co.korbit.gia.jpa.korbit.repository.LneQuizzRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class LneQuizzService {
-    @Autowired
-    val lneQuizzRepository: LneQuizzRepository? = null
+class LneQuizzService(
+    val lneQuizzRepository: LneQuizzRepository = Env.appContext.getBean(LneQuizzRepository::class.java)
+) {
+
+
 
     fun getLneQuizz(id: Long): LneQuizz? {
-        lneQuizzRepository?.let {
-            val quizz: LneQuizz? = it.findById(id).get()
-            return quizz
-        }
-        return null
+
+        val quizz: LneQuizz? = lneQuizzRepository.findById(id).get()
+        return quizz
     }
 }

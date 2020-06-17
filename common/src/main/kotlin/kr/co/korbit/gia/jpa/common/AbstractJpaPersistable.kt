@@ -19,7 +19,7 @@ abstract class AbstractJpaPersistable: Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    var id: Long = 0L
+    var id: Long? = null
 
     @CreatedDate
     @Column(name="created_at")

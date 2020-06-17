@@ -1,6 +1,5 @@
 package kr.co.korbit.gia.aop
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import kr.co.korbit.common.error.ErrorCode
 import kr.co.korbit.common.error.KorbitError
 import kr.co.korbit.common.extensions.stackTraceString
@@ -20,7 +19,6 @@ import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import java.lang.reflect.Method
@@ -98,7 +96,6 @@ class ControllerProxy {
 
     fun loggging(
         startTime: Long,
-        requestId: String,
         requestUri: String,
         isException: Boolean,
         req: HttpServletRequest,
@@ -107,12 +104,12 @@ class ControllerProxy {
         val msg = StringBuilder()
         if (!isException) {
 
-            msg.append(CRLF).append("################################").append("--:" + requestId + ":--[")
+            msg.append(CRLF).append("################################")
                 .append(CRLF).append(REQUEST_PREFIX)
                 .append(requestUri).append(":")
 
         } else {
-            msg.append(CRLF).append("###Exception####################").append("--:" + requestId + ":--[")
+            msg.append(CRLF).append("###Exception####################")
                 .append(CRLF).append(REQUEST_PREFIX)
                 .append(requestUri).append(":")
         }
@@ -169,7 +166,7 @@ class ControllerProxy {
                 .append(CRLF).append(RESPONSE_PREFIX)
             msg.append(CRLF).append(Env.objectMapper.writeValueAsString(response))
         }
-        msg.append(CRLF).append("################################").append("--:" + requestId + ":--]")
+        msg.append(CRLF).append("################################")
         if (isException) {
             logger.error(
                 msg.toString().replace("\\t".toRegex(), "\t").replace("\\n".toRegex(), "\n")
@@ -191,18 +188,21 @@ class ControllerProxy {
         val args = call.args
         val req: HttpServletRequest =
             (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request
-        val requestId: String = KeyGenerator.generateOrderNo()
+        val tid: String = KeyGenerator.generateOrderNo()
         val requestUri: String = req.requestURI
         val startTime = System.nanoTime()
         var isException = false
 
 
         try {
-            logger.debug("around AOP in : $args")
+            logger.debug("$tid : around AOP in : $args")
+            MDC.put("TID", tid)
+
 
             // session 값을 필요한 경우 Controller 의 RestApi 함수 파라미터로 자동 injection
             var session: Session? = null
-            if( !method.isAnnotationPresent(SkipSessionCheck::class.java) ) {
+            if( !method.isAnnotationPresent(SkipSessionCheck::class.java) &&
+                (requestUri.startsWith("/internal/") || requestUri.startsWith("/public/") || requestUri.startsWith("/admin/")) ){
                 val genericParameterTypes = method.genericParameterTypes
                 var i = 0
                 for (genericParameterType in genericParameterTypes) {
@@ -220,7 +220,7 @@ class ControllerProxy {
                 }
 
                 if( session == null ) {
-                    throw SessionNotFoundException(Exception("SessionNotFound"))
+                    throw SessionNotFoundException(null)
                 }
             }
 
@@ -230,23 +230,23 @@ class ControllerProxy {
                 is ErrorCode -> {
                     isException = true
                     val err = KorbitError.error(res)
-                    response = Response(false, err, MDC.get("requestId"), MDC.get("requestUri"), req.method.toUpperCase())
+                    response = Response(false, err, tid, requestUri, req.method.toUpperCase())
                 }
                 is KorbitError -> {
                     isException = true
-                    response = Response(false, res, MDC.get("requestId"), MDC.get("requestUri"), req.method.toUpperCase())
+                    response = Response(false, res, tid, requestUri, req.method.toUpperCase())
                 }
                 is Throwable -> {
                     logger.error(res.stackTraceString)
                     isException = true
                     val err = KorbitError.error(ErrorCode.E00000)
                     err.description = res.localizedMessage
-                    response = Response(false, err as Any, MDC.get("requestId"), MDC.get("requestUri"), req.method.toUpperCase())
+                    response = Response(false, err as Any, tid, requestUri, req.method.toUpperCase())
                 }
                 is Response -> {
                     if( res.body is Exception )
                         isException = true
-                    response = Response(res.success, res.body, MDC.get("requestId"), MDC.get("requestUri"), req.method.toUpperCase())
+                    response = Response(res.success, res.body, tid, requestUri, req.method.toUpperCase())
                 }
                 else -> {
                     response = res
@@ -255,25 +255,25 @@ class ControllerProxy {
         } catch(ex: SessionNotFoundException) {
             logger.error("proceed error return", ex.stackTraceString)
             isException = true
-            val err = KorbitError.error(ErrorCode.E00003)
-            response = Response(false, err as Any, MDC.get("requestId"), MDC.get("requestUri"), req.method.toUpperCase())
+            val err = KorbitError.error(ex)
+            response = Response(false, err as Any, tid, requestUri, req.method.toUpperCase())
         } catch (ex: Throwable) {
             logger.error("proceed error return", ex.stackTraceString)
             isException = true
             val err = KorbitError.error(ErrorCode.E00000)
             err.description = ex.localizedMessage
-            response = Response(false, err as Any, MDC.get("requestId"), MDC.get("requestUri"), req.method.toUpperCase())
+            response = Response(false, err as Any, tid, requestUri, req.method.toUpperCase())
         } finally {
             if (logger.isDebugEnabled) {
                 if (response != null) {
                     loggging(  startTime,
-                                requestId,
                                 requestUri,
                                 isException,
                                 req,
                                 response)
                 }
             }
+            MDC.clear()
             return response
         }
     }

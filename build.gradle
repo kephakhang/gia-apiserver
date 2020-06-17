@@ -8,7 +8,7 @@ buildscript {
     
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springboot_version"
-        classpath "org.springframework.plugin:spring-plugin-core:$spring_plugin_version"
+//        classpath "org.springframework.plugin:spring-plugin-core:$spring_plugin_version"
         classpath "io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:$spring_management_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"

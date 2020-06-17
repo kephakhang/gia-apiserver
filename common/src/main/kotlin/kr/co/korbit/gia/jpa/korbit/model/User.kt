@@ -13,7 +13,6 @@ import javax.persistence.*
 @Entity(name = "Users")
 @Table(name = "korbit.users")
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class User (
 

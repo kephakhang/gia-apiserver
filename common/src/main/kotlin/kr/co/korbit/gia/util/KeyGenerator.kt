@@ -19,7 +19,7 @@ class KeyGenerator {
             val transFormat = SimpleDateFormat("yyyyMMddHHmmssSSS")
             val to = transFormat.format(now)
             val random = Random(now.time)
-            return to + String.format("%4d", random.nextInt() % 10000)
+            return to + String.format("%04d", random.nextInt() % 10000)
         }
 
         fun removeEnd(str: String, remove: String): String {
