@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class LneQuizzController(
-    val lneQuizzService: LneQuizzService = Env.appContext.getBean(LneQuizzService::class.java)
+    val quizzService: LneQuizzService
 ): BaseController() {
 
     @GetMapping(baseUri + "/quizz")
     fun getLneQuizz(@RequestParam("id") id: Long, session: Session): Any? {
 
-        return Ok(lneQuizzService.getLneQuizz(id))
+        return Ok(quizzService.getLneQuizz(id))
     }
 }

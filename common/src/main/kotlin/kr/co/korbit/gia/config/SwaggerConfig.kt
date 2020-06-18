@@ -48,11 +48,11 @@ class SwaggerConfig {
 
     @Bean
     fun korbitApi(): Docket? {
-        return Docket(DocumentationType.SWAGGER_2)
+        return Docket(DocumentationType.SPRING_WEB)
             .ignoredParameterTypes(Session::class.java)
             .apiInfo(apiInfo())
             .select()
-            .apis(RequestHandlerSelectors.any())
+            .apis(RequestHandlerSelectors.basePackage("kr.co.korbit.gia.controller"))
             .paths(PathSelectors.any())
             .build()
             .pathMapping("/")

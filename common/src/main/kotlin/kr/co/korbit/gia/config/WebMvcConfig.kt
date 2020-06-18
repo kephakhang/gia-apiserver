@@ -9,14 +9,11 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
-import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.interceptor.SecurityInterceptor
 import org.modelmapper.ModelMapper
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.*
 import org.springframework.format.FormatterRegistry
 import org.springframework.http.converter.HttpMessageConverter

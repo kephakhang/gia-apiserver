@@ -22,7 +22,7 @@ import springfox.documentation.spring.data.rest.configuration.SpringDataRestConf
 
 @SpringBootApplication
 @Import(value = [JpaKorbitConfig::class, JpaKorbitApiConfig::class, JpaTerraConfig::class, SwaggerConfig::class, WebMvcConfig::class, SpringDataRestConfiguration::class])
-class Application {
+class Application: ApplicationInitializer() {
 
     companion object {
 

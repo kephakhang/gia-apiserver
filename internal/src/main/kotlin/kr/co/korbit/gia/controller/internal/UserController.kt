@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class UserController(
-    val userService: UserService = Env.appContext.getBean(UserService::class.java)
+    val userService: UserService
 ): BaseController() {
 
     @GetMapping(baseUri + "/user")

@@ -1,5 +1,9 @@
 package kr.co.korbit.gia.interceptor
 
+import kr.co.korbit.common.error.ErrorCode
+import kr.co.korbit.common.error.KorbitError
+import kr.co.korbit.gia.env.Env
+import kr.co.korbit.gia.jpa.common.Response
 import mu.KotlinLogging
 import org.slf4j.LoggerFactory
 import org.springframework.web.servlet.ModelAndView
@@ -15,17 +19,13 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
     @Throws(Exception::class)
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         logger.debug("[preHandle] - {} {}", request.method, request.requestURI)
-        val uri = request.requestURI
+        val uri: String = request.requestURI
         //val session = request.session
         return try {
             logger.debug("method : " + request.method)
             logger.debug("uri : $uri")
             if (request.method.toUpperCase() == "OPTIONS") {
-                if (uri.endsWith(".html") || uri.endsWith(".css") || uri.endsWith(".js") ||
-                    uri.endsWith(".jpg") || uri.endsWith(".gif") || uri.endsWith(".png") ||
-                    uri.endsWith(".ico") || uri.endsWith(".svg") ||
-                    uri.contains("/\\/swagger/".toRegex()) ||
-                    uri.startsWith("/internal/") || uri.startsWith("/public/") || uri.startsWith("/admin/")) {
+                if (uri.startsWith("/internal/") || uri.startsWith("/public/") || uri.startsWith("/admin/")) {
                     response.reset()
                     response.setHeader("Access-Control-Allow-Origin", "*")
                     response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT")
@@ -45,7 +45,8 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
                     response.contentType = "application/json; charset=utf-8"
                     response.characterEncoding = "utf-8"
                     response.status = HttpServletResponse.SC_UNAUTHORIZED
-                    response.writer.write("{\"success\":false, \"description\":\"unknown uri\"}")
+                    val res = Response(false, KorbitError.error(ErrorCode.E00002), "0",  uri, request.method.toUpperCase())
+                    response.writer.write(Env.objectMapper.writeValueAsString(res))
                     response.writer.flush()
                     false
                 }
@@ -54,7 +55,7 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
                 if (uri.endsWith(".html") || uri.endsWith(".css") || uri.endsWith(".js") ||
                     uri.endsWith(".jpg") || uri.endsWith(".gif") || uri.endsWith(".png") ||
                     uri.endsWith(".ico") || uri.endsWith(".svg") ||
-                    uri.contains("/\\/swagger/".toRegex()) ||
+                    uri.contains("\\/swagger".toRegex()) || uri.contains("\\/webjars\\/".toRegex())  || uri.equals("/v2/api-docs") ||
                     uri.startsWith("/internal/") || uri.startsWith("/public/") || uri.startsWith("/admin/")) {
                     response.setHeader("Access-Control-Allow-Origin", "*")
                     response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT")
@@ -69,7 +70,8 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
                     response.contentType = "application/json; charset=utf-8"
                     response.characterEncoding = "utf-8"
                     response.status = HttpServletResponse.SC_UNAUTHORIZED
-                    response.writer.write("{\"success\":false, \"description\":\"unknown uri\"}")
+                    val res = Response(false, KorbitError.error(ErrorCode.E00002), "0",  uri, request.method.toUpperCase())
+                    response.writer.write(Env.objectMapper.writeValueAsString(res))
                     response.writer.flush()
                     false
                 }
@@ -84,7 +86,8 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
             response.contentType = "application/json; charset=utf-8"
             response.characterEncoding = "utf-8"
             response.status = HttpServletResponse.SC_UNAUTHORIZED
-            response.writer.write(e.message)
+            val res = Response(false, KorbitError.error(ErrorCode.E00002), "0",  uri, request.method.toUpperCase())
+            response.writer.write(Env.objectMapper.writeValueAsString(res))
             response.writer.flush()
             false
         }

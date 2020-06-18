@@ -1,24 +1,13 @@
 package kr.co.korbit.gia.jpa.korbit.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import io.swagger.annotations.ApiModel
-import org.hibernate.annotations.Cache
-import org.hibernate.annotations.CacheConcurrencyStrategy
-import org.springframework.validation.annotation.Validated
 import java.time.LocalDateTime
-import javax.annotation.Generated
 import javax.persistence.*
 import kr.co.korbit.gia.jpa.common.AbstractJpaPersistable as AbstractJpaPersistable1
 
 /**
  * subscription information
  */
-@ApiModel(description = "Korbit Quest Event Entity Model")
-@Validated
-@Generated(
-    value = ["kr.co.korbit"],
-    date = "2020-06-16T17:24:48.045401+09:00[Asia/Seoul]"
-)
 @Entity(name = "LneQuests")
 @Table(name = "korbit.lne_quests")
 @Cacheable
@@ -57,8 +46,15 @@ class LneQuest (
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null,
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lneQuest")
-    var lneQuizzList: MutableList<LneQuizz> = mutableListOf()
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "quest", cascade = [CascadeType.ALL])
+    var quizzList: MutableList<LneQuizz> = mutableListOf()
+
+
 ): AbstractJpaPersistable1() {
-    
+
+    // 연관관계 추가 method 는 만들어 놓는게 편리하다.
+    fun addQuizz(quizz: LneQuizz) {
+        quizz.quest = this
+        quizzList.add(quizz)
+    }
 }

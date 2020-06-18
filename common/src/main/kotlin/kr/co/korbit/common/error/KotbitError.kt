@@ -61,6 +61,7 @@ class KorbitError(
 
 enum class ErrorCode {
     E00000,
+    E00002,
     E00003,
     E10001,
     E10002,

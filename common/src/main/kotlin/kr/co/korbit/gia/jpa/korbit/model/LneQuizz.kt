@@ -18,10 +18,7 @@ open class LneQuizz(
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quest_id")
-    var  lneQuest: LneQuest,
-
-//    @Column(name = "quest_id")
-//    var questId: Long,
+    var  quest: LneQuest,
 
     var  type: String,
     var  title: String,

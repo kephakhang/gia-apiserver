@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class WhiteListsController(
-    val whiteListsRepository: WhiteListsRepository = Env.appContext.getBean(WhiteListsRepository::class.java)
+    val whiteListsRepository: WhiteListsRepository
 ): BaseController() {
 
     @GetMapping(baseUri + "/white_lists")

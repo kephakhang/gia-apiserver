@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 @RestController
 @Api(value = "quest", description = "코빗 quest api")
 class LneQuestController(
-    val lneQuestService: LneQuestService = Env.appContext.getBean(LneQuestService::class.java)
+    val questService: LneQuestService
 ): BaseController() {
 
     @ApiOperation(
@@ -34,9 +34,9 @@ class LneQuestController(
         )]
     )
     @PostMapping(baseUri + "/quest")
-    fun addLneQuest(@RequestBody lneQuest: LneQuest, session: Session): Response? {
+    fun addLneQuest(@RequestBody quest: LneQuest, session: Session): Response? {
 
-        return Ok(lneQuestService.addLneQuest(lneQuest))
+        return Ok(questService.addLneQuest(quest))
     }
 
 
@@ -54,9 +54,9 @@ class LneQuestController(
         )]
     )
     @PutMapping(baseUri + "/quest")
-    fun updateLneQuest(@RequestBody lneQuest: LneQuest, session: Session): Response? {
+    fun updateLneQuest(@RequestBody quest: LneQuest, session: Session): Response? {
 
-        return Ok(lneQuestService.updateLneQuest(lneQuest))
+        return Ok(questService.updateLneQuest(quest))
     }
 
     @ApiOperation(
@@ -73,12 +73,9 @@ class LneQuestController(
         )]
     )
     @GetMapping(baseUri + "/quest")
-    fun getLneQuest(@ApiParam(
-                        value = "quest 의 id(primary key)",
-                        required = true
-                    ) @RequestParam("id", required = true) id: Long, session: Session): Response? {
+    fun getLneQuest(@RequestParam("id", required = true) id: Long, session: Session): Response? {
 
-        return Ok(lneQuestService.getLneQuest(id))
+        return Ok(questService.getLneQuest(id))
     }
 
 
@@ -98,6 +95,6 @@ class LneQuestController(
     @GetMapping(baseUri + "/quest/list")
     fun getLneQuestList(pageable: Pageable, session: Session): Response? {
 
-        return Ok(lneQuestService.getLneQuestList(pageable))
+        return Ok(questService.getLneQuestList(pageable))
     }
 }

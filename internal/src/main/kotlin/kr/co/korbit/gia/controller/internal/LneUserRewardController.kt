@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class LneUserRewardController(
-    val lneUserRewardService: LneUserRewardService = Env.appContext.getBean(LneUserRewardService::class.java)
+    val userRewardService: LneUserRewardService
 ): BaseController() {
 
     @GetMapping(baseUri + "/user_reward")
     fun getLneQuizz(@RequestParam("id") id: Long, session: Session): Any? {
 
-        return Ok(lneUserRewardService.getLneUserReward(id))
+        return Ok(userRewardService.getLneUserReward(id))
     }
 }

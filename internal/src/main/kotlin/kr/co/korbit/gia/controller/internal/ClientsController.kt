@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class ClientsController(
-    val clientsRepository: ClientsRepository = Env.appContext.getBean(ClientsRepository::class.java)
+    val clientsRepository: ClientsRepository
 ): BaseController() {
 
 
