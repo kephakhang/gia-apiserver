@@ -50,6 +50,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:$springboot_version")
     implementation("io.swagger:swagger-annotations:$io_swagger_version")
     implementation("io.swagger:swagger-models:$io_swagger_version")
+    implementation("javax.validation:validation-api:$javax_validation_version")
     testImplementation("junit:junit:4.12")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

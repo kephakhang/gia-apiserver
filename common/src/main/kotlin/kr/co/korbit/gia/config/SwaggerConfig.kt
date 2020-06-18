@@ -20,6 +20,7 @@ import springfox.documentation.swagger.web.*
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc
 import java.time.LocalDate
 import kr.co.korbit.gia.jpa.test.model.Session
+import org.springframework.context.annotation.Import
 
 
 /**
@@ -28,6 +29,7 @@ import kr.co.korbit.gia.jpa.test.model.Session
  */
 @Configuration
 @EnableSwagger2WebMvc
+@Import(WebMvcConfig::class)
 class SwaggerConfig {
 
     @Autowired
@@ -55,19 +57,19 @@ class SwaggerConfig {
             .apis(RequestHandlerSelectors.basePackage("kr.co.korbit.gia.controller"))
             .paths(PathSelectors.any())
             .build()
-            .pathMapping("/")
-            .directModelSubstitute(LocalDate::class.java, String::class.java)
-            .genericModelSubstitutes(ResponseEntity::class.java)
-            .alternateTypeRules(
-                newRule(
-                    typeResolver?.resolve(
-                        DeferredResult::class.java,
-                        typeResolver.resolve(ResponseEntity::class.java, WildcardType::class.java)
-                    ),
-                    typeResolver?.resolve(WildcardType::class.java)
-                )
-            )
-            .useDefaultResponseMessages(false)
+//            .pathMapping("/")
+//            .directModelSubstitute(LocalDate::class.java, String::class.java)
+//            .genericModelSubstitutes(ResponseEntity::class.java)
+//            .alternateTypeRules(
+//                newRule(
+//                    typeResolver?.resolve(
+//                        DeferredResult::class.java,
+//                        typeResolver.resolve(ResponseEntity::class.java, WildcardType::class.java)
+//                    ),
+//                    typeResolver?.resolve(WildcardType::class.java)
+//                )
+//            )
+//            .useDefaultResponseMessages(false)
 //            .globalResponseMessage(
 //                RequestMethod.GET,
 //                listOf(
@@ -80,7 +82,7 @@ class SwaggerConfig {
 //            )
 //            .securitySchemes(listOf(apiKey()))
 //            .securityContexts(listOf(securityContext()))
-            .enableUrlTemplating(true)
+//            .enableUrlTemplating(false)
 //            .globalOperationParameters(
 //                listOf(
 //                    ParameterBuilder()
@@ -92,7 +94,7 @@ class SwaggerConfig {
 //                        .build()
 //                )
 //            )
-            .tags(Tag("Korbit Gia Api Service", "All apis relating to Korbit"))
+            //.tags(Tag("Korbit Gia Api Service", "All apis relating to Korbit"))
             //.additionalModels(typeResolver.resolve(AdditionalModel::class.java))
     }
 

@@ -3,7 +3,6 @@ package kr.co.korbit.gia.jpa.korbit.service
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import kr.co.korbit.gia.config.*
-import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.jpa.korbit.model.LneQuest
 import org.junit.Test
 import org.junit.runner.RunWith

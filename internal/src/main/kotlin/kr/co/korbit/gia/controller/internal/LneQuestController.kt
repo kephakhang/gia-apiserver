@@ -1,18 +1,14 @@
 package kr.co.korbit.gia.controller.internal
 
 import io.swagger.annotations.*
-import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.jpa.common.Ok
 import kr.co.korbit.gia.jpa.common.Response
 import kr.co.korbit.gia.jpa.korbit.model.LneQuest
 import kr.co.korbit.gia.jpa.korbit.service.LneQuestService
-import kr.co.korbit.gia.jpa.korbitapi.repository.ClientsRepository
 import kr.co.korbit.gia.jpa.test.model.Session
-import org.jetbrains.annotations.NotNull
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
+import javax.validation.Valid
 
 @RestController
 @Api(value = "quest", description = "코빗 quest api")
@@ -34,7 +30,7 @@ class LneQuestController(
         )]
     )
     @PostMapping(baseUri + "/quest")
-    fun addLneQuest(@RequestBody quest: LneQuest, session: Session): Response? {
+    fun addLneQuest(@Valid @RequestBody quest: LneQuest, session: Session): Response? {
 
         return Ok(questService.addLneQuest(quest))
     }
@@ -54,26 +50,21 @@ class LneQuestController(
         )]
     )
     @PutMapping(baseUri + "/quest")
-    fun updateLneQuest(@RequestBody quest: LneQuest, session: Session): Response? {
+    fun updateLneQuest(@Valid @RequestBody quest: LneQuest, session: Session): Response? {
 
         return Ok(questService.updateLneQuest(quest))
     }
 
     @ApiOperation(
-        value = "",
-        nickname = "getLneQuest",
+        value = "quest 정보 가져오기",
+        nickname = "getLneQuest: quest 정보를 id(primary key)로 가져오기",
         notes = "quest 정보를 id(primary key)로 가져오기",
-        response = Response::class
-    )
-    @ApiResponses(
-        value = [ApiResponse(
-            code = 201,
-            message = "quest 정보 응답",
-            response = Response::class
-        )]
-    )
+        response = Response::class)
     @GetMapping(baseUri + "/quest")
-    fun getLneQuest(@RequestParam("id", required = true) id: Long, session: Session): Response? {
+    fun getLneQuest(
+        @ApiParam(name = "id", type = "Number",value = "lne_quest.id 고유 키 아이디 값", example = "1", required = true)
+        @RequestParam("id", required = true) id: Long,
+        session: Session): Response? {
 
         return Ok(questService.getLneQuest(id))
     }
