@@ -8,6 +8,7 @@ import kr.co.korbit.gia.jpa.korbit.service.LneQuestService
 import kr.co.korbit.gia.jpa.test.model.Session
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 import javax.validation.Valid
 
 @RestController
@@ -84,8 +85,10 @@ class LneQuestController(
         )]
     )
     @GetMapping(baseUri + "/quest/list")
-    fun getLneQuestList(pageable: Pageable, session: Session): Response? {
+    fun getLneQuestList(@RequestParam("type", required = false) type: String,
+                        @RequestParam("from", required = false) from: LocalDateTime,
+                        @RequestParam("from", required = false) to: LocalDateTime, pageable: Pageable, session: Session): Response? {
 
-        return Ok(questService.getLneQuestList(pageable))
+        return Ok(questService.getLneQuestList(type, from, to, pageable))
     }
 }

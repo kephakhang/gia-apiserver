@@ -1,5 +1,6 @@
 package kr.co.korbit.gia.config
 
+import com.querydsl.jpa.impl.JPAQueryFactory
 import com.zaxxer.hikari.HikariDataSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -86,5 +87,11 @@ class JpaKorbitApiConfig {
     fun jpaKorbitApiTransactionManager(
             @Qualifier("jpaKorbitApiEntityManagerFactory") jpaKorbitApiEntityManagerFactory: EntityManagerFactory?): PlatformTransactionManager {
         return JpaTransactionManager(jpaKorbitApiEntityManagerFactory!!)
+    }
+
+    @Bean(name = ["jpaKorbitApiQueryFactory"])
+    fun jpaKorbitApiQueryFactory(@Qualifier("jpaKorbitApiEntityManagerFactory") jpaKorbitApiEntityManagerFactory: EntityManagerFactory): JPAQueryFactory {
+
+        return JPAQueryFactory(jpaKorbitApiEntityManagerFactory.createEntityManager())
     }
 }
