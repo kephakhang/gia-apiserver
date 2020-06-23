@@ -59,6 +59,7 @@ class UnifiedArgumentResolver(
             } else if( uri.startsWith("/internal/") || uri.startsWith("/public/") || uri.startsWith("/admin/") ) {
                 //ToDo remove test authKey
                 authKey = "TEST"
+                MDC.put("authKey", authKey ?: "NULL")
                 return authService.checkAuth(authKey)
             } else {
                 return null

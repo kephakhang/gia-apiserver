@@ -7,13 +7,13 @@
     <root level="error">
         <appender-ref ref="STDOUT"/>
     </root>
-    <logger name="org.eclipse.jetty" level="info">
+    <logger name="org.eclipse.jetty" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="io.netty" level="info">
+    <logger name="io.netty" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="kr.co.korbit" level="info">
+    <logger name="kr.co.korbit" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 </configuration>

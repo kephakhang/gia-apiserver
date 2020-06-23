@@ -120,9 +120,8 @@ class ControllerProxy {
         val session = req.getSession(false)
         if (session != null) {
             msg.append(CRLF).append("SESSION ID: ").append(session.id)
+            msg.append(CRLF).append("authKey: ").append(MDC.get("authKey")).append(CRLF)
         }
-
-        msg.append(CRLF).append("authKey: ").append(MDC.get("authKey")).append(CRLF)
 
         var ip: String? = req.getHeader("X-FORWARDED-FOR")
         if (ip == null) ip = req.getRemoteAddr()

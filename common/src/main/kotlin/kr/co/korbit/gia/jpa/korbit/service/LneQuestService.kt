@@ -45,6 +45,6 @@ class LneQuestService(val lneQuestRepository: LneQuestRepository) {
     }
 
     fun getLneQuestList(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest> {
-        return lneQuestRepository.findAllByCreatedAtBetween(type, from, to, pageable)
+        return lneQuestRepository.findAllBy(type, from, to, pageable)
     }
 }

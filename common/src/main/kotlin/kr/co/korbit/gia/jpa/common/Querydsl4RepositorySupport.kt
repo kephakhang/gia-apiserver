@@ -2,6 +2,7 @@ package kr.co.korbit.gia.jpa.common
 
 import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.dsl.PathBuilder
+import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
@@ -9,7 +10,9 @@ import org.springframework.data.querydsl.QSort
 import org.springframework.data.repository.NoRepositoryBean
 
 @NoRepositoryBean
-abstract class BaseRepository(query: JPAQueryFactory) : QuerydslRepositorySupport(BaseRepository::class.java) {
+abstract class Querydsl4RepositorySupport<T>(val queryFactory: JPAQueryFactory) : QuerydslRepositorySupport(Querydsl4RepositorySupport::class.java) {
+
+
 
     open fun ordable(sort: Sort, builder: PathBuilder<*>): MutableList<OrderSpecifier<*>> {
 
@@ -29,4 +32,12 @@ abstract class BaseRepository(query: JPAQueryFactory) : QuerydslRepositorySuppor
         }
         return mutableListOf()
     }
+
+    open fun select(): JPAQuery<T> {
+        return queryFactory.query() as JPAQuery<T>
+    }
+
+//    open fun<T> applyPagination(pageable: Pageable, contentQuery: Function<JPAQueryFactory, JPAQuery> ): Page<T> {
+//        val jpaQuery = contentQuery.apply(queryFactory)
+//        val content: List<T> = getQuerydsl().applyPagination(pageable,jpaQuery).fetch();
 }
