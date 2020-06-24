@@ -4,15 +4,17 @@ import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.dsl.PathBuilder
 import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.data.querydsl.QSort
 import org.springframework.data.repository.NoRepositoryBean
+import org.springframework.stereotype.Repository
 
 @NoRepositoryBean
-abstract class Querydsl4RepositorySupport<T>(val queryFactory: JPAQueryFactory) : QuerydslRepositorySupport(Querydsl4RepositorySupport::class.java) {
+abstract class Querydsl4RepositorySupport<T>() {
 
-
+    lateinit var queryFactory: JPAQueryFactory
 
     open fun ordable(sort: Sort, builder: PathBuilder<*>): MutableList<OrderSpecifier<*>> {
 

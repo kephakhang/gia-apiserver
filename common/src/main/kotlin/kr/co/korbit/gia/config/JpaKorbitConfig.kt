@@ -27,7 +27,7 @@ import kotlin.collections.HashMap
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "jpaKorbitEntityManagerFactory",
         transactionManagerRef = "jpaKorbitTransactionManager",
-        basePackages = ["kr.co.korbit.gia.jpa.korbit.repository"])
+        basePackages = ["kr.co.korbit.gia.jpa.korbit.repository", "kr.co.korbit.gia.jpa.korbit.repository.custom", "kr.co.korbit.gia.jpa.korbit.repository.impl"])
 class JpaKorbitConfig {
     val dialect = "org.hibernate.dialect.MySQL57Dialect"
     var ddlAuto = "validate"

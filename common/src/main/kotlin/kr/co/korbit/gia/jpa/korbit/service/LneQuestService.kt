@@ -44,7 +44,12 @@ class LneQuestService(val lneQuestRepository: LneQuestRepository) {
         return page
     }
 
-    fun getLneQuestList(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest> {
-        return lneQuestRepository.findAllBy(type, from, to, pageable)
+    fun getLneQuestList(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest>? {
+        try {
+            return lneQuestRepository.findAllBy(type, from, to, pageable)
+        } catch(e: Throwable) {
+            e.printStackTrace()
+            return null
+        }
     }
 }

@@ -1,10 +1,15 @@
 package kr.co.korbit.gia.jpa.common
 
 import com.querydsl.core.BooleanBuilder
-import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.Visitor
 import org.springframework.lang.Nullable
+import com.querydsl.core.types.Predicate
+import com.querydsl.core.types.dsl.BooleanExpression
+import kotlin.reflect.KFunction1
 
+
+// ref : https://stackoverflow.com/questions/23750528/handle-optional-parameters-in-querydsl
+// ref : https://stackoverflow.com/questions/48709655/kotlin-pass-method-reference-to-function
 class WhereBuilder : Predicate, Cloneable {
     private var delegate: BooleanBuilder
 
@@ -20,12 +25,21 @@ class WhereBuilder : Predicate, Cloneable {
         return WhereBuilder(delegate.and(right))
     }
 
-    fun <V> optionalAnd(@Nullable param: V?, expression: Predicate): WhereBuilder {
-       return if( param != null ) {
-            this.and(expression)
-        } else {
-            this
-        }
+    fun <V> optionalAnd(@Nullable param: V?, expression: () -> Predicate): WhereBuilder {
+//        return this.applyIfNotNull<V>(param, this::and, expression())
+        return if (param != null) {
+            this.and( expression() )
+        } else this
+    }
+
+    private fun <V> applyIfNotNull(
+        @Nullable param: V?,
+        funCall: KFunction1<@ParameterName(name = "right") Predicate, WhereBuilder>,
+        booleanExpression: Predicate
+    ): WhereBuilder {
+        return if (param != null) {
+            funCall(booleanExpression)
+        } else this
     }
 
     override fun <R : Any?, C : Any?> accept(v: Visitor<R, C>?, context: C?): R? {
@@ -47,3 +61,8 @@ class WhereBuilder : Predicate, Cloneable {
         return this
     }
 }
+
+//@FunctionalInterface
+//interface LazyBooleanExpression {
+//    fun get(): LazyBooleanExpression
+//}

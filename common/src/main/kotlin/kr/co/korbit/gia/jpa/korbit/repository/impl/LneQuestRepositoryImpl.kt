@@ -9,14 +9,17 @@ import kr.co.korbit.gia.jpa.korbit.model.LneQuest
 import kr.co.korbit.gia.jpa.korbit.model.QLneQuest.*
 import kr.co.korbit.gia.jpa.korbit.model.QLneQuizz.*
 import kr.co.korbit.gia.jpa.korbit.repository.custom.CustomLneQuestRepository
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.domain.*
-import org.springframework.data.repository.NoRepositoryBean
 import java.time.LocalDateTime
 
-@NoRepositoryBean
-class CustomLneQuestRepositoryImpl(
-    val jpaKorbitQueryFactory: JPAQueryFactory
-): Querydsl4RepositorySupport<LneQuest>(jpaKorbitQueryFactory), CustomLneQuestRepository {
+class LneQuestRepositoryImpl(@Qualifier("jpaKorbitQueryFactory") val jpaKorbitQueryFactory: JPAQueryFactory)
+    : Querydsl4RepositorySupport<LneQuest>(), CustomLneQuestRepository {
+
+
+    init {
+        super.queryFactory = jpaKorbitQueryFactory
+    }
 
     val path: PathBuilder<LneQuest> = PathBuilder<LneQuest>(LneQuest::class.java, "path")
     //val lneQuest: QLneQuest = QLneQuizz("lneQuest")
@@ -29,20 +32,24 @@ class CustomLneQuestRepositoryImpl(
 //            pageableReal = PageRequest.of(1, 20).first()
 //
 //        }
+
+
         val sql =
             select()
                 .from(lneQuest)
                 .join(lneQuest.quizzList, lneQuizz)
                 .where(
                     WhereBuilder()
-                        .optionalAnd(from, lneQuest.createdAt.after(from))
-                        .optionalAnd(to, lneQuest.createdAt.before(to))
-                        .optionalAnd(type, lneQuest.type.eq(type))
+                        .optionalAnd(from, { lneQuest.createdAt.after(from) })
+                        .optionalAnd(to, { lneQuest.createdAt.before(to) })
+                        .optionalAnd(type, { lneQuest.type.eq(type) })
                 )
                 .orderBy(*ordable(pageable.sort, path).toTypedArray())
                 .offset(pageable.offset)
-                .limit(pageable.pageSize as Long)
+                .limit(pageable.pageSize.toLong())
         val queryResults: QueryResults<LneQuest> = sql.fetchResults()
         return PageImpl<LneQuest>(queryResults.results, pageable, queryResults.total)
     }
+
+
 }
