@@ -10,13 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import org.springframework.transaction.annotation.Transactional
 import springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration
 import java.time.Clock
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 fun Clock.fixWith(dateTime: LocalDateTime): Clock {
@@ -32,7 +30,6 @@ fun mockClock(dateTime: LocalDateTime = LocalDateTime.now(Clock.systemDefaultZon
 
 @SpringBootTest(classes=[JpaKorbitConfig::class, JpaKorbitApiConfig::class, JpaTerraConfig::class, SwaggerConfig::class, WebMvcConfig::class, SpringDataRestConfiguration::class])
 @RunWith(value = SpringJUnit4ClassRunner::class)
-@Transactional
 class LneQuestServiceTest {
 
     @Autowired
@@ -43,10 +40,11 @@ class LneQuestServiceTest {
 
     @Test(expected = Exception::class)
     @Rollback(value = true)
-    fun addQuestTest() {
+    fun updateQuestTest() {
         val quest = lneQuestService.getLneQuest(1L)
         quest?.let {
-            lneQuestService.addLneQuest(quest)
+            lneQuestService.updateLneQuest(quest)
+            return
         }
         throw Exception("select row is null")
     }

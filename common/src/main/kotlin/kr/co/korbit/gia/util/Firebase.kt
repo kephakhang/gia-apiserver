@@ -157,7 +157,8 @@ class Firebase {
                 var i = 0
                 for (res in response.getResponses()) {
                     try {
-                        val id: String = res.getMessageId()
+                        //ToDo : id 값이 필요하면 uncomment it ???
+//                        val id: String = res.getMessageId()
                         val ua: UserApp = targetList[i]
                         if (res.isSuccessful()) {
                             if (resultHandler != null) resultHandler.send(handlerArg, ua.user)

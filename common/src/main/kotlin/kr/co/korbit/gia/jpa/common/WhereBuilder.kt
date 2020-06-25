@@ -4,7 +4,6 @@ import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Visitor
 import org.springframework.lang.Nullable
 import com.querydsl.core.types.Predicate
-import com.querydsl.core.types.dsl.BooleanExpression
 import kotlin.reflect.KFunction1
 
 
@@ -43,11 +42,7 @@ class WhereBuilder : Predicate, Cloneable {
     }
 
     override fun <R : Any?, C : Any?> accept(v: Visitor<R, C>?, context: C?): R? {
-        if (delegate != null) {
-            return delegate.accept(v, context)
-        } else {
-            return null;
-        }
+        return delegate.accept(v, context)
     }
 
     override fun getType(): Class<out Boolean> {
@@ -55,10 +50,7 @@ class WhereBuilder : Predicate, Cloneable {
     }
 
     override fun not(): Predicate {
-        if (delegate != null) {
-            delegate = delegate.not()
-        }
-        return this
+        return delegate.not()
     }
 }
 

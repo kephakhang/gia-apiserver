@@ -71,7 +71,9 @@ class DigestUtil {
 
             return try {
                 val sha256HMAC: Mac = Mac.getInstance("HmacSHA256")
-                val secretKey: SecretKeySpec = SecretKeySpec(secretKey.toByteArray(), "HmacSHA256")
+
+                @Suppress("NAME_SHADOWING")
+                val secretKey = SecretKeySpec(secretKey.toByteArray(), "HmacSHA256")
                 sha256HMAC.init(secretKey)
                 val sha256Result: ByteArray = sha256HMAC.doFinal(deviceNumber.toByteArray())
                 NumberUtil.bytesToHexString(sha256Result)
@@ -85,6 +87,8 @@ class DigestUtil {
 
             return try {
                 val mac = Mac.getInstance("HmacMD5")
+
+                @Suppress("NAME_SHADOWING")
                 val secretKey = SecretKeySpec(secretKey.toByteArray(charset("UTF-8")), "HmacMD5")
                 mac.init(secretKey)
                 val bytes = mac.doFinal(value.toByteArray(charset("ASCII")))

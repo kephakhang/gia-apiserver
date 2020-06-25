@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import kr.co.korbit.gia.jpa.common.Querydsl4RepositorySupport
 import kr.co.korbit.gia.jpa.common.WhereBuilder
 import kr.co.korbit.gia.jpa.korbit.model.LneQuest
+import kr.co.korbit.gia.jpa.korbit.model.QLneQuest
 import kr.co.korbit.gia.jpa.korbit.model.QLneQuest.*
 import kr.co.korbit.gia.jpa.korbit.model.QLneQuizz.*
 import kr.co.korbit.gia.jpa.korbit.repository.custom.CustomLneQuestRepository
@@ -32,7 +33,7 @@ class LneQuestRepositoryImpl(@Qualifier("jpaKorbitQueryFactory") val jpaKorbitQu
 //            pageableReal = PageRequest.of(1, 20).first()
 //
 //        }
-
+        val quest = QLneQuest("quest")
 
         val sql =
             select()

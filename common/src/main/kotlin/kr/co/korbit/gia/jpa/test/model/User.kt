@@ -10,7 +10,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
 @Entity(name = "Users")
-@Table(name = "korbit.users")
+@Table(name = "test.users")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)

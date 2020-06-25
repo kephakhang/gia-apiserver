@@ -47,12 +47,11 @@ class KorbitError(
             }
         }
 
-        fun error(kex: KorbitException): KorbitError? {
-            val error: KorbitError? = error(kex.code, kex.argList.toArray())
-            error?.let {
-                kex.cause?.let {
-                    error.description = it.localizedMessage
-                }
+        fun error(kex: KorbitException): KorbitError {
+            val error: KorbitError = error(kex.code, kex.argList.toArray())
+
+            kex.cause?.let {
+                error.description = it.localizedMessage
             }
             return error
         }

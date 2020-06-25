@@ -52,4 +52,13 @@ class LneQuestService(val lneQuestRepository: LneQuestRepository) {
             return null
         }
     }
+
+    fun getLneQuestList2(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest>? {
+        try {
+            return lneQuestRepository.findAllByTypeAndCreatedAtBetween(type, from, to, pageable)
+        } catch(e: Throwable) {
+            e.printStackTrace()
+            return null
+        }
+    }
 }

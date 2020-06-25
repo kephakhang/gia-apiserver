@@ -20,9 +20,6 @@ class WhiteListsController(
     @GetMapping(baseUri + "/white_lists")
     fun getWhiteListsByIp(@RequestParam("ip") ip: String): WhiteLists? {
 
-        whiteListsRepository?.let {
-            return it.findByIp(ip)
-        }
-        return null
+        return whiteListsRepository.findByIp(ip)
     }
 }

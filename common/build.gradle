@@ -69,18 +69,27 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc:$springboot_version")
     implementation("org.springframework.boot:spring-boot-starter-data-redis:$springboot_version")
     implementation("org.springframework.boot:spring-boot-starter-web:$springboot_version")
-    implementation("org.springframework.boot:spring-boot-autoconfigure:$springboot_version")
+//    implementation("org.springframework:org.springframework.integration:spring-integration-core:$spring_version")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:$springboot_version")
+    implementation("org.springframework:spring-tx:$spring_tx_version")
     implementation("com.querydsl:querydsl-collections:$querydsl_version")
     implementation("com.querydsl:querydsl-jpa:$querydsl_version")
     implementation("com.google.dagger:dagger:$dagger_version")
     kapt("com.querydsl:querydsl-apt:$querydsl_version:jpa")
     kapt("com.google.dagger:dagger-compiler:$dagger_version")
-    implementation("io.springfox:springfox-swagger2:$swagger_version")
-    implementation("io.springfox:springfox-swagger-ui:$swagger_version")
-    implementation("io.springfox:springfox-data-rest:$swagger_version")
-    implementation("io.springfox:springfox-swagger-common:$swagger_version")
-    implementation("io.springfox:springfox-bean-validators:$swagger_version")
+
+    //ref : https://stackoverflow.com/questions/44046137/kapt-does-not-work-with-autovalue-in-android-studio-3-0
+//    kapt("com.google.auto.value:auto-value:$auto_value_verison")
+
+    // ref : https://github.com/springfox/springfox/issues/2899
+    implementation("io.springfox:springfox-swagger2:$springfox_version")
+    implementation("io.springfox:springfox-swagger-ui:$springfox_version")
+    implementation("io.springfox:springfox-data-rest:$springfox_version")
+    implementation("io.springfox:springfox-swagger-common:$springfox_version")
+    implementation("io.springfox:springfox-bean-validators:$springfox_version")
+    implementation("io.springfox:springfox-spring-webmvc:$springfox_version")
+//    implementation("io.springfox:springfox-spring-integration-webmvc:$springfox_version")
+
     implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:$p5spy_version")
     testImplementation("junit:junit:$junit_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")

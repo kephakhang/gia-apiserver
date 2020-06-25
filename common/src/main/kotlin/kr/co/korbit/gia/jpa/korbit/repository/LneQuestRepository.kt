@@ -25,5 +25,5 @@ interface LneQuestRepository : JpaRepository<LneQuest, Long>, CustomLneQuestRepo
 
     override fun findById(id: Long): Optional<LneQuest>
     override fun findAll(pageable: Pageable): Page<LneQuest>
-//    override fun findAllBy(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest>
+    fun findAllByTypeAndCreatedAtBetween(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest>
 }

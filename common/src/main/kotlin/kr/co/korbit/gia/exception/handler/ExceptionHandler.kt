@@ -40,16 +40,17 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         request: WebRequest
     ): ResponseEntity<Any> {
 
-        val req: HttpServletRequest =
-            (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request
-        val uri = req.requestURI
-        val method = req.method.toUpperCase()
-        var errCode: ErrorCode = ErrorCode.E00000
-        var err:KorbitError? = null
+        // ToDo : 필요하면 uncomment this
+//        val req: HttpServletRequest =
+//            (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request
+//        val uri = req.requestURI
+//        val method = req.method.toUpperCase()
+//        var errCode: ErrorCode = ErrorCode.E00000
+        lateinit var err:KorbitError
 
         when(ex) {
             is KorbitException -> {
-                err = KorbitError.error((ex as KorbitException))
+                err = KorbitError.error(ex)
             }
             else -> {
 
@@ -62,9 +63,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
             }
         }
 
-        err?.let {
-            return super.handleExceptionInternal(ex, err, HttpHeaders(), status, request)
-        }
-        return super.handleExceptionInternal(ex, errCode, HttpHeaders(), status, request)
+
+        return super.handleExceptionInternal(ex, err, HttpHeaders(), status, request)
     }
 }

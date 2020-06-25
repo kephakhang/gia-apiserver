@@ -86,7 +86,7 @@ class UnifiedArgumentResolver(
                 null
             } else {
                 val session: Session? =
-                    checkSession(nativeWebRequest.nativeRequest as HttpServletRequest, methodParameter.method)
+                    checkSession(nativeWebRequest.nativeRequest as HttpServletRequest, methodParameter.method!!)
                 session as Any
             }
         } catch(e: Throwable) {

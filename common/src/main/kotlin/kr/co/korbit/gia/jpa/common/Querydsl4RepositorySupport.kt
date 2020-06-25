@@ -18,24 +18,23 @@ abstract class Querydsl4RepositorySupport<T>() {
 
     open fun ordable(sort: Sort, builder: PathBuilder<*>): MutableList<OrderSpecifier<*>> {
 
-        var specifiers: MutableList<OrderSpecifier<*>>? = null
+        lateinit var specifiers: MutableList<OrderSpecifier<*>>
 
         if (sort is QSort) {
-            specifiers = (sort as QSort).orderSpecifiers
+        specifiers = sort.orderSpecifiers
         } else {
             specifiers = mutableListOf()
             for (order: Sort.Order in sort) {
+                //ToDo : This cast can never succeed ???????????? fix it
                 specifiers.addAll(ordable(order as Sort, builder))
             }
         }
 
-        specifiers?.let {
-            return it
-        }
-        return mutableListOf()
+        return specifiers
     }
 
     open fun select(): JPAQuery<T> {
+        //ToDo : Unchecked cast : JPAQuery<*>! to JPAQuery<T> ??? fix it
         return queryFactory.query() as JPAQuery<T>
     }
 

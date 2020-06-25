@@ -18,10 +18,6 @@ class ClientsController(
 
     @GetMapping(baseUri + "/client")
     fun getClientsByKey(@RequestParam("key") key: String): Clients? {
-
-        clientsRepository?.let {
-            return it.findByKey(key)
-        }
-        return null
+        return clientsRepository.findByKey(key)
     }
 }

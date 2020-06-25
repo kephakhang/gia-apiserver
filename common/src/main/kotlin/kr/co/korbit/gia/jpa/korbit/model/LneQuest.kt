@@ -46,7 +46,7 @@ class LneQuest (
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null,
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "quest", cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "quest", cascade = [CascadeType.ALL])
     var quizzList: MutableList<LneQuizz> = mutableListOf()
 
 

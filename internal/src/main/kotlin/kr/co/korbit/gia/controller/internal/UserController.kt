@@ -19,6 +19,6 @@ class UserController(
 
         //Env.objectMapper.writeValueAsString(session)
 
-        return Ok(userService?.getUser(id))
+        return Ok(userService.getUser(id))
     }
 }

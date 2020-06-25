@@ -5,17 +5,23 @@ package kr.co.korbit.gia.config
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import kr.co.korbit.gia.interceptor.SecurityInterceptor
 import org.modelmapper.ModelMapper
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
-import org.springframework.context.annotation.*
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.ImportResource
 import org.springframework.format.FormatterRegistry
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -39,7 +45,7 @@ import java.util.*
 @EnableAutoConfiguration
 @ComponentScan("kr.co.korbit.gia")
 @ImportResource("classpath:/app-context.xml")
-class WebMvcConfig(
+class WebMvcConfig (
     val unifiedArgumentResolver: UnifiedArgumentResolver = UnifiedArgumentResolver()
     ) : WebMvcConfigurer {
 
@@ -56,18 +62,21 @@ class WebMvcConfig(
                 LocalDateTime::class.java,
                 LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))
             ))
+            .registerModule(JavaTimeModule().addSerializer(
+                LocalDateTime::class.java,
+                LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))
+            ))
+            .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
             .setDateFormat(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"))
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .enable(SerializationFeature.INDENT_OUTPUT)
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
 
     }
+
 
     @Bean
     fun securityInterceptor(): MappedInterceptor {
@@ -129,7 +138,13 @@ class WebMvcConfig(
     override fun configureContentNegotiation(contentNegotiationConfigurer: ContentNegotiationConfigurer) {}
     override fun configureAsyncSupport(asyncSupportConfigurer: AsyncSupportConfigurer) {}
     override fun configureDefaultServletHandling(defaultServletHandlerConfigurer: DefaultServletHandlerConfigurer) {}
-    override fun addFormatters(formatterRegistry: FormatterRegistry) {}
+
+    // ref : https://stackoverflow.com/questions/40274353/how-to-use-localdatetime-requestparam-in-spring-i-get-failed-to-convert-string
+    override fun addFormatters(registry: FormatterRegistry) {
+        val registrar = DateTimeFormatterRegistrar()
+        registrar.setUseIsoFormat(true)
+        registrar.registerFormatters(registry)
+    }
     override fun addInterceptors(interceptorRegistry: InterceptorRegistry) {}
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
 

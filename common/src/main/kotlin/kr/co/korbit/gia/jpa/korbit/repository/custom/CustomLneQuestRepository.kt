@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
 @Repository
-open interface CustomLneQuestRepository {
+interface CustomLneQuestRepository {
     fun findAllBy(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest>
 }

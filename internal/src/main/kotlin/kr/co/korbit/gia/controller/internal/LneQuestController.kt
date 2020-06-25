@@ -91,4 +91,12 @@ class LneQuestController(
 
         return Ok(questService.getLneQuestList(type, from, to, pageable))
     }
+
+    @GetMapping(baseUri + "/quest/list2")
+    fun getLneQuestList2(@RequestParam("type", required = false) type: String?,
+                        @RequestParam("from", required = false) from: LocalDateTime?,
+                        @RequestParam("to", required = false) to: LocalDateTime?, pageable: Pageable, session: Session): Response? {
+
+        return Ok(questService.getLneQuestList2(type, from, to, pageable))
+    }
 }
