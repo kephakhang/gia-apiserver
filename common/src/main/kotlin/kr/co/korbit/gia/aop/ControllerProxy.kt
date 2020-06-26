@@ -243,8 +243,10 @@ class ControllerProxy {
                     response = Response(false, err as Any, tid, requestUri, req.method.toUpperCase())
                 }
                 is Response -> {
-                    if( res.body is Exception )
+                    if( res.body is Exception ) {
                         isException = true
+                        logger.error((res.body as Exception).stackTraceString)
+                    }
                     response = Response(res.success, res.body, tid, requestUri, req.method.toUpperCase())
                 }
                 else -> {

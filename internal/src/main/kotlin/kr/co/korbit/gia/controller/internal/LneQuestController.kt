@@ -4,7 +4,7 @@ import io.swagger.annotations.*
 import kr.co.korbit.gia.jpa.common.Ok
 import kr.co.korbit.gia.jpa.common.Response
 import kr.co.korbit.gia.jpa.korbit.model.LneQuest
-import kr.co.korbit.gia.jpa.korbit.service.LneQuestService
+import kr.co.korbit.gia.service.korbit.LneQuestService
 import kr.co.korbit.gia.jpa.test.model.Session
 import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.*

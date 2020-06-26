@@ -6,11 +6,10 @@ import kr.co.korbit.gia.annotation.AgentSessionUser
 import kr.co.korbit.gia.annotation.SkipSessionCheck
 import kr.co.korbit.gia.exception.SessionNotFoundException
 import kr.co.korbit.gia.jpa.test.model.Session
-import kr.co.korbit.gia.jpa.test.service.AuthService
+import kr.co.korbit.gia.service.test.AuthService
 import mu.KotlinLogging
 import org.slf4j.MDC
 import org.springframework.beans.BeansException
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.core.MethodParameter

@@ -1,4 +1,4 @@
-package kr.co.korbit.gia.jpa.korbit.service
+package kr.co.korbit.gia.service.korbit
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import kr.co.korbit.gia.env.Env

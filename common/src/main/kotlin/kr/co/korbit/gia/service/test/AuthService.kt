@@ -1,4 +1,4 @@
-package kr.co.korbit.gia.jpa.test.service
+package kr.co.korbit.gia.service.test
 
 import kr.co.korbit.common.extensions.stackTraceString
 import kr.co.korbit.gia.env.Env

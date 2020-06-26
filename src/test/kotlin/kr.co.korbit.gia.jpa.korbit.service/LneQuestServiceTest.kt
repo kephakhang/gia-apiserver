@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import kr.co.korbit.gia.config.*
 import kr.co.korbit.gia.jpa.korbit.model.LneQuest
+import kr.co.korbit.gia.service.korbit.LneQuestService
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired

@@ -22,18 +22,10 @@ class LneQuestRepositoryImpl(@Qualifier("jpaKorbitQueryFactory") val jpaKorbitQu
         super.queryFactory = jpaKorbitQueryFactory
     }
 
-    val path: PathBuilder<LneQuest> = PathBuilder<LneQuest>(LneQuest::class.java, "path")
+    val path: PathBuilder<LneQuest> = PathBuilder<LneQuest>(LneQuest::class.java, "lneQuest")
     //val lneQuest: QLneQuest = QLneQuizz("lneQuest")
 
     override fun findAllBy(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest> {
-//        lateinit var pageableReal: Pageable
-//        if (pageable != null) {
-//            pageableReal = pageable
-//        } else {
-//            pageableReal = PageRequest.of(1, 20).first()
-//
-//        }
-        val quest = QLneQuest("quest")
 
         val sql =
             select()
@@ -51,6 +43,4 @@ class LneQuestRepositoryImpl(@Qualifier("jpaKorbitQueryFactory") val jpaKorbitQu
         val queryResults: QueryResults<LneQuest> = sql.fetchResults()
         return PageImpl<LneQuest>(queryResults.results, pageable, queryResults.total)
     }
-
-
 }

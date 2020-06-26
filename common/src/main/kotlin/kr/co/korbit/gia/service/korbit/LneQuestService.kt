@@ -1,4 +1,4 @@
-package kr.co.korbit.gia.jpa.korbit.service
+package kr.co.korbit.gia.service.korbit
 
 import com.querydsl.core.types.dsl.PathBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -45,20 +45,10 @@ class LneQuestService(val lneQuestRepository: LneQuestRepository) {
     }
 
     fun getLneQuestList(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest>? {
-        try {
-            return lneQuestRepository.findAllBy(type, from, to, pageable)
-        } catch(e: Throwable) {
-            e.printStackTrace()
-            return null
-        }
+        return lneQuestRepository.findAllBy(type, from, to, pageable)
     }
 
     fun getLneQuestList2(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest>? {
-        try {
-            return lneQuestRepository.findAllByTypeAndCreatedAtBetween(type, from, to, pageable)
-        } catch(e: Throwable) {
-            e.printStackTrace()
-            return null
-        }
+        return lneQuestRepository.findAllByTypeAndCreatedAtBetween(type, from, to, pageable)
     }
 }

@@ -29,13 +29,6 @@ import kotlin.collections.HashMap
         transactionManagerRef = "jpaKorbitTransactionManager",
         basePackages = ["kr.co.korbit.gia.jpa.korbit.repository", "kr.co.korbit.gia.jpa.korbit.repository.custom", "kr.co.korbit.gia.jpa.korbit.repository.impl"])
 class JpaKorbitConfig {
-    val dialect = "org.hibernate.dialect.MySQL57Dialect"
-    var ddlAuto = "validate"
-    var showSql = "true"
-    var formatSql = "true"
-    var useNewIdGeneratorMappings = "false"
-    var implicitStrategy = "kr.co.korbit.gia.config.CamelCaseToSnakeCaseNamingStrategy"
-    var physicalStrategy = "kr.co.korbit.gia.config.CamelCaseToSnakeCaseNamingStrategy"
 
     @Autowired(required = false)
     private val persistenceUnitManager: PersistenceUnitManager? = null
@@ -58,16 +51,16 @@ class JpaKorbitConfig {
         adapter.setShowSql(true)
         adapter.setPrepareConnection(true)
         adapter.setDatabase(Database.MYSQL)
-        adapter.setDatabasePlatform(dialect)
+        adapter.setDatabasePlatform(Env.dialect)
         adapter.setGenerateDdl(false)
         val properties = HashMap<String, String?>()
-//        properties["hibernate.ddl-auto"] = ddlAuto
-//        properties["show-sql"] = showSql
-//        properties["format-sql"] = formatSql
-//        properties["format_sql"] = formatSql
-//        properties["hibernate.naming.implicit-strategy}"] = implicitStrategy
-//        properties["hibernate.naming.physical-strategy}"] = physicalStrategy
-//        properties["hibernate.use-new-id-generator-mappings"] = useNewIdGeneratorMappings
+        properties["hibernate.ddl-auto"] = Env.ddlAuto
+        properties["show_sql"] = Env.showSqlFlag
+        properties["format_sql"] = Env.formatSqlFlag
+        properties["use_sql_comments"] = Env.useSqlCommentFlag
+        properties["hibernate.naming.implicit-strategy}"] = Env.implicitStrategy
+        properties["hibernate.naming.physical-strategy}"] = Env.physicalStrategy
+        properties["hibernate.use-new-id-generator-mappings"] = Env.useNewIdGeneratorMappingsFlag
         //builder.setCallback(getVendorCallback());
         return EntityManagerFactoryBuilder(
                 adapter, properties, persistenceUnitManager)

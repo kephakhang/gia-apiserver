@@ -27,6 +27,16 @@ private val logger = KotlinLogging.logger(Env::class.java.name)
 class Env {
     companion object {
 
+        val dialect = "org.hibernate.dialect.MySQL57Dialect"
+        var ddlAuto = "validate"
+        var showSqlFlag = "false"
+        var formatSqlFlag = "true"
+        var useSqlCommentFlag = "true"
+        var useNewIdGeneratorMappingsFlag = "false"
+        var implicitStrategy = "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy" // "kr.co.korbit.gia.config.CamelCaseToSnakeCaseNamingStrategy"
+        var physicalStrategy = "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy" // "kr.co.korbit.gia.config.CamelCaseToSnakeCaseNamingStrategy"
+
+
         val password = "vmffotvhaxla"
         val korbit = "korbit"
         val connectionsLimit = 10
