@@ -1,19 +1,22 @@
 package kr.co.korbit.gia.jpa.korbit.repository.impl
 
 import com.querydsl.core.types.dsl.PathBuilder
-import com.querydsl.jpa.impl.JPAQueryFactory
-import kr.co.korbit.gia.jpa.common.QuerydslRepositorySupport
+import kr.co.korbit.gia.jpa.common.Querydsl4RepositorySupport
 import kr.co.korbit.gia.jpa.korbit.model.*
 import kr.co.korbit.gia.jpa.korbit.repository.custom.CustomLneUserRewardRepository
-import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.jdbc.core.JdbcTemplate
+import javax.persistence.EntityManager
+import kotlin.reflect.KClass
 
-class LneUserRewardRepositoryImpl(@Qualifier("jpaKorbitQueryFactory") val jpaKorbitQueryFactory: JPAQueryFactory)
-    : QuerydslRepositorySupport<LneUserReward>(), CustomLneUserRewardRepository {
+class LneUserRewardRepositoryImpl(
+    val jpaKorbitEntityManager: EntityManager,
+    val korbitJdbcTemplate: JdbcTemplate
+    ) : Querydsl4RepositorySupport<LneQuest>(
+        jpaKorbitEntityManager,
+        korbitJdbcTemplate,
+        LneQuest::class as KClass<Any>
+    ), CustomLneUserRewardRepository {
 
-
-    init {
-        super.queryFactory = jpaKorbitQueryFactory
-    }
 
     val path: PathBuilder<LneUserReward> = PathBuilder<LneUserReward>(LneUserReward::class.java, "lneUserReward")
 

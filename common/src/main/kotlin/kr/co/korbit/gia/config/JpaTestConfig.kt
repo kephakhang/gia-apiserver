@@ -22,6 +22,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import java.util.Calendar
+import javax.persistence.EntityManager
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 import kotlin.collections.HashMap
@@ -80,6 +81,12 @@ class JpaTestConfig() {
 
         factory.setPackagesToScan("kr.co.korbit.gia.jpa.test.model")
         return factory
+    }
+
+    @Bean(name = ["jpaTestEntityManager"])
+    fun jpaTestEntityManager(
+        @Qualifier("jpaTestEntityManagerFactory") jpaTestEntityManagerFactory: EntityManagerFactory): EntityManager {
+        return jpaTestEntityManagerFactory.createEntityManager()
     }
 
 

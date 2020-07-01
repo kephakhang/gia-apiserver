@@ -1,6 +1,7 @@
 package kr.co.korbit.gia.jpa.test.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.ser.Serializers
 import kr.co.korbit.gia.jpa.common.BasePersistable
 import kr.co.korbit.gia.jpa.common.UserStatus
 import org.hibernate.annotations.Cache

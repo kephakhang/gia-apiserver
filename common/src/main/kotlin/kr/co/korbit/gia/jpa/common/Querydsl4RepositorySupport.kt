@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.support.Querydsl
 import org.springframework.data.querydsl.SimpleEntityPathResolver
 import org.springframework.data.repository.NoRepositoryBean
 import org.springframework.data.repository.support.PageableExecutionUtils
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.util.Assert
 import java.util.function.Function
 import javax.annotation.PostConstruct
@@ -30,10 +31,11 @@ import kotlin.reflect.KClass
  * @see org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
  */
 @NoRepositoryBean
-abstract class Querydsl4RepositorySupport<T>(val entityManager: EntityManager, val domainClass: KClass<Any>) {
+abstract class Querydsl4RepositorySupport<T>(val entityManager: EntityManager, val jdbcTemplate: JdbcTemplate, val domainClass: KClass<Any>) {
     lateinit var querydsl: Querydsl
     lateinit var queryFactory: JPAQueryFactory
     lateinit var builder: PathBuilder<*>
+    protected val batchSize = 300
 
     init {
         Assert.notNull(entityManager, "EntityManager must not be null!")

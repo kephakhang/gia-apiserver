@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager
@@ -19,9 +20,9 @@ import org.springframework.orm.jpa.vendor.Database
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
+import javax.persistence.EntityManager
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
-import kotlin.collections.HashMap
 
 @Configuration
 @EnableTransactionManagement
@@ -41,6 +42,11 @@ class JpaKorbitConfig {
         val dataSource = DataSourceBuilder.create().type(HikariDataSource::class.java).build()
         //dataSource.connectionInitSql = "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
         return dataSource
+    }
+
+    @Bean(name = ["korbitJdbcTemplate"])
+    fun jdbcTemplate(@Qualifier("jpaKorbitDataSource") ds: DataSource?): JdbcTemplate? {
+        return JdbcTemplate(ds)
     }
 
 
@@ -81,6 +87,14 @@ class JpaKorbitConfig {
 
         factory.setPackagesToScan("kr.co.korbit.gia.jpa.korbit.model")
         return factory
+    }
+
+
+    @Bean(name = ["jpaKorbitEntityManager"])
+    @Primary
+    fun jpaKorbitEntityManager(
+        @Qualifier("jpaKorbitEntityManagerFactory") jpaKorbitEntityManagerFactory: EntityManagerFactory): EntityManager {
+        return jpaKorbitEntityManagerFactory.createEntityManager()
     }
 
 

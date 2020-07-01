@@ -21,6 +21,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import java.util.Calendar
+import javax.persistence.EntityManager
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 import kotlin.collections.HashMap
@@ -71,12 +72,17 @@ class JpaTerraConfig {
             @Qualifier("jpaTerraDataSource") jpaTerraDataSource: DataSource?): LocalContainerEntityManagerFactoryBean {
         val factory =  builder
                 .dataSource(jpaTerraDataSource)
-//                .packages("kr.co.korbit.gia.jpa.terra.model")
                 .persistenceUnit("terra")
                 .build()
 
         factory.setPackagesToScan("kr.co.korbit.gia.jpa.terra.model")
         return factory
+    }
+
+    @Bean(name = ["jpaTerraEntityManager"])
+    fun jpaTerraEntityManager(
+        @Qualifier("jpaTerraEntityManagerFactory") jpaTerraEntityManagerFactory: EntityManagerFactory): EntityManager {
+        return jpaTerraEntityManagerFactory.createEntityManager()
     }
 
     @Bean(name = ["jpaTerraTransactionManager"])

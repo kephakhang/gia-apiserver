@@ -10,14 +10,21 @@ import kr.co.korbit.gia.jpa.korbit.model.QLneQuiz.*
 import kr.co.korbit.gia.jpa.korbit.repository.custom.CustomLneQuestRepository
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.domain.*
+import org.springframework.jdbc.core.JdbcTemplate
 import java.time.LocalDateTime
+import javax.persistence.EntityManager
 import javax.persistence.EntityManagerFactory
 import kotlin.reflect.KClass
 
-class LneQuestRepositoryImpl(/* @Qualifier("jpaKorbitQueryFactory") val jpaKorbitQueryFactory: JPAQueryFactory */
-    @Qualifier("jpaKorbitEntityManagerFactory") val jpaKorbitEntityManagerFactory: EntityManagerFactory
+class LneQuestRepositoryImpl(
+    val jpaKorbitEntityManager: EntityManager,
+    val korbitJdbcTemplate: JdbcTemplate
 )
-    : Querydsl4RepositorySupport<LneQuest>(jpaKorbitEntityManagerFactory.createEntityManager(), LneQuest::class as KClass<Any>), CustomLneQuestRepository {
+    : Querydsl4RepositorySupport<LneQuest>(
+        jpaKorbitEntityManager,
+        korbitJdbcTemplate,
+        LneQuest::class as KClass<Any>
+    ), CustomLneQuestRepository {
 
     //val path: PathBuilder<LneQuest> = PathBuilder<LneQuest>(LneQuest::class.java, "lneQuest")
     //val lneQuest: QLneQuest = QLneQuiz("lneQuest")

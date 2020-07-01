@@ -1,3 +1,39 @@
+spring.jpa.properties.hibernate.default_batch_fetch_size: 300
+
+
+:::
+
+
+SELECT lnequest0_.id               AS id1_0_,
+       :::
+FROM   korbit.lne_quests lnequest0_
+WHERE  lnequest0_.type = 'quiz'
+       AND '2019-03-01T00:00:00.000+0000' < lnequest0_.created_at
+       AND lnequest0_.created_at < '2020-07-01T00:00:00.000+0000'
+LIMIT  3, 3;
+
+
+SELECT quizlist0_.quest_id       AS quest_i10_1_0_,
+       :::
+FROM   korbit.lne_quizzes quizlist0_
+WHERE  quizlist0_.quest_id in (4,5,6)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 CREATE TABLE `users` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `uuid` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
