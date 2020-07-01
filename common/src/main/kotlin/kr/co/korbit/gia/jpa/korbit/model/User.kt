@@ -1,16 +1,15 @@
 package kr.co.korbit.gia.jpa.korbit.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import kr.co.korbit.gia.jpa.common.AbstractJpaPersistable
+import kr.co.korbit.gia.jpa.common.BasePersistable
 import kr.co.korbit.gia.jpa.common.UserStatus
-import org.hibernate.annotations.Cache
-import org.hibernate.annotations.CacheConcurrencyStrategy
+import kr.co.korbit.gia.jpa.korbit.model.dto.UserDto
 import org.hibernate.annotations.Type
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
 
-@Entity(name = "Users")
+@Entity(name = "User")
 @Table(name = "korbit.users")
 @Cacheable
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -167,5 +166,27 @@ class User (
     @Column(name = "is_corporation")
     @Type(type = "yes_no")
     var isCorporation: Boolean = false
-) : AbstractJpaPersistable(){
+) : BasePersistable(){
+
+    
+    fun toUserDto(): UserDto {
+        return UserDto(
+            uuid,
+            email,
+            encryptedPassword,
+            signInCount,
+            name,
+            nick,
+            phone,
+            permit,
+            gender,
+            nationality,
+            countryCode,
+            status,
+            signUpPlatformId,
+            isIdentifiedForCoins,
+            isIdentifiedForFiats,
+            isCorporation
+        )
+    }
 }

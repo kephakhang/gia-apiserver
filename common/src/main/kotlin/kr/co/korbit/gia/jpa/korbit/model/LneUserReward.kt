@@ -1,14 +1,12 @@
 package kr.co.korbit.gia.jpa.korbit.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import kr.co.korbit.gia.jpa.common.AbstractJpaPersistable
-import org.hibernate.annotations.Cache
-import org.hibernate.annotations.CacheConcurrencyStrategy
+import kr.co.korbit.gia.jpa.common.BasePersistable
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 import javax.persistence.*
 
-@Entity(name = "LneUserRewards")
+@Entity(name = "LneUserReward")
 @Table(name = "korbit.lne_user_rewards")
 @Cacheable
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -36,6 +34,6 @@ class LneUserReward(
 
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null
-): AbstractJpaPersistable() {
+): BasePersistable() {
     
 }

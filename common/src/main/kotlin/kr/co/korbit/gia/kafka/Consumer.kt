@@ -66,7 +66,7 @@ class Consumer<K, V>(private val consumer: KafkaConsumer<K, V>, val topic: Strin
         } catch (e: Throwable) {
             when (e) {
                 is WakeupException -> logger.info { Message.message("app.kafka.consumer.wakeup") }
-                else -> logger.error(e) { Message.message("app.kafka.consumer.pollingFail") }
+                else -> logger.error(Message.message("app.kafka.consumer.pollingFail") + ":" + e.stackTraceString )
             }
         } finally {
             logger.info { Message.message("app.kafka.consumer.commit.sync") }

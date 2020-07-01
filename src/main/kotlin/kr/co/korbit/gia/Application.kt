@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Import
 import java.util.*
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
-import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
 import springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration
 
 @SpringBootApplication

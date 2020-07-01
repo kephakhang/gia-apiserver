@@ -1,25 +1,20 @@
 package kr.co.korbit.gia.config
 
 import com.fasterxml.classmate.TypeResolver
+import kr.co.korbit.gia.jpa.korbit.model.dto.Session
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.ResponseEntity
-import org.springframework.web.context.request.async.DeferredResult
 import springfox.documentation.builders.ApiInfoBuilder
 import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.PathSelectors.regex
 import springfox.documentation.builders.RequestHandlerSelectors
-import springfox.documentation.schema.AlternateTypeRules.newRule
-import springfox.documentation.schema.WildcardType
 import springfox.documentation.service.*
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spi.service.contexts.SecurityContext
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger.web.*
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc
-import java.time.LocalDate
-import kr.co.korbit.gia.jpa.test.model.Session
 import org.springframework.context.annotation.Import
 
 
@@ -42,7 +37,7 @@ class SwaggerConfig {
             .description("Korbit Gia Api Server Rest-Api 규약")
             .license("korbit copyright")
             .licenseUrl("https://korbit.co.kr")
-            .termsOfServiceUrl("https://korbit.co.kr/gia/swagger-ui.html")
+            .termsOfServiceUrl("https://api.korbit.co.kr/swagger-ui.html")
             .version("1.0.0")
             .contact(Contact("Kepha Khang", "https://korbit.co.kr", "kepha@korbit.co.kr"))
             .build()

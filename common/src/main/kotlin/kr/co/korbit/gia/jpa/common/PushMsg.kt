@@ -21,7 +21,7 @@ class PushMsg(
     var sender: User? = null,
     var receivers: List<User>? = null,
     var targets: List<UserApp>? = null
-) : AbstractJpaPersistable() {
+) : BasePersistable() {
     companion object {
         val serialVersionUID = 7825983033219974064L
     }

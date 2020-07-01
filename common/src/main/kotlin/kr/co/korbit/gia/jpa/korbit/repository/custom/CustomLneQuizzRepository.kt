@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
 @Repository
-interface CustomLneQuizzRepository {
+interface CustomLneQuizRepository {
 
 }

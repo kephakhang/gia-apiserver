@@ -56,6 +56,7 @@ class JpaKorbitApiConfig {
         properties["show_sql"] = Env.showSqlFlag
         properties["format_sql"] = Env.formatSqlFlag
         properties["use_sql_comments"] = Env.useSqlCommentFlag
+        properties["hibernate.default_batch_fetch_size"] = Env.defaultBatchSize
         properties["hibernate.naming.implicit-strategy}"] = Env.implicitStrategy
         properties["hibernate.naming.physical-strategy}"] = Env.physicalStrategy
         properties["hibernate.use-new-id-generator-mappings"] = Env.useNewIdGeneratorMappingsFlag

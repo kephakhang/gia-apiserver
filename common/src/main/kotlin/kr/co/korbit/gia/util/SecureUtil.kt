@@ -60,7 +60,7 @@ class SecureUtil{
                 val encrypted = cipher.doFinal("$mobileNumber.zhqltvhdpqj".toByteArray(charset("UTF-8")))
                 String(Base64.getEncoder().encode(encrypted))
             } catch (e: Exception) {
-                logger.error("input=$mobileNumber", e)
+                logger.error("input=$mobileNumber : ${e.stackTraceString}")
                 null
             }
         }
@@ -84,7 +84,7 @@ class SecureUtil{
                 val index = decrypted.indexOf('.')
                 decrypted.substring(0, index)
             } catch (e: Exception) {
-                logger.error("input=$mobileNumber", e)
+                logger.error("input=$mobileNumber : ${e.stackTraceString}")
                 null
             }
         }

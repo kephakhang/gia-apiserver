@@ -3,10 +3,11 @@ package kr.co.korbit.gia.service.korbit
 import com.querydsl.core.types.dsl.PathBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import kr.co.korbit.gia.env.Env
+import kr.co.korbit.gia.jpa.common.BaseService
 import kr.co.korbit.gia.jpa.common.WhereBuilder
 import kr.co.korbit.gia.jpa.korbit.model.LneQuest
 import kr.co.korbit.gia.jpa.korbit.model.QLneQuest
-import kr.co.korbit.gia.jpa.korbit.model.QLneQuizz
+import kr.co.korbit.gia.jpa.korbit.model.QLneQuiz
 import kr.co.korbit.gia.jpa.korbit.repository.LneQuestRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -17,11 +18,21 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import javax.persistence.EntityManager
+import javax.persistence.EntityManagerFactory
 
 
 @Service
 @Transactional(readOnly = true)
-class LneQuestService(val lneQuestRepository: LneQuestRepository) {
+class LneQuestService(val lneQuestRepository: LneQuestRepository,
+                      @Qualifier("jpaKorbitEntityManagerFactory") val jpaKorbitEntityManagerFactory: EntityManagerFactory):
+    BaseService() {
+
+    lateinit var em : EntityManager
+
+    init {
+        em = jpaKorbitEntityManagerFactory.createEntityManager()
+    }
 
     @Transactional
     fun addLneQuest(lneQuest: LneQuest): LneQuest? {
@@ -50,5 +61,26 @@ class LneQuestService(val lneQuestRepository: LneQuestRepository) {
 
     fun getLneQuestList2(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest>? {
         return lneQuestRepository.findAllByTypeAndCreatedAtBetween(type, from, to, pageable)
+    }
+
+    fun getLneQuestList3(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest> {
+
+        // JPQL by em.createQuery() : 테이블 명은 Entity Class Name 으로 인식한다.
+        val query = em.createQuery(
+            "select q from LneQuest q " +
+                    " where q.type = :type and :from < q.createdAt and q.createdAt < :to ", LneQuest::class.java
+        )
+        query.setParameter("type", type)
+        query.setParameter("from", from)
+        query.setParameter("to", to)
+        query.firstResult = pageable.offset.toInt()
+        query.maxResults = pageable.pageSize
+
+        val list =  query.resultList
+        return PageImpl<LneQuest>(list, pageable, list.size.toLong())
+    }
+
+    fun getLneQuestList4(type: String?, from: LocalDateTime?, to: LocalDateTime?, pageable: Pageable): Page<LneQuest>? {
+        return lneQuestRepository.findAllByJpql(type, from, to, pageable)
     }
 }

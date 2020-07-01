@@ -1,17 +1,18 @@
 package kr.co.korbit.gia.jpa.korbit.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import kr.co.korbit.gia.jpa.common.BasePersistable
 import java.time.LocalDateTime
 import javax.persistence.*
-import kr.co.korbit.gia.jpa.common.AbstractJpaPersistable as AbstractJpaPersistable1
 
 /**
  * subscription information
  */
-@Entity(name = "LneQuests")
+@Entity(name = "LneQuest")
 @Table(name = "korbit.lne_quests")
 @Cacheable
 @JsonInclude(JsonInclude.Include.NON_NULL)
+//@NamedEntityGraph(name = "LneQuest.all", attributeNodes = [NamedAttributeNode("quizList")])
 class LneQuest (
 
 
@@ -46,15 +47,15 @@ class LneQuest (
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null,
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "quest", cascade = [CascadeType.ALL])
-    var quizzList: MutableList<LneQuizz> = mutableListOf()
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "quest"  , cascade = [CascadeType.ALL] )
+    var quizList: MutableList<LneQuiz> = mutableListOf()
 
 
-): AbstractJpaPersistable1() {
+): BasePersistable() {
 
     // 연관관계 추가 method 는 만들어 놓는게 편리하다.
-    fun addQuizz(quizz: LneQuizz) {
-        quizz.quest = this
-        quizzList.add(quizz)
+    fun addQuiz(quiz: LneQuiz) {
+        quiz.quest = this
+        quizList.add(quiz)
     }
 }

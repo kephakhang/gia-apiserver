@@ -55,6 +55,7 @@ class JpaKorbitConfig {
         adapter.setGenerateDdl(false)
         val properties = HashMap<String, String?>()
         properties["hibernate.ddl-auto"] = Env.ddlAuto
+        properties["hibernate.default_batch_fetch_size"] = Env.defaultBatchSize
         properties["show_sql"] = Env.showSqlFlag
         properties["format_sql"] = Env.formatSqlFlag
         properties["use_sql_comments"] = Env.useSqlCommentFlag

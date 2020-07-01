@@ -5,7 +5,6 @@ import kr.co.korbit.common.error.KorbitError
 import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.jpa.common.Response
 import mu.KotlinLogging
-import org.slf4j.LoggerFactory
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 import javax.servlet.http.HttpServletRequest
@@ -54,7 +53,7 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
                 logger.debug("URI - {}", uri)
                 if (uri.endsWith(".html") || uri.endsWith(".css") || uri.endsWith(".js") ||
                     uri.endsWith(".jpg") || uri.endsWith(".gif") || uri.endsWith(".png") ||
-                    uri.endsWith(".ico") || uri.endsWith(".svg") ||
+                    uri.endsWith(".ico") || uri.endsWith(".svg") || uri.equals("/error") ||
                     uri.contains("\\/swagger".toRegex()) || uri.contains("\\/webjars\\/".toRegex())  || uri.equals("/v2/api-docs") ||
                     uri.startsWith("/internal/") || uri.startsWith("/public/") || uri.startsWith("/admin/")) {
                     response.setHeader("Access-Control-Allow-Origin", "*")

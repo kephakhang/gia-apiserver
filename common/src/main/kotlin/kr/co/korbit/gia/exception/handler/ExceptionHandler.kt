@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest
 
 val logger = KotlinLogging.logger(ExceptionHandler::class.java.name)
 
-@RestControllerAdvice("kr.co.korbit.gia.controller.internal", "kr.co.korbit.gia.controller.external", "kr.co.korbit.gia.controller.public")
+@RestControllerAdvice("kr.co.korbit.gia.controller.common", "kr.co.korbit.gia.controller.internal", "kr.co.korbit.gia.controller.external", "kr.co.korbit.gia.controller.public")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class ExceptionHandler : ResponseEntityExceptionHandler() {
     //========================================================================================================

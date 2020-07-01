@@ -1,22 +1,56 @@
 package kr.co.korbit.gia.jpa.common
 
+import com.querydsl.core.types.EntityPath
 import com.querydsl.core.types.Expression
 import com.querydsl.core.types.Order
 import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.dsl.PathBuilder
 import com.querydsl.jpa.impl.JPAQuery
 import com.querydsl.jpa.impl.JPAQueryFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
-import org.springframework.data.querydsl.QSort
+import org.springframework.data.jpa.repository.support.JpaEntityInformation
+import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport
+import org.springframework.data.jpa.repository.support.Querydsl
+import org.springframework.data.querydsl.SimpleEntityPathResolver
 import org.springframework.data.repository.NoRepositoryBean
+import org.springframework.data.repository.support.PageableExecutionUtils
+import org.springframework.util.Assert
+import java.util.function.Function
+import javax.annotation.PostConstruct
+import javax.persistence.EntityManager
+import kotlin.reflect.KClass
 
+
+/**
+ * Querydsl 4.x 버전에 맞춘 Querydsl 지원 라이브러리
+ *
+ * @author Younghan Kim
+ * @see org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
+ */
 @NoRepositoryBean
-abstract class Querydsl4RepositorySupport<T>() {
-
+abstract class Querydsl4RepositorySupport<T>(val entityManager: EntityManager, val domainClass: KClass<Any>) {
+    lateinit var querydsl: Querydsl
     lateinit var queryFactory: JPAQueryFactory
+    lateinit var builder: PathBuilder<*>
+
+    init {
+        Assert.notNull(entityManager, "EntityManager must not be null!")
+        val entityInformation: JpaEntityInformation<*, *> =
+            JpaEntityInformationSupport.getEntityInformation<T>(domainClass.java as Class<T>, entityManager)
+        val resolver = SimpleEntityPathResolver.INSTANCE
+        val path: EntityPath<*> = resolver.createPath<T>(entityInformation.javaType as Class<T>)
+        builder = PathBuilder(path.type, path.metadata)
+        querydsl = Querydsl(
+            entityManager,
+            builder
+        )
+        queryFactory = JPAQueryFactory(entityManager)
+    }
 
     //ref : https://stackoverflow.com/questions/13072378/how-can-i-convert-a-spring-data-sort-to-a-querydsl-orderspecifier
-    open fun ordable(sort: Sort, builder: PathBuilder<*>): MutableList<OrderSpecifier<*>> {
+    open fun ordable(sort: Sort): MutableList<OrderSpecifier<*>> {
 
         val specifiers: MutableList<OrderSpecifier<*>> = mutableListOf()
 
@@ -33,12 +67,46 @@ abstract class Querydsl4RepositorySupport<T>() {
         return specifiers
     }
 
-    open fun select(): JPAQuery<T> {
+    @PostConstruct
+    fun validate() {
+        Assert.notNull(entityManager, "EntityManager must not be null!")
+        Assert.notNull(querydsl, "Querydsl must not be null!")
+        Assert.notNull(queryFactory, "QueryFactory must not be null!")
+    }
+
+    protected fun select(): JPAQuery<T> {
         //ToDo : Unchecked cast : JPAQuery<*>! to JPAQuery<T> ??? fix it
         return queryFactory.query() as JPAQuery<T>
     }
 
-//    open fun<T> applyPagination(pageable: Pageable, contentQuery: Function<JPAQueryFactory, JPAQuery> ): Page<T> {
-//        val jpaQuery = contentQuery.apply(queryFactory)
-//        val content: List<T> = getQuerydsl().applyPagination(pageable,jpaQuery).fetch();
+    protected fun select(expr: Expression<T>?): JPAQuery<T> {
+        return queryFactory.select(expr)
+    }
+
+    protected fun selectFrom(from: EntityPath<T>?): JPAQuery<T> {
+        return queryFactory.selectFrom(from)
+    }
+
+    protected fun applyPagination(
+        pageable: Pageable?,
+        jpaQuery: JPAQuery<*>
+    ): Page<T> {
+        val content: List<T> = querydsl.applyPagination(
+            pageable,
+            jpaQuery
+        ).fetch() as List<T>
+        return PageableExecutionUtils.getPage(content, pageable) { jpaQuery.fetchCount() }
+    }
+
+    protected fun applyPagination(
+        pageable: Pageable?,
+        jpaQuery: JPAQuery<*>,
+        countQuery: JPAQuery<*>
+    ): Page<T> {
+        val content: List<T> = querydsl.applyPagination(
+            pageable,
+            jpaQuery
+        ).fetch() as List<T>
+        return PageableExecutionUtils.getPage(content, pageable) { countQuery.fetchCount() }
+    }
 }

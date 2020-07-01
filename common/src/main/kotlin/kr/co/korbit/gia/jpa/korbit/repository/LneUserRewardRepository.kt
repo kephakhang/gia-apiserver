@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Repository
-@Transactional(transactionManager = "jpaTestTransactionManager")
+@Transactional(transactionManager = "jpaKorbitTransactionManager")
 interface LneUserRewardRepository : JpaRepository<LneUserReward, Long> {
     override fun findById(id: Long): Optional<LneUserReward>
 }

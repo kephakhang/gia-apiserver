@@ -5,7 +5,7 @@ import kr.co.korbit.gia.annotation.AdminSessionUser
 import kr.co.korbit.gia.annotation.AgentSessionUser
 import kr.co.korbit.gia.annotation.SkipSessionCheck
 import kr.co.korbit.gia.exception.SessionNotFoundException
-import kr.co.korbit.gia.jpa.test.model.Session
+import kr.co.korbit.gia.jpa.korbit.model.dto.Session
 import kr.co.korbit.gia.service.test.AuthService
 import mu.KotlinLogging
 import org.slf4j.MDC
@@ -32,18 +32,18 @@ class UnifiedArgumentResolver(
 
     @Throws(SessionNotFoundException::class)
     fun checkSession(req: HttpServletRequest, method: Method): Session? {
-        var authKey = req.getHeader("Authorization")
+        var authKey = req.getHeader(JwtProperties.HEADER_STRING)
         if (authKey == null || authKey.isEmpty()) {
             req.cookies?.let {
                 for (cookie in it) {
-                    if (cookie.name.equals("Korbit-Authorization", ignoreCase = true)) {
+                    if (cookie.name.equals("Korbit-" + JwtProperties.HEADER_STRING, ignoreCase = true)) {
                         authKey = cookie.value
                         break
                     }
                 }
             }
             if (authKey == null || authKey.isEmpty())
-                authKey = req.getParameter("Authorization")
+                authKey = req.getParameter(JwtProperties.HEADER_STRING)
         }
 
         MDC.put("authKey", authKey ?: "NULL")

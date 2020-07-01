@@ -20,6 +20,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.ImportResource
+import org.springframework.data.domain.AuditorAware
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.format.FormatterRegistry
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar
 import org.springframework.http.converter.HttpMessageConverter
@@ -42,6 +44,7 @@ import java.util.*
 
 @Configuration
 @EnableWebMvc
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @EnableAutoConfiguration
 @ComponentScan("kr.co.korbit.gia")
 @ImportResource("classpath:/app-context.xml")
@@ -53,6 +56,11 @@ class WebMvcConfig (
         arrayOf(
             "classpath:/static/"
         )
+
+    @Bean
+    fun auditorProvider(): AuditorAware<String> {
+        return AuditorAwareImpl()
+    }
 
     @Bean
     fun objectMapper(): ObjectMapper? {

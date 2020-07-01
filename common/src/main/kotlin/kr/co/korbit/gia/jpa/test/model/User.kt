@@ -1,7 +1,7 @@
 package kr.co.korbit.gia.jpa.test.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import kr.co.korbit.gia.jpa.common.AbstractJpaPersistable
+import kr.co.korbit.gia.jpa.common.BasePersistable
 import kr.co.korbit.gia.jpa.common.UserStatus
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
@@ -9,7 +9,7 @@ import org.hibernate.annotations.Type
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
-@Entity(name = "Users")
+@Entity(name = "User")
 @Table(name = "test.users")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -167,9 +167,6 @@ class User (
     @Column(name = "is_corporation")
     @Type(type = "yes_no")
     var isCorporation: Boolean = false
-) : AbstractJpaPersistable(){
+) : BasePersistable(){
 }
 
-typealias Session = User
-typealias Agent = User
-typealias Admin = User

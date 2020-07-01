@@ -7,7 +7,7 @@ import kr.co.korbit.gia.annotation.SkipSessionCheck
 import kr.co.korbit.gia.env.Env
 import kr.co.korbit.gia.exception.SessionNotFoundException
 import kr.co.korbit.gia.jpa.common.Response
-import kr.co.korbit.gia.jpa.test.model.Session
+import kr.co.korbit.gia.jpa.korbit.model.dto.Session
 import kr.co.korbit.gia.util.KeyGenerator
 import kr.co.korbit.gia.util.RequestWrapper
 import mu.KotlinLogging
@@ -111,7 +111,7 @@ class ControllerProxy {
         } else {
             msg.append(CRLF).append("###Exception####################")
                 .append(CRLF).append(REQUEST_PREFIX)
-                .append(requestUri).append(":")
+                .append(requestUri)
         }
         if (req.queryString != null
             && !req.queryString.isEmpty()
@@ -179,7 +179,7 @@ class ControllerProxy {
         }
     }
 
-    @Around("execution(* kr.co.korbit.gia.controller.internal.*.*(..)) || execution(* kr.co.korbit.gia.controller.public.*.*(..)) || execution(* kr.co.korbit.gia.controller.admin.*.*(..))")
+    @Around("execution(* kr.co.korbit.gia.controller.common.*.*(..)) || execution(* kr.co.korbit.gia.controller.internal.*.*(..)) || execution(* kr.co.korbit.gia.controller.public.*.*(..)) || execution(* kr.co.korbit.gia.controller.admin.*.*(..))")
     fun around(call: ProceedingJoinPoint): Any? {
         var response: Any? = null
         val sig = call.signature as MethodSignature
@@ -254,12 +254,12 @@ class ControllerProxy {
                 }
             }
         } catch(ex: SessionNotFoundException) {
-            logger.error("proceed error return", ex.stackTraceString)
+            logger.error("proceed error return : ${ex.stackTraceString}")
             isException = true
             val err = KorbitError.error(ex)
             response = Response(false, err as Any, tid, requestUri, req.method.toUpperCase())
         } catch (ex: Throwable) {
-            logger.error("proceed error return", ex.stackTraceString)
+            logger.error("proceed error return : ${ex.stackTraceString}")
             isException = true
             val err = KorbitError.error(ErrorCode.E00000)
             err.description = ex.localizedMessage

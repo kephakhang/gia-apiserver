@@ -58,6 +58,7 @@ class JpaTestConfig() {
         properties["hibernate.ddl-auto"] = Env.ddlAuto
         properties["show_sql"] = Env.showSqlFlag
         properties["format_sql"] = Env.formatSqlFlag
+        properties["hibernate.default_batch_fetch_size"] = Env.defaultBatchSize
         properties["use_sql_comments"] = Env.useSqlCommentFlag
         properties["hibernate.naming.implicit-strategy}"] = Env.implicitStrategy
         properties["hibernate.naming.physical-strategy}"] = Env.physicalStrategy

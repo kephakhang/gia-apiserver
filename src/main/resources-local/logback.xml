@@ -7,19 +7,19 @@
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
-    <logger name="org.hibernate.SQL" level="debug" additivity="false">
+    <logger name="org.hibernate.SQL" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" additivity="false">
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="org.springframework.jdbc.core.JdbcTemplate" level="debug" additivity="false">
+    <logger name="org.springframework.jdbc.core.JdbcTemplate" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="trace" additivity="false">
+    <logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" additivity="false">
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="kr.co.korbit" level="debug"  additivity="false">

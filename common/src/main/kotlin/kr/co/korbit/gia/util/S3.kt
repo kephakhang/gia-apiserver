@@ -78,9 +78,9 @@ class S3 {
 
     fun removeNewFile(targetFile: File) {
         if (targetFile.delete()) {
-            logger.info("파일이 삭제되었습니다.")
+            logger.info(targetFile.path + " : This file is removed !!!")
         } else {
-            logger.error("파일이 삭제되지 못했습니다.")
+            logger.error(targetFile.path + " : The file is not removed !!!")
         }
     }
 

@@ -8,7 +8,7 @@ class Device(
     val last_access_date: LocalDateTime? = null,
     val platform: String? = null,
     val properties: Map<String, Any>? = null
-) : AbstractJpaPersistable() {
+) : BasePersistable() {
     companion object {
         const val serialVersionUID = 4357098649071892749L
     }

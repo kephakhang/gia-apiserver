@@ -10,9 +10,9 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.typesafe.config.ConfigFactory
 import kr.co.korbit.common.conf.HoconApplicationConfig
 import kr.co.korbit.gia.jpa.common.UserStatus
-import kr.co.korbit.gia.jpa.test.model.Session
+import kr.co.korbit.gia.jpa.korbit.model.User
+import kr.co.korbit.gia.jpa.korbit.model.dto.UserDto
 import mu.KotlinLogging
-import org.apache.kafka.common.protocol.types.ArrayOf
 import org.springframework.context.ApplicationContext
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -29,6 +29,7 @@ class Env {
 
         val dialect = "org.hibernate.dialect.MySQL57Dialect"
         var ddlAuto = "validate"
+        val defaultBatchSize = "300"
         var showSqlFlag = "false"
         var formatSqlFlag = "true"
         var useSqlCommentFlag = "true"
@@ -72,8 +73,29 @@ class Env {
             objectMapper.dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
         }
 
-        fun getTestSession(): Session {
-            return Session(
+        fun getTestUserDto(): UserDto {
+            return UserDto(
+                "3c9aa398-0004-4324-a826-8c7fdaae633c",
+                null,
+                "5d0ad68d5caa68e4b8dcbd1fd3e5621f1f908426edd8f04ff7e4f0bf04645738",
+                0,
+                "Kobit Tester",
+                "Korbit Tester",
+                "01012345678",
+                null,
+                "m",
+                "0",
+                "KR",
+                UserStatus.registered,
+                1L,
+                true,
+                true,
+                false
+            )
+        }
+
+        fun getTestUser(): User {
+            return User(
                 "3c9aa398-0004-4324-a826-8c7fdaae633c",
                 null,
                 "5d0ad68d5caa68e4b8dcbd1fd3e5621f1f908426edd8f04ff7e4f0bf04645738",
