@@ -32,18 +32,18 @@ class UnifiedArgumentResolver(
 
     @Throws(SessionNotFoundException::class)
     fun checkSession(req: HttpServletRequest, method: Method): Session? {
-        var authKey = req.getHeader(JwtProperties.HEADER_STRING)
+        var authKey = req.getHeader(JwtSecurityConstants.TOKEN_HEADER)
         if (authKey == null || authKey.isEmpty()) {
             req.cookies?.let {
                 for (cookie in it) {
-                    if (cookie.name.equals("Korbit-" + JwtProperties.HEADER_STRING, ignoreCase = true)) {
+                    if (cookie.name.equals("Korbit-" + JwtSecurityConstants.TOKEN_HEADER, ignoreCase = true)) {
                         authKey = cookie.value
                         break
                     }
                 }
             }
             if (authKey == null || authKey.isEmpty())
-                authKey = req.getParameter(JwtProperties.HEADER_STRING)
+                authKey = req.getParameter(JwtSecurityConstants.TOKEN_HEADER)
         }
 
         MDC.put("authKey", authKey ?: "NULL")

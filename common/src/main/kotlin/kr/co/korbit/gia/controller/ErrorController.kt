@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @Api(value = "error", description = "코빗 error api")
 class ErrorController() {
 
+    /*
     @ApiOperation(
         value = "Interceptor Level Error 발생시 호출되는 401 에러 처리",
         nickname = "addLneQuest",
@@ -20,4 +21,6 @@ class ErrorController() {
 
         return Response(false, map, null, null, "GET")
     }
+    */
+
 }

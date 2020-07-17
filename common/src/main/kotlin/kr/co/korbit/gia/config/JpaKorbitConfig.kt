@@ -45,7 +45,7 @@ class JpaKorbitConfig {
     }
 
     @Bean(name = ["korbitJdbcTemplate"])
-    fun jdbcTemplate(@Qualifier("jpaKorbitDataSource") ds: DataSource?): JdbcTemplate? {
+    fun jdbcTemplate(@Qualifier("jpaKorbitDataSource") ds: DataSource): JdbcTemplate {
         return JdbcTemplate(ds)
     }
 

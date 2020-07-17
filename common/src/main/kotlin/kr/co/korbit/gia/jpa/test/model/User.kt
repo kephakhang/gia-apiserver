@@ -13,7 +13,6 @@ import javax.persistence.*
 @Entity(name = "User")
 @Table(name = "test.users")
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class User (
 

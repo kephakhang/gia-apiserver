@@ -12,6 +12,7 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.orm.jpa.JpaTransactionManager
@@ -29,30 +30,29 @@ import kotlin.collections.HashMap
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef = "jpaTerraEntityManagerFactory",
-        transactionManagerRef = "jpaTerraTransactionManager",
-        basePackages = ["kr.co.korbit.gia.jpa.terra.repository", "kr.co.korbit.gia.jpa.terra.repository.custom", "kr.co.korbit.gia.jpa.terra.repository.impl"])
-class JpaTerraConfig {
+@EnableJpaRepositories(entityManagerFactoryRef = "jpaAdminEntityManagerFactory",
+        transactionManagerRef = "jpaAdminTransactionManager",
+        basePackages = ["kr.co.korbit.gia.jpa.admin.repository", "kr.co.korbit.gia.jpa.admin.repository.custom", "kr.co.korbit.gia.jpa.admin.repository.impl"])
+class JpaAdminConfig {
 
     @Autowired(required = false)
     private val persistenceUnitManager: PersistenceUnitManager? = null
 
-    @Bean(name = ["jpaTerraDataSource"])
-    @ConfigurationProperties(prefix = "spring.datasource.terra")
-    fun jpaTerraDataSource(): DataSource {
+    @Bean(name = ["jpaAdminDataSource"])
+    @ConfigurationProperties(prefix = "spring.datasource.admin")
+    fun jpaAdminDataSource(): DataSource {
         val dataSource = DataSourceBuilder.create().type(HikariDataSource::class.java).build()
         //dataSource.connectionInitSql = "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
         return dataSource
     }
 
-    @Bean(name = ["terraJdbcTemplate"])
-    fun jdbcTemplate(@Qualifier("jpaTerraDataSource") ds: DataSource): JdbcTemplate {
+    @Bean(name = ["adminJdbcTemplate"])
+    fun jdbcTemplate(@Qualifier("jpaAdminDataSource") ds: DataSource): JdbcTemplate {
         return JdbcTemplate(ds)
     }
 
-
-    @Bean(name = ["jpaTerraEntityManagerFactoryBuilder"])
-    fun jpaTerraEntityManagerFactoryBuilder(): EntityManagerFactoryBuilder {
+    @Bean(name = ["jpaAdminEntityManagerFactoryBuilder"])
+    fun jpaAdminEntityManagerFactoryBuilder(): EntityManagerFactoryBuilder {
         val adapter = HibernateJpaVendorAdapter()
         adapter.setShowSql(true)
         adapter.setPrepareConnection(true)
@@ -63,8 +63,8 @@ class JpaTerraConfig {
         properties["hibernate.ddl-auto"] = Env.ddlAuto
         properties["show_sql"] = Env.showSqlFlag
         properties["format_sql"] = Env.formatSqlFlag
-        properties["hibernate.default_batch_fetch_size"] = Env.defaultBatchSize
         properties["use_sql_comments"] = Env.useSqlCommentFlag
+        properties["hibernate.default_batch_fetch_size"] = Env.defaultBatchSize
         properties["hibernate.naming.implicit-strategy}"] = Env.implicitStrategy
         properties["hibernate.naming.physical-strategy}"] = Env.physicalStrategy
         properties["hibernate.use-new-id-generator-mappings"] = Env.useNewIdGeneratorMappingsFlag
@@ -73,34 +73,34 @@ class JpaTerraConfig {
                 adapter, properties, persistenceUnitManager)
     }
 
-    @Bean(name = ["jpaTerraEntityManagerFactory"])
-    fun jpaTerraEntityManagerFactory(
-            @Qualifier("jpaTerraEntityManagerFactoryBuilder") builder: EntityManagerFactoryBuilder,
-            @Qualifier("jpaTerraDataSource") jpaTerraDataSource: DataSource?): LocalContainerEntityManagerFactoryBean {
-        val factory =  builder
-                .dataSource(jpaTerraDataSource)
-                .persistenceUnit("terra")
+    @Bean(name = ["jpaAdminEntityManagerFactory"])
+    fun jpaAdminEntityManagerFactory(
+            @Qualifier("jpaAdminEntityManagerFactoryBuilder") builder: EntityManagerFactoryBuilder,
+            @Qualifier("jpaAdminDataSource") jpaAdminDataSource: DataSource?): LocalContainerEntityManagerFactoryBean {
+        val factory = builder
+                .dataSource(jpaAdminDataSource)
+                .persistenceUnit("admin")
                 .build()
-
-        factory.setPackagesToScan("kr.co.korbit.gia.jpa.terra.model")
+        factory.setPackagesToScan("kr.co.korbit.gia.jpa.admin.model")
         return factory
     }
 
-    @Bean(name = ["jpaTerraEntityManager"])
-    fun jpaTerraEntityManager(
-        @Qualifier("jpaTerraEntityManagerFactory") jpaTerraEntityManagerFactory: EntityManagerFactory): EntityManager {
-        return jpaTerraEntityManagerFactory.createEntityManager()
+    @Bean(name = ["jpaAdminEntityManager"])
+    fun jpaAdminEntityManager(
+        @Qualifier("jpaAdminEntityManagerFactory") jpaAdminEntityManagerFactory: EntityManagerFactory): EntityManager {
+        return jpaAdminEntityManagerFactory.createEntityManager()
     }
 
-    @Bean(name = ["jpaTerraTransactionManager"])
-    fun jpaTerraTransactionManager(
-            @Qualifier("jpaTerraEntityManagerFactory") jpaTerraEntityManagerFactory: EntityManagerFactory?): PlatformTransactionManager {
-        return JpaTransactionManager(jpaTerraEntityManagerFactory!!)
+
+    @Bean(name = ["jpaAdminTransactionManager"])
+    fun jpaAdminTransactionManager(
+            @Qualifier("jpaAdminEntityManagerFactory") jpaAdminEntityManagerFactory: EntityManagerFactory?): PlatformTransactionManager {
+        return JpaTransactionManager(jpaAdminEntityManagerFactory!!)
     }
 
-    @Bean(name = ["jpaTerraQueryFactory"])
-    fun jpaTerraQueryFactory(@Qualifier("jpaTerraEntityManagerFactory") jpaTerraEntityManagerFactory: EntityManagerFactory): JPAQueryFactory {
+    @Bean(name = ["jpaAdminQueryFactory"])
+    fun jpaAdminQueryFactory(@Qualifier("jpaAdminEntityManagerFactory") jpaAdminEntityManagerFactory: EntityManagerFactory): JPAQueryFactory {
 
-        return JPAQueryFactory(jpaTerraEntityManagerFactory.createEntityManager())
+        return JPAQueryFactory(jpaAdminEntityManagerFactory.createEntityManager())
     }
 }

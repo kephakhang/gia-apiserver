@@ -36,10 +36,6 @@ class Application: ApplicationInitializer() {
             Env.appContext = runApplication<Application>(*args)
         }
 
-        fun initFirebase(context: ApplicationContext) {
-            Firebase.geInstance(context)
-        }
-
         @PostConstruct
         fun started() {
             var applicable = Env.appConfig.config("app.deployment").property("applicable").toString()
@@ -49,8 +45,6 @@ class Application: ApplicationInitializer() {
 
             // Appicable="false" 이면 Consumer 를 띄우지 않는다.
             if (applicable.equals("true")) {
-
-                initFirebase(Env.appContext)
 
                 val topics: List<String> = Env.appConfig.config("app.kafka.consumer").property("topics").getList()
                 val kafkaEventProducer: KafkaProducer<String, Any> = buildProducer<String, Any>()

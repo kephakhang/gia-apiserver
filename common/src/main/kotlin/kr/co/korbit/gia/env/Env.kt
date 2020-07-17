@@ -153,7 +153,7 @@ class Env {
         }
 
 
-        @JvmStatic fun main(argv: List<String>) {
+        @JvmStatic fun main() {
             System.out.println(LocalDateTime.parse("2020-04-23T08:28:26.000", DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")).toString())
         }
 

@@ -17,22 +17,14 @@ import java.net.URL
 import java.util.*
 
 class Firebase {
-    private val accessToken: AccessToken? = null
-    private var googleCredentials: GoogleCredentials? = null
-    private var sendUrl: String? = null
-    private var dbUrl: String? = null
-    private var jsonKey: String? = null
-    private var options: FirebaseOptions? = null
-    private var firbaseApp: FirebaseApp? = null
-    private var firebaseMessaging: FirebaseMessaging? = null
-
-    fun getFirbaseApp(): FirebaseApp? {
-        return firbaseApp
-    }
-
-    fun getFirebaseMessaging(): FirebaseMessaging? {
-        return firebaseMessaging
-    }
+   lateinit var accessToken: AccessToken
+   lateinit var googleCredentials: GoogleCredentials
+   lateinit var sendUrl: String
+   lateinit var dbUrl: String
+   lateinit var jsonKey: String
+   lateinit var options: FirebaseOptions
+   lateinit var firbaseApp: FirebaseApp
+   lateinit var firebaseMessaging: FirebaseMessaging
 
     fun toFile(url: URL?): File? {
         return if (url == null || url.protocol != "file") {
@@ -92,9 +84,6 @@ class Firebase {
                 .setDatabaseUrl(dbUrl)
                 .build()
             firbaseApp = FirebaseApp.initializeApp(options, dbUrl)
-            if (firbaseApp == null) {
-                logger.info("firbaseApp is null")
-            }
             firebaseMessaging = FirebaseMessaging.getInstance(firbaseApp)
             firbaseApp
         } catch (e: Exception) {
@@ -117,7 +106,7 @@ class Firebase {
                     .build()
             logger.info("sendPush Message : $message")
             logger.info("sendPush firebaseMessaging : " + firebaseMessaging.toString())
-            val response = firebaseMessaging!!.send(message)
+            val response = firebaseMessaging.send(message)
             logger.debug("sendPush response : $response")
         } catch (e: Exception) {
             logger.error("sendPush exception : " + e.stackTraceString)
@@ -145,13 +134,9 @@ class Firebase {
                 .putAllData(data)
                 .addAllTokens(pushKeyArr)
                 .build()
-            if (firebaseMessaging == null) {
-                logger.info("firebaseMessaging is null")
-                return
-            }
             logger.info("sendPush Message : " + message.toString())
             logger.info("sendPush firebaseMessaging : " + firebaseMessaging.toString())
-            val response = firebaseMessaging!!.sendMulticast(message)
+            val response = firebaseMessaging.sendMulticast(message)
             if (response != null) {
                 logger.debug("sendPush response : $response")
                 var i = 0
@@ -184,7 +169,7 @@ class Firebase {
 
     companion object {
         val logger = KotlinLogging.logger(Firebase::class.java.name)
-        var firebase: Firebase? = null
+
         val SCOPES = arrayOf(
             "https://www.googleapis.com/auth/firebase.database",
             "https://www.googleapis.com/auth/userinfo.email",
@@ -198,22 +183,23 @@ class Firebase {
             "https://fcm.googleapis.com/v1/projects/korbit-ae2c9/messages:send"
         const val FCM_KORBIT_DB_URL = "https://korbit-ae2c9.firebaseio.com"
 
-        fun geInstance(context: ApplicationContext): Firebase? {
-            return Firebase.firebase
-        }
+        var firebase: Firebase? = null
 
         val instance: Firebase?
             get() {
                 logger.info("getBizInstance")
-                if( Firebase.firebase == null) {
+                if( firebase == null) {
                     logger.info("firebaseBiz null")
-                    Firebase.firebase = Firebase()
-                    Firebase.firebase!!.sendUrl = FCM_KORBIT_SEND_URL
-                    Firebase.firebase!!.dbUrl = FCM_KORBIT_DB_URL
-                    Firebase.firebase!!.jsonKey = FCM_KORBIT_SDK_KEY_JSON
-                    Firebase.firebase!!.createApp()
+                    firebase = Firebase()
+                    firebase ?.let {
+                        it.sendUrl = FCM_KORBIT_SEND_URL
+                        it.dbUrl = FCM_KORBIT_DB_URL
+                        it.jsonKey = FCM_KORBIT_SDK_KEY_JSON
+                        it.createApp()
+                    }
                 }
-                return Firebase.firebase
+
+                return firebase
             }
 
         @Throws(FirebaseMessagingException::class)

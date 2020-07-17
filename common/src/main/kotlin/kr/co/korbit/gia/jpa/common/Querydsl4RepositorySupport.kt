@@ -17,6 +17,7 @@ import org.springframework.data.querydsl.SimpleEntityPathResolver
 import org.springframework.data.repository.NoRepositoryBean
 import org.springframework.data.repository.support.PageableExecutionUtils
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.stereotype.Repository
 import org.springframework.util.Assert
 import java.util.function.Function
 import javax.annotation.PostConstruct
@@ -28,14 +29,14 @@ import kotlin.reflect.KClass
  * Querydsl 4.x 버전에 맞춘 Querydsl 지원 라이브러리
  *
  * @author Younghan Kim
- * @see org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
+ * @see org.springframework.data.jpa.repository.support.Querydsl4RepositorySupport
  */
-@NoRepositoryBean
+@Suppress("UNCHECKED_CAST")
 abstract class Querydsl4RepositorySupport<T>(val entityManager: EntityManager, val jdbcTemplate: JdbcTemplate, val domainClass: KClass<Any>) {
-    lateinit var querydsl: Querydsl
-    lateinit var queryFactory: JPAQueryFactory
-    lateinit var builder: PathBuilder<*>
-    protected val batchSize = 300
+     var querydsl: Querydsl
+     var queryFactory: JPAQueryFactory
+     var builder: PathBuilder<*>
+     val batchSize = 300
 
     init {
         Assert.notNull(entityManager, "EntityManager must not be null!")
@@ -90,7 +91,7 @@ abstract class Querydsl4RepositorySupport<T>(val entityManager: EntityManager, v
     }
 
     protected fun applyPagination(
-        pageable: Pageable?,
+        pageable: Pageable,
         jpaQuery: JPAQuery<*>
     ): Page<T> {
         val content: List<T> = querydsl.applyPagination(
@@ -101,7 +102,7 @@ abstract class Querydsl4RepositorySupport<T>(val entityManager: EntityManager, v
     }
 
     protected fun applyPagination(
-        pageable: Pageable?,
+        pageable: Pageable,
         jpaQuery: JPAQuery<*>,
         countQuery: JPAQuery<*>
     ): Page<T> {

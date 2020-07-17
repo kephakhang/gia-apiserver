@@ -4,6 +4,7 @@ import kr.co.korbit.gia.jpa.common.Querydsl4RepositorySupport
 import kr.co.korbit.gia.jpa.korbit.model.LneQuest
 import kr.co.korbit.gia.jpa.korbit.model.LneQuiz
 import kr.co.korbit.gia.jpa.korbit.repository.custom.CustomLneQuizRepository
+import mu.KotlinLogging
 import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.JdbcTemplate
 import java.sql.Date
@@ -15,6 +16,9 @@ import java.util.*
 import javax.persistence.EntityManager
 import kotlin.reflect.KClass
 
+val logger = KotlinLogging.logger(LneQuizRepositoryImpl::class.java.name)
+
+@Suppress("UNCHECKED_CAST")
 class LneQuizRepositoryImpl(
     val jpaKorbitEntityManager: EntityManager,
     val korbitJdbcTemplate: JdbcTemplate
@@ -26,27 +30,27 @@ class LneQuizRepositoryImpl(
 
 
     fun saveAll(quizList: List<LneQuiz>) {
-        var batchCount = 0
+        var totalCount = 0
         val subItems: MutableList<LneQuiz> = ArrayList()
         for (i in quizList.indices) {
             subItems.add(quizList[i])
-            if ((i + 1) % super.batchSize === 0) {
-                batchCount = batchInsert(super.batchSize, batchCount, subItems)
+            if ((i + 1) % super.batchSize == 0) {
+                val insertCount = batchInsert(subItems)
+                totalCount += insertCount
+                subItems.clear()
             }
         }
         if (!subItems.isEmpty()) {
-            batchCount = batchInsert(super.batchSize, batchCount, subItems)
+            val insertCount = batchInsert(subItems)
+            totalCount += insertCount
         }
-        println("batchCount: $batchCount")
+        logger.debug{ "batchTotalCount: $totalCount" }
     }
 
     private fun batchInsert(
-        batchSize: Int,
-        batchCount: Int,
         subItems: MutableList<LneQuiz>
     ): Int {
-        var batchCount = batchCount
-        jdbcTemplate.batchUpdate("INSERT INTO lne_quizzes (quest_id, title, type, description, answers, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        val rets: IntArray = jdbcTemplate.batchUpdate("INSERT INTO lne_quizzes (quest_id, title, type, description, answers, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
             object : BatchPreparedStatementSetter {
                 @Throws(SQLException::class)
                 override fun setValues(ps: PreparedStatement, i: Int) {
@@ -74,8 +78,12 @@ class LneQuizRepositoryImpl(
                 }
             })
         subItems.clear()
-        batchCount++
-        return batchCount
+
+        var insertCount = 0
+        rets.forEach {
+            insertCount += it
+        }
+        return insertCount
     }
 
 }
