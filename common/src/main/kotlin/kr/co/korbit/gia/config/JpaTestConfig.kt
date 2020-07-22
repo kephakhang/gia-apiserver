@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager
@@ -31,7 +32,7 @@ import kotlin.collections.HashMap
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "jpaTestEntityManagerFactory",
         transactionManagerRef = "jpaTestTransactionManager",
-        basePackages = ["kr.co.korbit.gia.jpa.test.repository"])
+        basePackages = ["kr.co.korbit.gia.jpa.test.repository", "kr.co.korbit.gia.jpa.test.repository.custom", "kr.co.korbit.gia.jpa.test.repository.impl"])
 class JpaTestConfig() {
 
     @Autowired(required = false)
@@ -45,6 +46,12 @@ class JpaTestConfig() {
         //dataSource.connectionInitSql = "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
         return dataSource
     }
+
+    @Bean(name = ["testJdbcTemplate"])
+    fun jdbcTemplate(@Qualifier("jpaTestDataSource") ds: DataSource): JdbcTemplate {
+        return JdbcTemplate(ds)
+    }
+
 
 
     @Bean(name = ["jpaTestEntityManagerFactoryBuilder"])

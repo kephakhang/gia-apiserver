@@ -2,20 +2,18 @@ package kr.co.korbit.gia.config
 
 import com.fasterxml.classmate.TypeResolver
 import kr.co.korbit.gia.jpa.korbit.model.dto.Session
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import springfox.documentation.builders.ApiInfoBuilder
 import springfox.documentation.builders.PathSelectors
-import springfox.documentation.builders.PathSelectors.regex
 import springfox.documentation.builders.RequestHandlerSelectors
-import springfox.documentation.service.*
+import springfox.documentation.service.ApiInfo
+import springfox.documentation.service.Contact
 import springfox.documentation.spi.DocumentationType
-import springfox.documentation.spi.service.contexts.SecurityContext
 import springfox.documentation.spring.web.plugins.Docket
+import springfox.documentation.spring.web.readers.operation.HandlerMethodResolver
 import springfox.documentation.swagger.web.*
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc
-import org.springframework.context.annotation.Import
 
 
 /**
@@ -23,15 +21,11 @@ import org.springframework.context.annotation.Import
  * [공식문서 링크](https://springfox.github.io/springfox/docs/snapshot/)
  */
 @Configuration
-@EnableSwagger2WebMvc
 @Import(WebMvcConfig::class)
 class SwaggerConfig {
 
-    @Autowired
-    private val typeResolver: TypeResolver? = TypeResolver()
 
-
-    fun apiInfo(): ApiInfo? {
+    fun apiInfo(): ApiInfo {
         return ApiInfoBuilder()
             .title("Korbit Gia Api Server")
             .description("Korbit Gia Api Server Rest-Api 규약")
@@ -43,8 +37,9 @@ class SwaggerConfig {
             .build()
     }
 
+
     @Bean
-    fun korbitApi(): Docket? {
+    fun korbitApi(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
             .ignoredParameterTypes(Session::class.java)
             .apiInfo(apiInfo())
@@ -52,6 +47,7 @@ class SwaggerConfig {
             .apis(RequestHandlerSelectors.basePackage("kr.co.korbit.gia.controller"))
             .paths(PathSelectors.any())
             .build()
+
 //            .pathMapping("/")
 //            .directModelSubstitute(LocalDate::class.java, String::class.java)
 //            .genericModelSubstitutes(ResponseEntity::class.java)
@@ -93,40 +89,44 @@ class SwaggerConfig {
             //.additionalModels(typeResolver.resolve(AdditionalModel::class.java))
     }
 
-    private fun apiKey(): ApiKey? {
-        return ApiKey("mykey", "api_key", "header")
-    }
+//
+//    private fun apiKey(): ApiKey {
+//        return ApiKey("mykey", "api_key", "header")
+//    }
+//
+//
+//    fun defaultAuth(): List<SecurityReference?> {
+//        val authorizationScope = AuthorizationScope("global", "accessEverything")
+//        val authorizationScopes: Array<AuthorizationScope?> = arrayOfNulls<AuthorizationScope>(1)
+//        authorizationScopes[0] = authorizationScope
+//        return listOf(
+//            SecurityReference("mykey", authorizationScopes)
+//        )
+//    }
+//
+//    private fun securityContext(): SecurityContext {
+//        return SecurityContext.builder()
+//            .securityReferences(defaultAuth())
+//            .forPaths(regex("/*"))
+//            .build()
+//    }
+//
+//    // ToDo : 테스트를 위한 세션 정보 추후 추가 필요
+//    @Bean
+//    fun security(): SecurityConfiguration {
+//        return SecurityConfigurationBuilder.builder()
+//            .clientId("test-app-client-id")
+//            .clientSecret("test-app-client-secret")
+//            .realm("korbit-app-realm")
+//            .appName("korbit-app")
+//            .scopeSeparator(",")
+//            .additionalQueryStringParams(null)
+//            .useBasicAuthenticationWithAccessCodeGrant(false)
+//            .enableCsrfSupport(false)
+//            .build()
+//    }
 
 
-    fun defaultAuth(): List<SecurityReference?>? {
-        val authorizationScope = AuthorizationScope("global", "accessEverything")
-        val authorizationScopes: Array<AuthorizationScope?> = arrayOfNulls<AuthorizationScope>(1)
-        authorizationScopes[0] = authorizationScope
-        return listOf(
-            SecurityReference("mykey", authorizationScopes)
-        )
-    }
-
-    private fun securityContext(): SecurityContext? {
-        return SecurityContext.builder()
-            .securityReferences(defaultAuth())
-            .forPaths(regex("/*"))
-            .build()
-    }
-
-    @Bean
-    fun security(): SecurityConfiguration? {
-        return SecurityConfigurationBuilder.builder()
-            .clientId("test-app-client-id")
-            .clientSecret("test-app-client-secret")
-            .realm("test-app-realm")
-            .appName("test-app")
-            .scopeSeparator(",")
-            .additionalQueryStringParams(null)
-            .useBasicAuthenticationWithAccessCodeGrant(false)
-            .enableCsrfSupport(false)
-            .build()
-    }
 
     @Bean
     fun uiConfig(): UiConfiguration? {
@@ -142,7 +142,6 @@ class SwaggerConfig {
             .maxDisplayedTags(null)
             .operationsSorter(OperationsSorter.ALPHA)
             .showExtensions(false)
-            .showCommonExtensions(false)
             .tagsSorter(TagsSorter.ALPHA)
             .supportedSubmitMethods(UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS)
             .validatorUrl(null)

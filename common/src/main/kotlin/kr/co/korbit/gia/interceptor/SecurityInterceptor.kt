@@ -54,6 +54,7 @@ class SecurityInterceptor : HandlerInterceptorAdapter() {
                 if (uri.endsWith(".html") || uri.endsWith(".css") || uri.endsWith(".js") ||
                     uri.endsWith(".jpg") || uri.endsWith(".gif") || uri.endsWith(".png") ||
                     uri.endsWith(".ico") || uri.endsWith(".svg") || uri.equals("/error") ||
+                    uri.equals("/swagger-ui/index.html") ||
                     uri.contains("\\/swagger".toRegex()) || uri.contains("\\/webjars\\/".toRegex())  || uri.equals("/v2/api-docs") ||
                     uri.startsWith("/internal/") || uri.startsWith("/public/") || uri.startsWith("/admin/")) {
                     response.setHeader("Access-Control-Allow-Origin", "*")

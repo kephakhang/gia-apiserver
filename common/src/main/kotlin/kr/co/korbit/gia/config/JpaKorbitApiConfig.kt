@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager
@@ -31,7 +32,7 @@ import kotlin.collections.HashMap
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "jpaKorbitApiEntityManagerFactory",
         transactionManagerRef = "jpaKorbitApiTransactionManager",
-        basePackages = ["kr.co.korbit.gia.jpa.korbitapi.repository"])
+        basePackages = ["kr.co.korbit.gia.jpa.korbitapi.repository", "kr.co.korbit.gia.jpa.korbitapi.repository.custom", "kr.co.korbit.gia.jpa.korbitapi.repository.impl"])
 class JpaKorbitApiConfig {
 
     @Autowired(required = false)
@@ -39,11 +40,18 @@ class JpaKorbitApiConfig {
 
     @Bean(name = ["jpaKorbitApiDataSource"])
     @ConfigurationProperties(prefix = "spring.datasource.korbitapi")
+    @Primary
     fun jpaKorbitApiDataSource(): DataSource {
         val dataSource = DataSourceBuilder.create().type(HikariDataSource::class.java).build()
         //dataSource.connectionInitSql = "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
         return dataSource
     }
+
+    @Bean(name = ["korbitApiJdbcTemplate"])
+    fun jdbcTemplate(@Qualifier("jpaKorbitApiDataSource") ds: DataSource): JdbcTemplate {
+        return JdbcTemplate(ds)
+    }
+
 
     @Bean(name = ["jpaKorbitApiEntityManagerFactoryBuilder"])
     fun jpaKorbitApiEntityManagerFactoryBuilder(): EntityManagerFactoryBuilder {

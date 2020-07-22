@@ -211,7 +211,7 @@ class ControllerProxy {
                     } else {
                         val cls = genericParameterType as Class<*>
                         if (Session::class.java.isAssignableFrom(cls)) {
-                            session = args[i] as Session
+                            session = args[i] as Session?
                             break
                         }
                         i++

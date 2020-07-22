@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service
 @Service
 class UserService {
     @Autowired
-    val usersRepository: TestUserRepository? = null
+    val testUserRepository: TestUserRepository? = null
 
     fun getUser(id: Long): User? {
-        usersRepository?.let {
+        testUserRepository?.let {
             val user:User? = it.findById(id).get()
             return user
         }

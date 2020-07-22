@@ -1,21 +1,18 @@
 package kr.co.korbit.gia.jpa.korbit.repository.impl
 
-import com.querydsl.core.QueryResults
-import com.querydsl.core.types.dsl.PathBuilder
+
 import kr.co.korbit.gia.jpa.common.Querydsl4RepositorySupport
 import kr.co.korbit.gia.jpa.common.WhereBuilder
 import kr.co.korbit.gia.jpa.korbit.model.LneQuest
 import kr.co.korbit.gia.jpa.korbit.model.QLneQuest.*
-import kr.co.korbit.gia.jpa.korbit.model.QLneQuiz.*
 import kr.co.korbit.gia.jpa.korbit.repository.custom.CustomLneQuestRepository
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.domain.*
 import org.springframework.jdbc.core.JdbcTemplate
 import java.time.LocalDateTime
 import javax.persistence.EntityManager
-import javax.persistence.EntityManagerFactory
 import kotlin.reflect.KClass
 
+@Suppress("UNCHECKED_CAST")
 class LneQuestRepositoryImpl(
     val jpaKorbitEntityManager: EntityManager,
     val korbitJdbcTemplate: JdbcTemplate

@@ -1,4 +1,4 @@
-package kr.co.korbit.gia.jpa.test.model
+package kr.co.korbit.gia.jpa.admin.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import kr.co.korbit.gia.jpa.common.BaseModifyerPersistable
@@ -13,21 +13,22 @@ import javax.persistence.*
 @Entity(name = "AdminUser")
 @Table(name = "admin.admin_users")
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class AdminUser (
 
-    var email: String? = null,
+    var email: String,
 
     var password: String,
 
-    var name: String,
+    var phone: String,
 
-    var nick: String?,
+    var roles: String,
 
-    var phone: String?,
+    var name: String? = null,
 
-    var description: String?,
+    var nick: String? = null,
+
+    var description: String? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

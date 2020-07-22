@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import javax.persistence.EntityManager
 import kotlin.reflect.KClass
 
+@Suppress("UNCHECKED_CAST")
 class LneUserRewardRepositoryImpl(
     val jpaKorbitEntityManager: EntityManager,
     val korbitJdbcTemplate: JdbcTemplate

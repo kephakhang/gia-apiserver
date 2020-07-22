@@ -49,6 +49,7 @@ server:
 spring:
   profiles: jpa
   jpa:
+    open-in-view: false
     database-platform: org.hibernate.dialect.MySQL57Dialect
     database: mysql
     hibernate:
@@ -91,28 +92,22 @@ spring:
   datasource:
 #    url: "jdbc:mysql://localhost:3306/korbit?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
 #    driver-class-name: "com.mysql.cj.jdbc.Driver"
-#    username: kepha
-#    password: kepha
+#    username: korbit
+#    password: korbit
     test:
       type: "com.zaxxer.hikari.HikariDataSource"
       jdbc-url: "jdbc:mysql://localhost:3306/test?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
       driver-class-name: "com.mysql.cj.jdbc.Driver"
-      username: kepha
-      password: kepha
+      username: korbit
+      password: korbit
 #      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
       connection-test-query: "select 1 from dual"
-      #      schema:
       minimum-idle: 10
       idle-timeout: 600000
       auto-commit: true
       allow-pool-suspension: false
-      #      catalog:
-      #      data-source-j-n-d-i:
-      #      data-source-class-name:
       connection-timeout: 70000
-#      data-source-properties: "{password=<kepha>}"
       health-check-properties: "{}"
-      #      health-check-registry:
       initialization-fail-timeout: 1
       isolate-internal-queries: false
       leak-detection-threshold: 0
@@ -122,7 +117,6 @@ spring:
       #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
       read-only: false
       register-mbeans: false
-      #      scheduled-executor:
       transaction-isolation: TRANSACTION_REPEATABLE_READ
       login-timeout: 70000
       pool-name: HikariPool1
@@ -133,22 +127,16 @@ spring:
       type: "com.zaxxer.hikari.HikariDataSource"
       jdbc-url: "jdbc:mysql://localhost:3306/korbit?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
       driver-class-name: "com.mysql.cj.jdbc.Driver"
-      username: kepha
-      password: kepha
+      username: korbit
+      password: korbit
 #      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
       connection-test-query: "select 1 from dual"
-      #      schema:
       minimum-idle: 10
       idle-timeout: 600000
       auto-commit: true
       allow-pool-suspension: false
-      #      catalog:
-      #      data-source-j-n-d-i:
-      #      data-source-class-name:
       connection-timeout: 70000
-#      data-source-properties: "{password=<kepha>}"
       health-check-properties: "{}"
-      #      health-check-registry:
       initialization-fail-timeout: 1
       isolate-internal-queries: false
       leak-detection-threshold: 0
@@ -158,7 +146,6 @@ spring:
       #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
       read-only: false
       register-mbeans: false
-      #      scheduled-executor:
       transaction-isolation: TRANSACTION_REPEATABLE_READ
       login-timeout: 70000
       pool-name: HikariPool2
@@ -169,22 +156,16 @@ spring:
       type: "com.zaxxer.hikari.HikariDataSource"
       jdbc-url: "jdbc:mysql://localhost:3306/korbit_api?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
       driver-class-name: "com.mysql.cj.jdbc.Driver"
-      username: kepha
-      password: kepha
+      username: korbit
+      password: korbit
 #      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
       connection-test-query: "select 1 from dual"
-      #      schema:
       minimum-idle: 10
       idle-timeout: 600000
       auto-commit: true
       allow-pool-suspension: false
-      #      catalog:
-      #      data-source-j-n-d-i:
-      #      data-source-class-name:
       connection-timeout: 70000
-#      data-source-properties: "{password=<kepha>}"
       health-check-properties: "{}"
-      #      health-check-registry:
       initialization-fail-timeout: 1
       isolate-internal-queries: false
       leak-detection-threshold: 0
@@ -194,7 +175,6 @@ spring:
       #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
       read-only: false
       register-mbeans: false
-      #      scheduled-executor:
       transaction-isolation: TRANSACTION_REPEATABLE_READ
       login-timeout: 70000
       pool-name: HikariPool3
@@ -203,22 +183,16 @@ spring:
       type: "com.zaxxer.hikari.HikariDataSource"
       jdbc-url: "jdbc:mysql://localhost:3306/terra?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
       driver-class-name: "com.mysql.cj.jdbc.Driver"
-      username: kepha
-      password: kepha
+      username: korbit
+      password: korbit
 #      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
       connection-test-query: "select 1 from dual"
-      #      schema:
       minimum-idle: 10
       idle-timeout: 600000
       auto-commit: true
       allow-pool-suspension: false
-      #      catalog:
-      #      data-source-j-n-d-i:
-      #      data-source-class-name:
       connection-timeout: 70000
-#      data-source-properties: "{password=<kepha>}"
       health-check-properties: "{}"
-      #      health-check-registry:
       initialization-fail-timeout: 1
       isolate-internal-queries: false
       leak-detection-threshold: 0
@@ -228,13 +202,73 @@ spring:
       #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
       read-only: false
       register-mbeans: false
-      #      scheduled-executor:
       transaction-isolation: TRANSACTION_REPEATABLE_READ
       login-timeout: 70000
       pool-name: HikariPool4
       validation-timeout: 5000
       hikari:
         idle-timeout: 10000
+    admin:
+      type: "com.zaxxer.hikari.HikariDataSource"
+      jdbc-url: "jdbc:mysql://localhost:3306/admin?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      driver-class-name: "com.mysql.cj.jdbc.Driver"
+      username: korbit
+      password: korbit
+      #      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
+      connection-test-query: "select 1 from dual"
+      minimum-idle: 10
+      idle-timeout: 600000
+      auto-commit: true
+      allow-pool-suspension: false
+      connection-timeout: 70000
+
+      health-check-properties: "{}"
+      initialization-fail-timeout: 1
+      isolate-internal-queries: false
+      leak-detection-threshold: 0
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+      #      metric-registry: com.codahale.metrics.MetricRegistry
+      #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
+      read-only: false
+      register-mbeans: false
+      transaction-isolation: TRANSACTION_REPEATABLE_READ
+      login-timeout: 70000
+      pool-name: HikariPool4
+      validation-timeout: 5000
+      hikari:
+        idle-timeout: 10000
+  admin2:
+    type: "com.zaxxer.hikari.HikariDataSource"
+    jdbc-url: "jdbc:mysql://localhost:3306/admin?autoReconnection-true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC"
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    username: korbit
+    password: korbit
+    #      connection-init-sql: "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
+    connection-test-query: "select 1 from dual"
+    minimum-idle: 10
+    idle-timeout: 600000
+    auto-commit: true
+    allow-pool-suspension: false
+    connection-timeout: 70000
+
+    health-check-properties: "{}"
+    initialization-fail-timeout: 1
+    isolate-internal-queries: false
+    leak-detection-threshold: 0
+    max-lifetime: 1800000
+    maximum-pool-size: 10
+    #      metric-registry: com.codahale.metrics.MetricRegistry
+    #      metrics-tracker-factory: com.zaxxer.hikari.metrics.MetricsTracker
+    read-only: false
+    register-mbeans: false
+    transaction-isolation: TRANSACTION_REPEATABLE_READ
+    login-timeout: 70000
+    pool-name: HikariPool4
+    validation-timeout: 5000
+    hikari:
+      idle-timeout: 10000
+
 
 ---
 

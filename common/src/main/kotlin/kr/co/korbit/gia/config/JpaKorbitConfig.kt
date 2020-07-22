@@ -37,7 +37,6 @@ class JpaKorbitConfig {
 
     @Bean(name = ["jpaKorbitDataSource"])
     @ConfigurationProperties(prefix = "spring.datasource.korbit")
-    @Primary
     fun jpaKorbitDataSource(): DataSource {
         val dataSource = DataSourceBuilder.create().type(HikariDataSource::class.java).build()
         //dataSource.connectionInitSql = "SET NAMES utf8mb4; set @@session.time_zone = '+00:00'"
@@ -45,7 +44,7 @@ class JpaKorbitConfig {
     }
 
     @Bean(name = ["korbitJdbcTemplate"])
-    fun jdbcTemplate(@Qualifier("jpaKorbitDataSource") ds: DataSource?): JdbcTemplate? {
+    fun jdbcTemplate(@Qualifier("jpaKorbitDataSource") ds: DataSource): JdbcTemplate {
         return JdbcTemplate(ds)
     }
 

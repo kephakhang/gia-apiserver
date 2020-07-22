@@ -159,16 +159,22 @@ class WebMvcConfig (
         registry.addResourceHandler("/**")
             .addResourceLocations(RESOURCE_LOCATIONS[0])
 
-        registry.addResourceHandler("swagger-ui.html")
-            .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/swagger-ui/**")
+            .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+            .resourceChain(false);
 
-        registry.addResourceHandler("/webjars/**")
-            .addResourceLocations("classpath:/META-INF/resources/webjars/");
+//        registry.addResourceHandler("/webjars/**")
+//            .addResourceLocations("classpath:/META-INF/resources/webjars/");
 
     }
 
     override fun addCorsMappings(corsRegistry: CorsRegistry) {}
-    override fun addViewControllers(viewControllerRegistry: ViewControllerRegistry) {}
+
+    override fun addViewControllers(viewControllerRegistry: ViewControllerRegistry) {
+        viewControllerRegistry.addViewController("/swagger-ui/")
+            .setViewName("forward:/swagger-ui/index.html")
+    }
+
     override fun configureViewResolvers(viewResolverRegistry: ViewResolverRegistry) {}
 
 //    val unifiedArgumentResolver: UnifiedArgumentResolver = context.getBean(UnifiedArgumentResolver::class.java)
